@@ -51,6 +51,5 @@ struct PhotoCell: View {
                     .padding([.bottom, .trailing], 2)
             }
         }
-        .background(Color.red)
     }
 }

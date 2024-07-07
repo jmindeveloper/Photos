@@ -19,15 +19,24 @@ struct PhotoStorageView: View {
                     Color.clear
                         .frame(height: 100)
                     
-                    PhotoGridView(assets: $viewModel.assets)
+                    PhotoGridView(assets: $viewModel.assets) { asset in
+                        if let date = asset.creationDate {
+                            viewModel.visibleAssetsDate.append(date)
+                        }
+                    } cellOnDisappearAction: { asset in
+                        if let date = asset.creationDate {
+                            viewModel.visibleAssetsDate.removeAll {
+                                $0 == date
+                            }
+                        }
+                    }
                     
                     Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
                         .font(.system(size: 17, weight: .semibold))
                         .padding(.vertical, 10)
-                        .id("SCROLLVIEW_BOTTOM")
                 }
                 .onAppear {
-                    proxy.scrollTo("SCROLLVIEW_BOTTOM")
+                    proxy.scrollTo(viewModel.assets.last?.localIdentifier)
                 }
             }
             
@@ -38,7 +47,7 @@ struct PhotoStorageView: View {
     @ViewBuilder
     private func navigationBar() -> some View {
         HStack(alignment: .top) {
-            Text("2024년 4월 29일 ~ 5월 18일")
+            Text(viewModel.dateRangeString)
                 .font(.bold(fontSize: .subHead2))
                 .foregroundColor(.white)
             Spacer()

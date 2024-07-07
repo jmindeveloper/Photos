@@ -13,8 +13,17 @@ struct PhotoGridView: View {
     @Binding var assets: [PHAsset]
     private let spacingWidth: CGFloat = 1
     
-    init(assets: Binding<[PHAsset]>) {
+    var cellOnAppearAction: ((_ asset: PHAsset) -> Void)
+    var cellOnDisappearAction: ((_ asset: PHAsset) -> Void)
+    
+    init(
+        assets: Binding<[PHAsset]>,
+        cellOnAppearAction: @escaping (_ asset: PHAsset) -> Void = { _ in },
+        cellOnDisappearAction: @escaping (_ asset: PHAsset) -> Void = { _ in }
+    ) {
         self._assets = assets
+        self.cellOnAppearAction = cellOnAppearAction
+        self.cellOnDisappearAction = cellOnDisappearAction
     }
     
     var body: some View {
@@ -27,6 +36,12 @@ struct PhotoGridView: View {
                 PhotoCell(asset: asset)
                     .aspectRatio(1, contentMode: .fit)
                     .id(asset.localIdentifier)
+                    .onAppear {
+                        cellOnAppearAction(asset)
+                    }
+                    .onDisappear {
+                        cellOnDisappearAction(asset)
+                    }
             }
             
         }

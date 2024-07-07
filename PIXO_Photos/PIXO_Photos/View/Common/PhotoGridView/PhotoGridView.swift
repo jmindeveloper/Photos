@@ -10,7 +10,10 @@ import Photos
 
 protocol PhotoGridViewModelProtocol: ObservableObject {
     var assets: [PHAsset] { get set }
+    var assetWithFrame: [(asset: PHAsset, frame: CGRect)] { get set }
     var selectedAssets: [PHAsset] { get set }
+    
+    func setAssetFrame(index: Int, rect: CGRect)
 }
 
 struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
@@ -41,12 +44,16 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
             count: columnItemCount
         )
         LazyVGrid(columns: gridItem, spacing: spacingWidth) {
-            ForEach(viewModel.assets, id: \.localIdentifier) { asset in
+            ForEach(0..<viewModel.assets.count, id: \.self) { index in
+                let asset = viewModel.assets[index]
                 PhotoCell(asset: asset)
                     .contentMode(cellContentMode)
                     .isSelected(viewModel.selectedAssets.contains(asset))
                     .aspectRatio(1, contentMode: .fit)
                     .id(asset.localIdentifier)
+                    .readFrame(name: "CARDCELLFRAME") { rect in
+                        viewModel.setAssetFrame(index: index, rect: rect)
+                    }
                     .onAppear {
                         cellOnAppearAction(asset)
                     }

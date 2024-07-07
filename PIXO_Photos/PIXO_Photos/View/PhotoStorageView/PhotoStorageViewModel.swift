@@ -19,6 +19,7 @@ final class PhotoStorageViewModel: PhotoGridViewModelProtocol {
     }
     
     @Published var assets: [PHAsset] = []
+    lazy var assetWithFrame: [(asset: PHAsset, frame: CGRect)] = assets.map { ($0, .zero) }
     @Published var selectedAssets: [PHAsset] = []
     @Published var imageCount: Int = 0
     @Published var videoCount: Int = 0
@@ -54,5 +55,9 @@ final class PhotoStorageViewModel: PhotoGridViewModelProtocol {
             // 전부 같을때
             return "\(date1Componets.year ?? 0)년 \(date1Componets.month ?? 0)월 \(date1Componets.day ?? 0)일"
         }
+    }
+    
+    func setAssetFrame(index: Int, rect: CGRect) {
+        assetWithFrame[index].frame = rect
     }
 }

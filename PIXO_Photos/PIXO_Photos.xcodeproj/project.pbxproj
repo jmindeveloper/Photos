@@ -21,6 +21,8 @@
 		0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A02C3A18CC0047157C /* SceneDelegate.swift */; };
 		0E8431A82C3A18CD0047157C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A72C3A18CD0047157C /* Assets.xcassets */; };
 		0E8431AB2C3A18CD0047157C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */; };
+		0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA42C3A72D2009F8F22 /* Font+.swift */; };
+		0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		0E8431A72C3A18CD0047157C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E8431AA2C3A18CD0047157C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E8431AC2C3A18CD0047157C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E907BA42C3A72D2009F8F22 /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
+		0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +98,7 @@
 			isa = PBXGroup;
 			children = (
 				0E64E2F12C3A4890004C29CE /* UIApplication+.swift */,
+				0E907BA42C3A72D2009F8F22 /* Font+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -114,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
+				0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -229,6 +235,8 @@
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
+				0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */,
+				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Photos
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,6 +21,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = tabbarController
         
         window?.makeKeyAndVisible()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.checkAccessAuthority()
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -51,5 +56,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
 
+    private func checkAccessAuthority() {
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        
+        switch photoAuthorizationStatus {
+        case .notDetermined, .denied, .limited:
+            PHPhotoLibrary.requestAuthorization { [weak self] status in }
+        default: return
+        }
+    }
 }
 

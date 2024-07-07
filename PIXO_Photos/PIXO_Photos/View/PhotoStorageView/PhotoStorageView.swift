@@ -96,7 +96,9 @@ struct PhotoStorageView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     HStack {
                         Button {
-                            print("share")
+                            viewModel.getSelectedAssetsURL { images in
+                                present(view: ActivityView(activityItmes: images))
+                            }
                         } label: {
                             Image(systemName: "square.and.arrow.up")
                         }

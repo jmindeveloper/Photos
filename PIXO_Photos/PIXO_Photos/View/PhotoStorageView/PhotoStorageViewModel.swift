@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 import Photos
 
 final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol {
@@ -35,6 +36,12 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         videoCount = assets.filter { $0.mediaType == .video }.count
         imageCount = assets.count - videoCount
         assetWithFrame = assets.map { ($0, .zero) }
+    }
+    
+    func getSelectedAssetsURL(completion: @escaping ([UIImage]) -> Void) {
+        PhotoLibrary.requestImages(with: Array(selectedAssets)) { images in
+            completion(images)
+        }
     }
     
     private func getDateRange(date1: Date, date2: Date) -> String {

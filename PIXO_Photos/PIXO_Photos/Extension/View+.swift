@@ -17,6 +17,11 @@ extension View {
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
+    
+    func present(view: some View, animated: Bool = true) {
+        let vc = UIHostingController(rootView: view)
+        UIApplication.topViewController()?.present(vc, animated: animated)
+    }
 }
 
 struct SizePreferenceKey: PreferenceKey {

@@ -61,6 +61,8 @@ struct PhotoCell: View {
             }
             
             if isSelected {
+                Color.black.opacity(0.3)
+                
                 Image(systemName: "checkmark.circle")
                     .resizable()
                     .frame(width: 20, height: 20)

@@ -97,6 +97,37 @@ final class PhotoLibrary {
             }
     }
     
+    static func requestImages(with assets: [PHAsset], completion: @escaping (([UIImage]) -> Void)) {
+        let dispatchGroup = DispatchGroup()
+        var images: [UIImage] = []
+        
+        for asset in assets {
+            dispatchGroup.enter()
+            
+            let requestOption = PHImageRequestOptions()
+            requestOption.isSynchronous = false
+            requestOption.resizeMode = .none
+            requestOption.deliveryMode = .highQualityFormat
+            requestOption.isNetworkAccessAllowed = true
+            let size = CGSize(width: 300, height: 300)
+            
+            PHCachingImageManager.default().requestImage(
+                for: asset,
+                targetSize: size,
+                contentMode: .aspectFill,
+                options: requestOption) { image, info in
+                    if let image = image {
+                        images.append(image)
+                    }
+                    dispatchGroup.leave()
+                }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completion(images)
+        }
+    }
+    
     static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true

@@ -27,6 +27,8 @@
 		0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */; };
 		0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E95E3DF2C3AA40D00F65754 /* View+.swift */; };
 		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
+		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
+		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetView.swift; sourceTree = "<group>"; };
 		0E95E3DF2C3AA40D00F65754 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
+		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
+		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +115,7 @@
 				0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */,
 				0E84BBB82C3A965E00BA93D1 /* UIView+.swift */,
 				0E95E3DF2C3AA40D00F65754 /* View+.swift */,
+				0ECBB1032C3AC5A000482E71 /* UIImage+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 			children = (
 				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
 				0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */,
+				0ECBB1052C3AC8C600482E71 /* ActivityView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -256,11 +262,13 @@
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,
 				0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */,
+				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */,
 				0E64E2FC2C3A5430004C29CE /* Constant.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,
+				0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

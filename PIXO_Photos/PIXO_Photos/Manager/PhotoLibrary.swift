@@ -29,10 +29,10 @@ final class PhotoLibrary {
     
     func getAllAssetCollections() -> [PHAssetCollectionType: [PHAssetCollection]] {
         var collections = [PHAssetCollectionType: [PHAssetCollection]]()
-    
+        
         // MARK: - smartAlbum
         let smartCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
-    
+        
         for i in 0..<smartCollection.count {
             let asset = PHAsset.fetchAssets(in: smartCollection[i], options: nil)
             if asset.count != 0 {
@@ -97,7 +97,38 @@ final class PhotoLibrary {
             }
     }
     
-    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    func requestImages(with assets: [PHAsset], completion: @escaping (([UIImage]) -> Void)) {
+        let dispatchGroup = DispatchGroup()
+        var images: [UIImage] = []
+        
+        for asset in assets {
+            dispatchGroup.enter()
+            
+            let requestOption = PHImageRequestOptions()
+            requestOption.isSynchronous = false
+            requestOption.resizeMode = .none
+            requestOption.deliveryMode = .highQualityFormat
+            requestOption.isNetworkAccessAllowed = true
+            let size = CGSize(width: 300, height: 300)
+            
+            PHCachingImageManager.default().requestImage(
+                for: asset,
+                targetSize: size,
+                contentMode: .aspectFill,
+                options: requestOption) { image, info in
+                    if let image = image {
+                        images.append(image)
+                    }
+                    dispatchGroup.leave()
+                }
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            completion(images)
+        }
+    }
+    
+    func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         
@@ -110,7 +141,7 @@ final class PhotoLibrary {
         }
     }
     
-    static func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         if asset.mediaType == .video {
             let options = PHVideoRequestOptions()
             options.isNetworkAccessAllowed = true
@@ -126,6 +157,88 @@ final class PhotoLibrary {
             }
         } else {
             fatalError("asset의 mediaType이 video가 아닙니다")
+        }
+    }
+    
+    func deleteAssets(with assets: [PHAsset], completion: (() -> ())? = nil) {
+        PHPhotoLibrary.shared().performChanges {
+            PHAssetChangeRequest.deleteAssets(assets as NSArray)
+        } completionHandler: { success, error in
+            if success {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            } else if !success || error != nil {
+                fatalError()
+            }
+        }
+    }
+    
+    func favoriteAssets(with assets: [PHAsset], completion: (() -> Void)? = nil) {
+        PHPhotoLibrary.shared().performChanges {
+            assets.forEach { asset in
+                let request = PHAssetChangeRequest(for: asset)
+                request.isFavorite = !asset.isFavorite
+            }
+        } completionHandler: { success, error in
+            if success {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            } else if !success || error != nil {
+                fatalError()
+            }
+        }
+    }
+    
+    private func duplicateAsset(_ asset: PHAsset, completion: ((PHAsset?) -> Void)? = nil) {
+        PhotoLibrary.requestImage(with: asset) { [weak self] image, _ in
+            guard let self = self,
+                  let image = image else {
+                fatalError("이미지 받아오기 실패")
+            }
+            
+            self.saveImageToLibrary(image) { success, newAsset in
+                completion?(newAsset)
+            }
+        }
+    }
+    
+    func duplicateAssets(_ assets: [PHAsset], completion: (() -> Void)? = nil) {
+        let group = DispatchGroup()
+        var newAssets: [PHAsset] = []
+        
+        for asset in assets {
+            group.enter()
+            duplicateAsset(asset) { newAsset in
+                if let newAsset = newAsset {
+                    newAssets.append(newAsset)
+                }
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion?()
+        }
+    }
+    
+    private func saveImageToLibrary(_ image: UIImage, completion: @escaping (Bool, PHAsset?) -> Void) {
+        var placeholder: PHObjectPlaceholder?
+        
+        PHPhotoLibrary.shared().performChanges({
+            let createAssetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+            placeholder = createAssetRequest.placeholderForCreatedAsset
+        }) { success, error in
+            if success, let placeholder = placeholder {
+                let assets = PHAsset.fetchAssets(withLocalIdentifiers: [placeholder.localIdentifier], options: nil)
+                let asset = assets.firstObject
+                DispatchQueue.main.async {
+                    completion(true, asset)
+                }
+            } else {
+                fatalError("이미지 저장 실패")
+            }
         }
     }
 }

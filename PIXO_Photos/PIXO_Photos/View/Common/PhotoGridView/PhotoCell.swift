@@ -12,9 +12,17 @@ struct PhotoCell: View {
     @State var uiImage: UIImage? = nil
     @State var duration: Int? = nil
     private var asset: PHAsset? = nil
+    private var contentMode = ContentMode.fill
+    private var isSelected: Bool = false
     
     init(asset: PHAsset) {
         self.asset = asset
+    }
+    
+    private init(asset: PHAsset?, contentMode: ContentMode, isSelected: Bool) {
+        self.asset = asset
+        self.contentMode = contentMode
+        self.isSelected = isSelected
     }
     
     var body: some View {
@@ -23,8 +31,9 @@ struct PhotoCell: View {
                 if let image = uiImage {
                     Image(uiImage: image)
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: contentMode)
                         .frame(width: proxy.size.width, height: proxy.size.height)
+                        .contentShape(Rectangle())
                         .clipped()
                 } else {
                     Image(systemName: "photo")
@@ -50,7 +59,36 @@ struct PhotoCell: View {
                     .font(.system(size: 14))
                     .padding([.bottom, .trailing], 2)
             }
+            
+            if isSelected {
+                Color.black.opacity(0.3)
+                
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .background(Circle().fill(Color.blue))
+                    .padding([.bottom, .trailing], 2)
+            }
+            
+            if asset?.isFavorite ?? false {
+                HStack {
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(width: 15, height: 15)
+                        .padding([.bottom, .leading], 2)
+                    
+                    Spacer()
+                }
+            }
         }
-        .background(Color.red)
+    }
+    
+    func contentMode(_ mode: ContentMode) -> PhotoCell {
+        PhotoCell(asset: asset, contentMode: mode, isSelected: isSelected)
+    }
+    
+    func isSelected(_ isSelected: Bool) -> PhotoCell {
+        PhotoCell(asset: asset, contentMode: contentMode, isSelected: isSelected)
     }
 }

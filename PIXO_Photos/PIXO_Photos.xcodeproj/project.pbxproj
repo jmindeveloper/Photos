@@ -21,6 +21,14 @@
 		0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A02C3A18CC0047157C /* SceneDelegate.swift */; };
 		0E8431A82C3A18CD0047157C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A72C3A18CD0047157C /* Assets.xcassets */; };
 		0E8431AB2C3A18CD0047157C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */; };
+		0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */; };
+		0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB82C3A965E00BA93D1 /* UIView+.swift */; };
+		0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA42C3A72D2009F8F22 /* Font+.swift */; };
+		0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */; };
+		0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E95E3DF2C3AA40D00F65754 /* View+.swift */; };
+		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
+		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
+		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +48,14 @@
 		0E8431A72C3A18CD0047157C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E8431AA2C3A18CD0047157C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E8431AC2C3A18CD0047157C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabbar+.swift"; sourceTree = "<group>"; };
+		0E84BBB82C3A965E00BA93D1 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		0E907BA42C3A72D2009F8F22 /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
+		0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetView.swift; sourceTree = "<group>"; };
+		0E95E3DF2C3AA40D00F65754 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
+		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
+		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +102,7 @@
 			children = (
 				0E64E2ED2C3A4871004C29CE /* AlertManager.swift */,
 				0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */,
+				0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -94,6 +111,11 @@
 			isa = PBXGroup;
 			children = (
 				0E64E2F12C3A4890004C29CE /* UIApplication+.swift */,
+				0E907BA42C3A72D2009F8F22 /* Font+.swift */,
+				0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */,
+				0E84BBB82C3A965E00BA93D1 /* UIView+.swift */,
+				0E95E3DF2C3AA40D00F65754 /* View+.swift */,
+				0ECBB1032C3AC5A000482E71 /* UIImage+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -114,6 +136,8 @@
 			isa = PBXGroup;
 			children = (
 				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
+				0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */,
+				0ECBB1052C3AC8C600482E71 /* ActivityView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -225,18 +249,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
+				0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */,
+				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
+				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,
+				0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */,
+				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
+				0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */,
 				0E64E2FC2C3A5430004C29CE /* Constant.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,
+				0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

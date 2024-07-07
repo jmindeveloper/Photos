@@ -13,6 +13,8 @@
 		0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2ED2C3A4871004C29CE /* AlertManager.swift */; };
 		0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F12C3A4890004C29CE /* UIApplication+.swift */; };
 		0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */; };
+		0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F62C3A4DC1004C29CE /* PhotoGridView.swift */; };
+		0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F92C3A4DD1004C29CE /* PhotoCell.swift */; };
 		0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84319E2C3A18CC0047157C /* AppDelegate.swift */; };
 		0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A02C3A18CC0047157C /* SceneDelegate.swift */; };
 		0E8431A82C3A18CD0047157C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A72C3A18CD0047157C /* Assets.xcassets */; };
@@ -26,6 +28,8 @@
 		0E64E2ED2C3A4871004C29CE /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		0E64E2F12C3A4890004C29CE /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
 		0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
+		0E64E2F62C3A4DC1004C29CE /* PhotoGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridView.swift; sourceTree = "<group>"; };
+		0E64E2F92C3A4DD1004C29CE /* PhotoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
 		0E84319B2C3A18CC0047157C /* PIXO_Photos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PIXO_Photos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E84319E2C3A18CC0047157C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0E8431A02C3A18CC0047157C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -48,6 +52,7 @@
 		0E64E2E22C3A39C0004C29CE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0E64E2F52C3A4DAE004C29CE /* Common */,
 				0E64E2E72C3A39FF004C29CE /* AlbumView */,
 				0E64E2E52C3A39D6004C29CE /* PhotoStorageView */,
 				0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */,
@@ -97,6 +102,23 @@
 				0E8431A02C3A18CC0047157C /* SceneDelegate.swift */,
 			);
 			path = Application;
+			sourceTree = "<group>";
+		};
+		0E64E2F52C3A4DAE004C29CE /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		0E64E2F82C3A4DC9004C29CE /* PhotoGridView */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2F62C3A4DC1004C29CE /* PhotoGridView.swift */,
+				0E64E2F92C3A4DD1004C29CE /* PhotoCell.swift */,
+			);
+			path = PhotoGridView;
 			sourceTree = "<group>";
 		};
 		0E8431922C3A18CC0047157C = {
@@ -201,7 +223,9 @@
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
+				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
+				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,

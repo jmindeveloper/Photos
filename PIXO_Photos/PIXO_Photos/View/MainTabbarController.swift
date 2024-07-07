@@ -15,13 +15,8 @@ final class MainTabbarController: UITabBarController {
         configureTabbar()
     }
     
-    private func setTabbarControllerItem(view: some View, title: String, image: UIImage, isNavigation: Bool) -> UIViewController {
-        let viewController: UIViewController
-        if isNavigation {
-            viewController = UINavigationController(rootViewController: UIHostingController(rootView: view))
-        } else {
-            viewController = UIHostingController(rootView: view)
-        }
+    private func setTabbarControllerItem(view: some View, title: String, image: UIImage) -> UIViewController {
+        let viewController: UIViewController = UIHostingController(rootView: view)
         
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
@@ -33,14 +28,12 @@ final class MainTabbarController: UITabBarController {
         let photoVC = setTabbarControllerItem(
             view: PhotoStorageView(),
             title: "보관함",
-            image: UIImage(systemName: "photo.stack") ?? UIImage(),
-            isNavigation: false
+            image: UIImage(systemName: "photo.stack") ?? UIImage()
         )
         let albumVC = setTabbarControllerItem(
             view: AlbumView(),
             title: "앨범",
-            image: UIImage(systemName: "square.stack.fill") ?? UIImage(),
-            isNavigation: false
+            image: UIImage(systemName: "square.stack.fill") ?? UIImage()
         )
         
         setViewControllers([photoVC, albumVC], animated: true)

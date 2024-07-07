@@ -45,6 +45,17 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         PHPhotoLibrary.shared().register(self)
     }
     
+    init(library: PhotoLibrary, album: Album) {
+        self.library = library
+        self.fetchResult = album.fetchResult
+        super.init()
+        self.assets = album.assets
+        videoCount = assets.filter { $0.mediaType == .video }.count
+        imageCount = assets.count - videoCount
+        assetWithFrame = assets.map { ($0, .zero) }
+        PHPhotoLibrary.shared().register(self)
+    }
+    
     func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {
         library.requestImages(with: Array(selectedAssets)) { images in
             completion(images)

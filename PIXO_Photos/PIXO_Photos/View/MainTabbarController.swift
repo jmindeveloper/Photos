@@ -26,8 +26,8 @@ final class MainTabbarController: UITabBarController {
     }
     
     private func configureTabbar() {
-        @ObservedObject var photoStorageViewModel = PhotoStorageViewModel(library: library)
-        @ObservedObject var albumViewModel = AlbumViewModel(library: library)
+        let photoStorageViewModel = PhotoStorageViewModel(library: library)
+        let albumViewModel = AlbumViewModel(library: library)
         
         let photoVC = setTabbarControllerItem(
             view: PhotoStorageView().environmentObject(photoStorageViewModel),

@@ -8,9 +8,15 @@
 import SwiftUI
 import Photos
 
-struct PhotoGridView: View {
+protocol PhotoGridViewModelProtocol: ObservableObject {
+    var assets: [PHAsset] { get set }
+    var selectedAssets: [PHAsset] { get set }
+}
+
+struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
+    @EnvironmentObject var viewModel: VM
+    
     @Binding var columnItemCount: Int
-    @Binding var assets: [PHAsset]
     @Binding var cellContentMode: ContentMode
     private let spacingWidth: CGFloat = 1
     
@@ -18,13 +24,11 @@ struct PhotoGridView: View {
     var cellOnDisappearAction: ((_ asset: PHAsset) -> Void)
     
     init(
-        assets: Binding<[PHAsset]>,
         columnItemCount: Binding<Int>,
         cellContentMode: Binding<ContentMode>,
         cellOnAppearAction: @escaping (_ asset: PHAsset) -> Void = { _ in },
         cellOnDisappearAction: @escaping (_ asset: PHAsset) -> Void = { _ in }
     ) {
-        self._assets = assets
         self._columnItemCount = columnItemCount
         self.cellOnAppearAction = cellOnAppearAction
         self.cellOnDisappearAction = cellOnDisappearAction
@@ -37,7 +41,7 @@ struct PhotoGridView: View {
             count: columnItemCount
         )
         LazyVGrid(columns: gridItem, spacing: spacingWidth) {
-            ForEach(assets, id: \.localIdentifier) { asset in
+            ForEach(viewModel.assets, id: \.localIdentifier) { asset in
                 PhotoCell(asset: asset)
                     .contentMode(cellContentMode)
                     .aspectRatio(1, contentMode: .fit)

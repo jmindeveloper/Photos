@@ -8,7 +8,7 @@
 import Foundation
 import Photos
 
-final class PhotoStorageViewModel: ObservableObject {
+final class PhotoStorageViewModel: PhotoGridViewModelProtocol {
     private let library = PhotoLibrary()
     private var recentsCollection: PHAssetCollection {
         if let collection = library.collections[.smartAlbum]?.first {

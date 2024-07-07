@@ -13,15 +13,7 @@ struct PhotoStorageView: View {
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
-    @State var selectMode: Bool = false {
-        didSet {
-            if selectMode {
-                UITabBar.hideTabBar(animated: false)
-            } else {
-                UITabBar.showTabBar(animated: false)
-            }
-        }
-    }
+    @State var selectMode: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -31,8 +23,7 @@ struct PhotoStorageView: View {
                     Color.clear
                         .frame(height: 100)
                     
-                    PhotoGridView(
-                        assets: $viewModel.assets,
+                    PhotoGridView<PhotoStorageViewModel>(
                         columnItemCount: $columnItemCount,
                         cellContentMode: $cellContentMode
                     ) { asset in
@@ -47,6 +38,7 @@ struct PhotoStorageView: View {
                             }
                         }
                     }
+                    .environmentObject(viewModel)
                     
                     if !selectMode {
                         Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")

@@ -32,8 +32,12 @@ struct AlbumView: View {
                         
                         LazyHGrid(rows: gridItem, spacing: spacingWidth){
                             ForEach(viewModel.userAlbum, id: \.self) { album in
-                                AlbumCoverView(album: album)
-                                    .frame(width: proxy.size.width / 2 - 30)
+                                NavigationLink {
+                                    
+                                } label: {
+                                    AlbumCoverView(album: album)
+                                        .frame(width: proxy.size.width / 2 - 30)
+                                }
                             }
                         }
                     }
@@ -54,7 +58,11 @@ struct AlbumView: View {
                 
                 LazyVStack {
                     ForEach(viewModel.smartAlbum, id: \.self) { album in
-                        albumListCell(album: album, imageName: "heart")
+                        NavigationLink {
+                            
+                        } label: {
+                            albumListCell(album: album, imageName: "heart")
+                        }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -133,6 +141,7 @@ struct AlbumCoverView: View {
             }
             
             Text(album.title)
+                .foregroundColor(Color(uiColor: .label))
             
             Text("\(album.assetCount)")
                 .foregroundColor(.gray)

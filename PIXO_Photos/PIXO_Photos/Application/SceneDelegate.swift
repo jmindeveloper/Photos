@@ -22,9 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.makeKeyAndVisible()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.checkAccessAuthority()
-        }
+        checkAccessAuthority()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -61,7 +59,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         switch photoAuthorizationStatus {
         case .notDetermined, .denied, .limited:
-            PHPhotoLibrary.requestAuthorization { [weak self] status in }
+            AlertManager(message: "앱을 사용하기 위해서는 사진 권한이 필요합니다")
+                .addAction(actionTitle: "설정이동", style: .default) { _ in
+                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                    if UIApplication.shared.canOpenURL(url) {
+                        UIApplication.shared.open(url)
+                    }
+                }
+                .addAction(actionTitle: "취소", style: .cancel)
+                .present()
         default: return
         }
     }

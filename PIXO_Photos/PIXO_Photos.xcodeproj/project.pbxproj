@@ -7,18 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
+		0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E82C3A3A09004C29CE /* AlbumView.swift */; };
+		0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */; };
 		0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84319E2C3A18CC0047157C /* AppDelegate.swift */; };
 		0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A02C3A18CC0047157C /* SceneDelegate.swift */; };
-		0E8431A32C3A18CC0047157C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A22C3A18CC0047157C /* ViewController.swift */; };
 		0E8431A82C3A18CD0047157C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A72C3A18CD0047157C /* Assets.xcassets */; };
 		0E8431AB2C3A18CD0047157C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
+		0E64E2E82C3A3A09004C29CE /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
+		0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageView.swift; sourceTree = "<group>"; };
 		0E84319B2C3A18CC0047157C /* PIXO_Photos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PIXO_Photos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E84319E2C3A18CC0047157C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0E8431A02C3A18CC0047157C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0E8431A22C3A18CC0047157C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		0E8431A72C3A18CD0047157C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0E8431AA2C3A18CD0047157C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0E8431AC2C3A18CD0047157C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -35,6 +39,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E64E2E22C3A39C0004C29CE /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2E72C3A39FF004C29CE /* AlbumView */,
+				0E64E2E52C3A39D6004C29CE /* PhotoStorageView */,
+				0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		0E64E2E52C3A39D6004C29CE /* PhotoStorageView */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */,
+			);
+			path = PhotoStorageView;
+			sourceTree = "<group>";
+		};
+		0E64E2E72C3A39FF004C29CE /* AlbumView */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2E82C3A3A09004C29CE /* AlbumView.swift */,
+			);
+			path = AlbumView;
+			sourceTree = "<group>";
+		};
 		0E8431922C3A18CC0047157C = {
 			isa = PBXGroup;
 			children = (
@@ -56,7 +86,7 @@
 			children = (
 				0E84319E2C3A18CC0047157C /* AppDelegate.swift */,
 				0E8431A02C3A18CC0047157C /* SceneDelegate.swift */,
-				0E8431A22C3A18CC0047157C /* ViewController.swift */,
+				0E64E2E22C3A39C0004C29CE /* View */,
 				0E8431A72C3A18CD0047157C /* Assets.xcassets */,
 				0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */,
 				0E8431AC2C3A18CD0047157C /* Info.plist */,
@@ -134,9 +164,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E8431A32C3A18CC0047157C /* ViewController.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
+				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
+				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
+				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

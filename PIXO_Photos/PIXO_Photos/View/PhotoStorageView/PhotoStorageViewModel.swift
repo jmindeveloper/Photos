@@ -11,7 +11,7 @@ import Combine
 import Photos
 
 final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol {
-    private let library = PhotoLibrary()
+    private let library: PhotoLibrary
     private var recentsCollection: PHAssetCollection {
         if let collection = library.collections[.smartAlbum]?.first {
             return collection
@@ -33,7 +33,8 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         }
     }
     
-    override init() {
+    init(library: PhotoLibrary) {
+        self.library = library
         super.init()
         let fetchAssetResult = library.getAssets(with: recentsCollection)
         assets = fetchAssetResult.assets

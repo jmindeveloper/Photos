@@ -9,7 +9,7 @@ import SwiftUI
 import Photos
 
 struct PhotoStorageView: View {
-    @ObservedObject var viewModel = PhotoStorageViewModel()
+    @EnvironmentObject var viewModel: PhotoStorageViewModel
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill

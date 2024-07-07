@@ -9,6 +9,7 @@ import UIKit
 import SwiftUI
 
 final class MainTabbarController: UITabBarController {
+    let library = PhotoLibrary()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,13 +26,16 @@ final class MainTabbarController: UITabBarController {
     }
     
     private func configureTabbar() {
+        @ObservedObject var photoStorageViewModel = PhotoStorageViewModel(library: library)
+        @ObservedObject var albumViewModel = AlbumViewModel(library: library)
+        
         let photoVC = setTabbarControllerItem(
-            view: PhotoStorageView(),
+            view: PhotoStorageView().environmentObject(photoStorageViewModel),
             title: "보관함",
             image: UIImage(systemName: "photo.stack") ?? UIImage()
         )
         let albumVC = setTabbarControllerItem(
-            view: AlbumView(),
+            view: AlbumView().environmentObject(albumViewModel),
             title: "앨범",
             image: UIImage(systemName: "square.stack.fill") ?? UIImage()
         )

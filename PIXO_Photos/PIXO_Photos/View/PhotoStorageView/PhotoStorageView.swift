@@ -13,7 +13,6 @@ struct PhotoStorageView: View {
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
-    @State var selectMode: Bool = false
     @State var isEnableDragToSelect: Bool = false
     @State var scrollViewFrame: CGRect = .zero
     
@@ -42,7 +41,7 @@ struct PhotoStorageView: View {
                     }
                     .environmentObject(viewModel)
                     
-                    if !selectMode {
+                    if !viewModel.selectMode {
                         Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
                             .font(.system(size: 17, weight: .semibold))
                             .padding(.vertical, 10)
@@ -66,7 +65,7 @@ struct PhotoStorageView: View {
                 .onChange(of: columnItemCount) { _ in
                     proxy.scrollTo(scrollAsset?.localIdentifier, anchor: .top)
                 }
-                .onChange(of: selectMode) { selectMode in
+                .onChange(of: viewModel.selectMode) { selectMode in
                     if selectMode {
                         UITabBar.hideTabBar(animated: false)
                     } else {
@@ -76,13 +75,13 @@ struct PhotoStorageView: View {
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
                         .onChanged { gesture in
-                            if !selectMode { return }
+                            if !viewModel.selectMode { return }
                             if !isEnableDragToSelect { isEnableDragToSelect = true; return }
                             guard self.scrollViewFrame.contains(gesture.location) else { return }
                             viewModel.dragingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
                         }
                         .onEnded { _ in
-                            if !selectMode { return }
+                            if !viewModel.selectMode { return }
                             isEnableDragToSelect = false
                             viewModel.finishDragingAssetSelect()
                         }
@@ -92,7 +91,7 @@ struct PhotoStorageView: View {
             navigationBar()
         }
         .toolbar {
-            if selectMode {
+            if viewModel.selectMode {
                 ToolbarItemGroup(placement: .bottomBar) {
                     HStack {
                         Button {
@@ -111,7 +110,7 @@ struct PhotoStorageView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                         
                         Button {
-                            
+                                viewModel.deleteSelectedAssets()
                         } label: {
                             Image(systemName: "trash")
                         }
@@ -137,10 +136,10 @@ struct PhotoStorageView: View {
             Spacer()
             
             Button {
-                selectMode.toggle()
+                viewModel.selectMode.toggle()
                 viewModel.selectedAssets.removeAll()
             } label: {
-                Text(selectMode ? "취소" : "선택")
+                Text(viewModel.selectMode ? "취소" : "선택")
                     .font(.medium(fontSize: .caption1))
                     .foregroundColor(.white)
                     .padding(8)
@@ -150,7 +149,7 @@ struct PhotoStorageView: View {
             }
             .padding(.trailing, 4)
             
-            if !selectMode {
+            if !viewModel.selectMode {
                 navigationBarMenuButton()
             }
         }

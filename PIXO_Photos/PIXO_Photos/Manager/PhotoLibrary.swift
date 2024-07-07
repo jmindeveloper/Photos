@@ -97,7 +97,7 @@ final class PhotoLibrary {
             }
     }
     
-    static func requestImages(with assets: [PHAsset], completion: @escaping (([UIImage]) -> Void)) {
+    func requestImages(with assets: [PHAsset], completion: @escaping (([UIImage]) -> Void)) {
         let dispatchGroup = DispatchGroup()
         var images: [UIImage] = []
         
@@ -128,7 +128,7 @@ final class PhotoLibrary {
         }
     }
     
-    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         
@@ -141,7 +141,7 @@ final class PhotoLibrary {
         }
     }
     
-    static func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         if asset.mediaType == .video {
             let options = PHVideoRequestOptions()
             options.isNetworkAccessAllowed = true
@@ -157,6 +157,15 @@ final class PhotoLibrary {
             }
         } else {
             fatalError("asset의 mediaType이 video가 아닙니다")
+        }
+    }
+    
+    func deleteAsset(with assets: [PHAsset], completion: @escaping () -> ()) {
+        PHPhotoLibrary.shared().performChanges {
+            PHAssetChangeRequest.deleteAssets(assets as NSArray)
+            DispatchQueue.main.async {
+                completion()
+            }
         }
     }
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Combine
 import Photos
 
 final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol {
@@ -18,12 +19,14 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
             fatalError("Recents collection을 찾지 못했습니다.")
         }
     }
+    private var fetchResult: PHFetchResult<PHAsset> = .init()
     
     @Published var assets: [PHAsset] = []
-    
     @Published var imageCount: Int = 0
     @Published var videoCount: Int = 0
     @Published var dateRangeString: String = ""
+    @Published var selectMode: Bool = false
+    
     var visibleAssetsDate: [Date] = [] {
         didSet {
             dateRangeString = getDateRange(date1: visibleAssetsDate.min() ?? Date(), date2: visibleAssetsDate.max() ?? Date())
@@ -32,15 +35,25 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     
     override init() {
         super.init()
-        assets = library.getAssets(with: recentsCollection).assets
+        let fetchAssetResult = library.getAssets(with: recentsCollection)
+        assets = fetchAssetResult.assets
+        fetchResult = fetchAssetResult.fetchResult
         videoCount = assets.filter { $0.mediaType == .video }.count
         imageCount = assets.count - videoCount
         assetWithFrame = assets.map { ($0, .zero) }
+        PHPhotoLibrary.shared().register(self)
     }
     
     func getSelectedAssetsURL(completion: @escaping ([UIImage]) -> Void) {
-        PhotoLibrary.requestImages(with: Array(selectedAssets)) { images in
+        library.requestImages(with: Array(selectedAssets)) { images in
             completion(images)
+        }
+    }
+    
+    func deleteSelectedAssets() {
+        library.deleteAsset(with: Array(selectedAssets)) { [weak self] in
+            guard let self = self else { return }
+            self.selectedAssets.removeAll()
         }
     }
     
@@ -62,6 +75,25 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         } else {
             // 전부 같을때
             return "\(date1Componets.year ?? 0)년 \(date1Componets.month ?? 0)월 \(date1Componets.day ?? 0)일"
+        }
+    }
+}
+
+extension PhotoStorageViewModel: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard let change = changeInstance.changeDetails(for: fetchResult)?.fetchResultAfterChanges else {
+            return
+        }
+        fetchResult = change
+        var asset = [PHAsset]()
+        for i in 0..<change.count {
+            asset.append(change[i])
+        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            assetWithFrame = asset.map { ($0, .zero) }
+            assets = asset
+            selectMode = false
         }
     }
 }

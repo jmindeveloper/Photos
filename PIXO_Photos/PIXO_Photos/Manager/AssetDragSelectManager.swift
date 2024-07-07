@@ -8,7 +8,7 @@
 import UIKit
 import Photos
 
-class AssetDragSelectManager {
+class AssetDragSelectManager: NSObject {
     @Published var selectedAssets: Set<PHAsset> = []
     
     private var dragStartIndex: Int? = nil
@@ -18,6 +18,7 @@ class AssetDragSelectManager {
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] = []
     
     func setAssetFrame(index: Int, rect: CGRect) {
+        if index >= assetWithFrame.count { return }
         assetWithFrame[index].frame = rect
     }
     

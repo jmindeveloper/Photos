@@ -12,6 +12,7 @@ protocol PhotoGridViewModelProtocol: ObservableObject {
     var assets: [PHAsset] { get set }
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] { get set }
     var selectedAssets: Set<PHAsset> { get set }
+    var selectMode: Bool { get set }
     
     func setAssetFrame(index: Int, rect: CGRect)
     func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
@@ -68,10 +69,12 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                         cellOnDisappearAction(asset)
                     }
                     .onTapGesture {
-                        if viewModel.selectedAssets.contains(asset) {
-                            viewModel.selectedAssets.remove(asset)
-                        } else {
-                            viewModel.selectedAssets.insert(asset)
+                        if viewModel.selectMode {
+                            if viewModel.selectedAssets.contains(asset) {
+                                viewModel.selectedAssets.remove(asset)
+                            } else {
+                                viewModel.selectedAssets.insert(asset)
+                            }
                         }
                     }
             }

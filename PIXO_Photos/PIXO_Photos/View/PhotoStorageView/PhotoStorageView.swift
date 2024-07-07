@@ -13,15 +13,9 @@ struct PhotoStorageView: View {
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
-    @State var selectMode: Bool = false {
-        didSet {
-            if selectMode {
-                UITabBar.hideTabBar(animated: false)
-            } else {
-                UITabBar.showTabBar(animated: false)
-            }
-        }
-    }
+    @State var selectMode: Bool = false
+    @State var isEnableDragToSelect: Bool = false
+    @State var scrollViewFrame: CGRect = .zero
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -31,8 +25,7 @@ struct PhotoStorageView: View {
                     Color.clear
                         .frame(height: 100)
                     
-                    PhotoGridView(
-                        assets: $viewModel.assets,
+                    PhotoGridView<PhotoStorageViewModel>(
                         columnItemCount: $columnItemCount,
                         cellContentMode: $cellContentMode
                     ) { asset in
@@ -47,11 +40,23 @@ struct PhotoStorageView: View {
                             }
                         }
                     }
+                    .environmentObject(viewModel)
                     
                     if !selectMode {
                         Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
                             .font(.system(size: 17, weight: .semibold))
                             .padding(.vertical, 10)
+                    }
+                }
+                .scrollDisabled(isEnableDragToSelect)
+                .coordinateSpace(name: "CARDCELLFRAME")
+                .overlay {
+                    GeometryReader { geometry -> Color in
+                        let frame = geometry.frame(in: .global)
+                        DispatchQueue.main.async {
+                            self.scrollViewFrame = frame
+                        }
+                        return Color.clear
                     }
                 }
                 .onAppear {
@@ -68,6 +73,20 @@ struct PhotoStorageView: View {
                         UITabBar.showTabBar(animated: false)
                     }
                 }
+                .gesture(
+                    DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
+                        .onChanged { gesture in
+                            if !selectMode { return }
+                            if !isEnableDragToSelect { isEnableDragToSelect = true; return }
+                            guard self.scrollViewFrame.contains(gesture.location) else { return }
+                            viewModel.dragingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
+                        }
+                        .onEnded { _ in
+                            if !selectMode { return }
+                            isEnableDragToSelect = false
+                            viewModel.finishDragingAssetSelect()
+                        }
+                )
             }
             
             navigationBar()
@@ -84,7 +103,8 @@ struct PhotoStorageView: View {
                         
                         Button { } label: { Image(systemName: "square.and.arrow.up") }.opacity(0)
                         
-                        Text("항목 선택")
+                        let title = viewModel.selectedAssets.isEmpty ? "항목 선택" : "\(viewModel.selectedAssets.count)개의 항목 선택됨"
+                        Text(title)
                             .font(.bold(fontSize: .body1))
                             .frame(maxWidth: .infinity, alignment: .center)
                         
@@ -116,6 +136,7 @@ struct PhotoStorageView: View {
             
             Button {
                 selectMode.toggle()
+                viewModel.selectedAssets.removeAll()
             } label: {
                 Text(selectMode ? "취소" : "선택")
                     .font(.medium(fontSize: .caption1))

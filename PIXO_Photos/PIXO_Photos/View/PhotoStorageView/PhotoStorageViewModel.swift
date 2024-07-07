@@ -8,7 +8,7 @@
 import Foundation
 import Photos
 
-final class PhotoStorageViewModel: ObservableObject {
+final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol {
     private let library = PhotoLibrary()
     private var recentsCollection: PHAssetCollection {
         if let collection = library.collections[.smartAlbum]?.first {
@@ -19,7 +19,7 @@ final class PhotoStorageViewModel: ObservableObject {
     }
     
     @Published var assets: [PHAsset] = []
-    @Published var selectedAssets: [PHAsset] = []
+    
     @Published var imageCount: Int = 0
     @Published var videoCount: Int = 0
     @Published var dateRangeString: String = ""
@@ -29,10 +29,12 @@ final class PhotoStorageViewModel: ObservableObject {
         }
     }
     
-    init() {
+    override init() {
+        super.init()
         assets = library.getAssets(with: recentsCollection).assets
         videoCount = assets.filter { $0.mediaType == .video }.count
         imageCount = assets.count - videoCount
+        assetWithFrame = assets.map { ($0, .zero) }
     }
     
     private func getDateRange(date1: Date, date2: Date) -> String {

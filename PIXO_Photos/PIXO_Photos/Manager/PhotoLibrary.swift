@@ -39,7 +39,7 @@ final class PhotoLibrary {
         var assets = [PHAsset]()
         
         let fetchOption = PHFetchOptions()
-        fetchOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         if let fetchLimit = fetchLimit {
             fetchOption.fetchLimit = fetchLimit
         }
@@ -54,7 +54,12 @@ final class PhotoLibrary {
     }
     
     // video일경우 duration까지 받아옴
-    static func requestImage(with asset: PHAsset, completion: @escaping ((_ image: UIImage?, _ duration: Int?) -> Void)) {
+    static func requestImage(with asset: PHAsset?, completion: @escaping ((_ image: UIImage?, _ duration: Int?) -> Void)) {
+        guard let asset = asset else {
+            completion(nil, nil)
+            return
+        }
+        
         let requestOption = PHImageRequestOptions()
         requestOption.isSynchronous = false
         requestOption.resizeMode = .none

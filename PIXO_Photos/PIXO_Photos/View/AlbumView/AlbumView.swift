@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AlbumView: View {
     
+    @EnvironmentObject var viewModel: AlbumViewModel
+    
     @State var rowCount: Int = 2
     @State var spacingWidth: CGFloat = 10
     
@@ -29,8 +31,8 @@ struct AlbumView: View {
                         )
                         
                         LazyHGrid(rows: gridItem, spacing: spacingWidth){
-                            ForEach(0..<100, id: \.self) { i in
-                                Color.red
+                            ForEach(viewModel.userAlbum, id: \.self) { album in
+                                AlbumCoverView(album: album)
                                     .frame(width: proxy.size.width / 2 - 30)
                             }
                         }
@@ -68,6 +70,45 @@ struct AlbumView: View {
                 
             } label: {
                 Text("전체보기")
+            }
+        }
+    }
+}
+
+struct AlbumCoverView: View {
+    @State var album: Album
+    @State var uiImage: UIImage? = nil
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            GeometryReader { proxy in
+                if let image = uiImage {
+                    Image(uiImage: image)
+                        .resizable()
+                        .scaledToFill()
+                        .foregroundColor(.clear)
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                } else {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFill()
+                        .foregroundColor(.gray)
+                        .frame(width: 60, height: 60)
+                        .clipped()
+                        .position(x: proxy.frame(in: .local).midX, y: proxy.frame(in: .local).midY)
+                }
+            }
+            
+            Text(album.title)
+            
+            Text("\(album.assetCount)")
+                .foregroundColor(.gray)
+        }
+        .onAppear {
+            PhotoLibrary.requestImage(with: album.assets.last) { image, _ in
+                uiImage = image
             }
         }
     }

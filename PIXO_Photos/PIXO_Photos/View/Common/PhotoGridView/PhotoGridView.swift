@@ -18,23 +18,17 @@ struct PhotoGridView: View {
     }
     
     var body: some View {
-        ScrollViewReader { proxy in
-            ScrollView(.vertical) {
-                let gridItem = Array(
-                    repeating: GridItem(.flexible(), spacing: spacingWidth),
-                    count: columnItemCount
-                )
-                LazyVGrid(columns: gridItem, spacing: spacingWidth) {
-                    ForEach(assets, id: \.localIdentifier) { asset in
-                        PhotoCell(asset: asset)
-                            .aspectRatio(1, contentMode: .fit)
-                            .id(asset.localIdentifier)
-                    }
-                }
+        let gridItem = Array(
+            repeating: GridItem(.flexible(), spacing: spacingWidth),
+            count: columnItemCount
+        )
+        LazyVGrid(columns: gridItem, spacing: spacingWidth) {
+            ForEach(assets, id: \.localIdentifier) { asset in
+                PhotoCell(asset: asset)
+                    .aspectRatio(1, contentMode: .fit)
+                    .id(asset.localIdentifier)
             }
-            .onAppear {
-                 proxy.scrollTo(assets.last?.localIdentifier)
-            }
+            
         }
     }
 }

@@ -19,8 +19,12 @@ final class PhotoStorageViewModel: ObservableObject {
     }
     
     @Published var assets: [PHAsset] = []
+    @Published var imageCount: Int = 0
+    @Published var videoCount: Int = 0
     
     init() {
         assets = library.getAssets(with: recentsCollection).assets
+        videoCount = assets.filter { $0.mediaType == .video }.count
+        imageCount = assets.count - videoCount
     }
 }

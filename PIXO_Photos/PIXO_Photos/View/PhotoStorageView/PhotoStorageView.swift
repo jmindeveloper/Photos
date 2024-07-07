@@ -210,7 +210,7 @@ struct PhotoStorageView: View {
             
             Group {
                 Button {
-                    
+                    viewModel.duplicateSelectedAssets()
                 } label: {
                     Label("복제", systemImage: "plus.square.on.square")
                 }

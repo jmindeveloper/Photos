@@ -63,6 +63,12 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         }
     }
     
+    func duplicateSelectedAssets() {
+        library.duplicateAssets(Array(selectedAssets)) { [weak self] in
+            self?.selectedAssets.removeAll()
+        }
+    }
+    
     private func getDateRange(date1: Date, date2: Date) -> String {
         let calendar = Calendar.current
         let date1Componets = calendar.dateComponents([.day, .month, .year], from: date1)

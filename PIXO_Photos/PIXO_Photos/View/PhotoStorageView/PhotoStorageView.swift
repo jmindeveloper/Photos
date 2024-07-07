@@ -10,15 +10,10 @@ import Photos
 
 struct PhotoStorageView: View {
     @State var assets: [PHAsset] = []
-    let library = PhotoLibrary()
+    let viewModel = PhotoStorageViewModel()
     
     
     var body: some View {
         PhotoGridView(assets: $assets)
-            .onAppear {
-                let collection = library.getAllAssetCollections()
-                let assets = library.getAssets(with: collection[0])
-                self.assets = assets.assets
-            }
     }
 }

@@ -26,6 +26,7 @@
 		0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA42C3A72D2009F8F22 /* Font+.swift */; };
 		0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */; };
 		0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E95E3DF2C3AA40D00F65754 /* View+.swift */; };
+		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +51,7 @@
 		0E907BA42C3A72D2009F8F22 /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
 		0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetView.swift; sourceTree = "<group>"; };
 		0E95E3DF2C3AA40D00F65754 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			children = (
 				0E64E2ED2C3A4871004C29CE /* AlertManager.swift */,
 				0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */,
+				0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,

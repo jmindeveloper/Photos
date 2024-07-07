@@ -95,7 +95,7 @@ struct PhotoStorageView: View {
                 ToolbarItemGroup(placement: .bottomBar) {
                     HStack {
                         Button {
-                            viewModel.getSelectedAssetsURL { images in
+                            viewModel.getSelectedAssetsImage { images in
                                 present(view: ActivityView(activityItmes: images))
                             }
                         } label: {
@@ -110,7 +110,7 @@ struct PhotoStorageView: View {
                             .frame(maxWidth: .infinity, alignment: .center)
                         
                         Button {
-                                viewModel.deleteSelectedAssets()
+                            viewModel.deleteSelectedAssets()
                         } label: {
                             Image(systemName: "trash")
                         }
@@ -222,7 +222,7 @@ struct PhotoStorageView: View {
                 }
                 
                 Button {
-                    
+                    viewModel.copySelectedImageToClipboard()
                 } label: {
                     Label("복사", systemImage: "doc.on.doc")
                 }

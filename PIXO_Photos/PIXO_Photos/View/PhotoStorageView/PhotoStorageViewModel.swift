@@ -44,7 +44,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         PHPhotoLibrary.shared().register(self)
     }
     
-    func getSelectedAssetsURL(completion: @escaping ([UIImage]) -> Void) {
+    func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {
         library.requestImages(with: Array(selectedAssets)) { images in
             completion(images)
         }
@@ -66,6 +66,12 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     func duplicateSelectedAssets() {
         library.duplicateAssets(Array(selectedAssets)) { [weak self] in
             self?.selectedAssets.removeAll()
+        }
+    }
+    
+    func copySelectedImageToClipboard() {
+        library.requestImages(with: Array(selectedAssets)) { images in
+            UIPasteboard.general.images = images
         }
     }
     

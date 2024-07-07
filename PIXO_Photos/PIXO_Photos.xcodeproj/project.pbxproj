@@ -10,6 +10,9 @@
 		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
 		0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E82C3A3A09004C29CE /* AlbumView.swift */; };
 		0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */; };
+		0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2ED2C3A4871004C29CE /* AlertManager.swift */; };
+		0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F12C3A4890004C29CE /* UIApplication+.swift */; };
+		0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */; };
 		0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84319E2C3A18CC0047157C /* AppDelegate.swift */; };
 		0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E8431A02C3A18CC0047157C /* SceneDelegate.swift */; };
 		0E8431A82C3A18CD0047157C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A72C3A18CD0047157C /* Assets.xcassets */; };
@@ -20,6 +23,9 @@
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
 		0E64E2E82C3A3A09004C29CE /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageView.swift; sourceTree = "<group>"; };
+		0E64E2ED2C3A4871004C29CE /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
+		0E64E2F12C3A4890004C29CE /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
+		0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoLibrary.swift; sourceTree = "<group>"; };
 		0E84319B2C3A18CC0047157C /* PIXO_Photos.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PIXO_Photos.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0E84319E2C3A18CC0047157C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0E8431A02C3A18CC0047157C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -65,6 +71,34 @@
 			path = AlbumView;
 			sourceTree = "<group>";
 		};
+		0E64E2EC2C3A4849004C29CE /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2ED2C3A4871004C29CE /* AlertManager.swift */,
+				0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		0E64E2EF2C3A4879004C29CE /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				0E64E2F12C3A4890004C29CE /* UIApplication+.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		0E64E2F02C3A487D004C29CE /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				0E8431A72C3A18CD0047157C /* Assets.xcassets */,
+				0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */,
+				0E84319E2C3A18CC0047157C /* AppDelegate.swift */,
+				0E8431A02C3A18CC0047157C /* SceneDelegate.swift */,
+			);
+			path = Application;
+			sourceTree = "<group>";
+		};
 		0E8431922C3A18CC0047157C = {
 			isa = PBXGroup;
 			children = (
@@ -84,11 +118,10 @@
 		0E84319D2C3A18CC0047157C /* PIXO_Photos */ = {
 			isa = PBXGroup;
 			children = (
-				0E84319E2C3A18CC0047157C /* AppDelegate.swift */,
-				0E8431A02C3A18CC0047157C /* SceneDelegate.swift */,
+				0E64E2F02C3A487D004C29CE /* Application */,
+				0E64E2EF2C3A4879004C29CE /* Extension */,
+				0E64E2EC2C3A4849004C29CE /* Manager */,
 				0E64E2E22C3A39C0004C29CE /* View */,
-				0E8431A72C3A18CD0047157C /* Assets.xcassets */,
-				0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */,
 				0E8431AC2C3A18CD0047157C /* Info.plist */,
 			);
 			path = PIXO_Photos;
@@ -166,6 +199,9 @@
 			files = (
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
+				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
+				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
+				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,
@@ -315,6 +351,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -343,6 +380,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

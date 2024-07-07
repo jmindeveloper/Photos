@@ -37,7 +37,6 @@ struct AlbumView: View {
                             }
                         }
                     }
-                    .scrollTargetBehavior(.viewAligned(limitBehavior: .always))
                     .contentMargins(.horizontal, 16, for: .scrollContent)
                 }
                 .frame(height: 400)
@@ -52,6 +51,13 @@ struct AlbumView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 4)
+                
+                LazyVStack {
+                    ForEach(viewModel.smartAlbum, id: \.self) { album in
+                        albumListCell(album: album, imageName: "heart")
+                    }
+                }
+                .padding(.horizontal, 16)
             }
             .navigationBarTitleDisplayMode(.large)
             .navigationTitle("앨범")
@@ -72,6 +78,31 @@ struct AlbumView: View {
                 Text("전체보기")
             }
         }
+    }
+    
+    @ViewBuilder
+    private func albumListCell(album: Album, imageName: String) -> some View {
+        VStack(spacing: .zero) {
+            HStack {
+                Text(album.title)
+                    .font(.medium(fontSize: .body1))
+                    .foregroundColor(.blue)
+                
+                Spacer()
+                
+                Text(String(album.assetCount))
+                    .foregroundColor(.gray)
+                
+                Image(systemName: "chevron.right")
+                    .resizable()
+                    .frame(width: 4, height: 8)
+                    .foregroundColor(.gray)
+            }
+            
+            Divider()
+                .padding(.top, 12)
+        }
+        .frame(height: 40)
     }
 }
 

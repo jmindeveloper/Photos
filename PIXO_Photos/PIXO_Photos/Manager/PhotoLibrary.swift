@@ -160,11 +160,33 @@ final class PhotoLibrary {
         }
     }
     
-    func deleteAsset(with assets: [PHAsset], completion: @escaping () -> ()) {
+    func deleteAssets(with assets: [PHAsset], completion: (() -> ())? = nil) {
         PHPhotoLibrary.shared().performChanges {
             PHAssetChangeRequest.deleteAssets(assets as NSArray)
-            DispatchQueue.main.async {
-                completion()
+        } completionHandler: { success, error in
+            if success {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            } else if !success || error != nil {
+                fatalError()
+            }
+        }
+    }
+    
+    func favoriteAssets(with assets: [PHAsset], completion: (() -> Void)? = nil) {
+        PHPhotoLibrary.shared().performChanges {
+            assets.forEach { asset in
+                let request = PHAssetChangeRequest(for: asset)
+                request.isFavorite = !asset.isFavorite
+            }
+        } completionHandler: { success, error in
+            if success {
+                DispatchQueue.main.async {
+                    completion?()
+                }
+            } else if !success || error != nil {
+                fatalError()
             }
         }
     }

@@ -51,9 +51,15 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     }
     
     func deleteSelectedAssets() {
-        library.deleteAsset(with: Array(selectedAssets)) { [weak self] in
+        library.deleteAssets(with: Array(selectedAssets)) { [weak self] in
             guard let self = self else { return }
             self.selectedAssets.removeAll()
+        }
+    }
+    
+    func setFavoriteSelectedAssets() {
+        library.favoriteAssets(with: Array(selectedAssets)) { [weak self] in
+            self?.selectedAssets.removeAll()
         }
     }
     

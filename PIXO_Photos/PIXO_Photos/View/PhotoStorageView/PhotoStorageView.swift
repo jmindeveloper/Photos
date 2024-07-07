@@ -115,11 +115,7 @@ struct PhotoStorageView: View {
                             Image(systemName: "trash")
                         }
                         
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "ellipsis.circle")
-                        }
+                        imageSelectMenuButton()
                     }
                     .disabled(viewModel.selectedAssets.isEmpty)
                 }
@@ -199,5 +195,40 @@ struct PhotoStorageView: View {
                 )
         }
         .frame(width: 28, height: 28)
+    }
+    
+    @ViewBuilder
+    private func imageSelectMenuButton() -> some View {
+        Menu {
+            Group {
+                Button {
+                    
+                } label: {
+                    Label("앨범에 추가", systemImage: "rectangle.stack.badge.plus")
+                }
+            }
+            
+            Group {
+                Button {
+                    
+                } label: {
+                    Label("복제", systemImage: "plus.square.on.square")
+                }
+                
+                Button {
+                    viewModel.setFavoriteSelectedAssets()
+                } label: {
+                    Label("즐겨찾기", systemImage: "heart")
+                }
+                
+                Button {
+                    
+                } label: {
+                    Label("복사", systemImage: "doc.on.doc")
+                }
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+        }
     }
 }

@@ -69,6 +69,18 @@ struct PhotoCell: View {
                     .background(Circle().fill(Color.blue))
                     .padding([.bottom, .trailing], 2)
             }
+            
+            if asset?.isFavorite ?? false {
+                HStack {
+                    Image(systemName: "heart.fill")
+                        .resizable()
+                        .foregroundColor(.white)
+                        .frame(width: 15, height: 15)
+                        .padding([.bottom, .leading], 2)
+                    
+                    Spacer()
+                }
+            }
         }
     }
     

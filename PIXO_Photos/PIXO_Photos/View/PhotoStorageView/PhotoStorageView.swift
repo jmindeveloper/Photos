@@ -14,6 +14,8 @@ struct PhotoStorageView: View {
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
     @State var selectMode: Bool = false
+    @State var isEnableDragToSelect: Bool = false
+    @State var scrollViewFrame: CGRect = .zero
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -46,6 +48,17 @@ struct PhotoStorageView: View {
                             .padding(.vertical, 10)
                     }
                 }
+                .scrollDisabled(isEnableDragToSelect)
+                .coordinateSpace(name: "CARDCELLFRAME")
+                .overlay {
+                    GeometryReader { geometry -> Color in
+                        let frame = geometry.frame(in: .global)
+                        DispatchQueue.main.async {
+                            self.scrollViewFrame = frame
+                        }
+                        return Color.clear
+                    }
+                }
                 .onAppear {
                     scrollAsset = viewModel.assets.last
                     proxy.scrollTo(scrollAsset?.localIdentifier)
@@ -60,6 +73,20 @@ struct PhotoStorageView: View {
                         UITabBar.showTabBar(animated: false)
                     }
                 }
+                .gesture(
+                    DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
+                        .onChanged { gesture in
+                            if !selectMode { return }
+                            if !isEnableDragToSelect { isEnableDragToSelect = true; return }
+                            guard self.scrollViewFrame.contains(gesture.location) else { return }
+                            viewModel.dragingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
+                        }
+                        .onEnded { _ in
+                            if !selectMode { return }
+                            isEnableDragToSelect = false
+                            viewModel.finishDragingAssetSelect()
+                        }
+                )
             }
             
             navigationBar()

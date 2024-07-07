@@ -20,7 +20,7 @@ final class PhotoStorageViewModel: PhotoGridViewModelProtocol {
     
     @Published var assets: [PHAsset] = []
     lazy var assetWithFrame: [(asset: PHAsset, frame: CGRect)] = assets.map { ($0, .zero) }
-    @Published var selectedAssets: [PHAsset] = []
+    @Published var selectedAssets: Set<PHAsset> = []
     @Published var imageCount: Int = 0
     @Published var videoCount: Int = 0
     @Published var dateRangeString: String = ""
@@ -57,7 +57,65 @@ final class PhotoStorageViewModel: PhotoGridViewModelProtocol {
         }
     }
     
+    var dragStartIndex: Int? = nil
+    var isDragStart: Bool = false
+    var isInsert: Bool = false
+    
     func setAssetFrame(index: Int, rect: CGRect) {
         assetWithFrame[index].frame = rect
+    }
+    
+    func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint) {
+        guard let startIndex = itemIndexFromPoint(startLocation),
+              let endIndex = itemIndexFromPoint(currentLocation) else {
+            return
+        }
+        if dragStartIndex == nil {
+            dragStartIndex = startIndex
+        }
+        
+        let (min, max) = endIndex >= dragStartIndex! ? (dragStartIndex!, endIndex) : (endIndex, dragStartIndex!)
+        
+        if !isDragStart {
+            if !selectedAssets.contains(assetWithFrame[startIndex].asset) {
+                isInsert = true
+            }
+            isDragStart = true
+        }
+        
+        for i in min..<max + 1 {
+            let asset = assetWithFrame[i].asset
+            
+            if isInsert {
+                selectedAssets.insert(assetWithFrame[i].asset)
+            } else {
+                selectedAssets.remove(assetWithFrame[i].asset)
+            }
+        }
+        
+        print(selectedAssets.count)
+    }
+    
+    func finishDragingAssetSelect() {
+        dragStartIndex = nil
+        isDragStart = false
+        isInsert = false
+    }
+    
+    private func itemIndexFromPoint(_ point: CGPoint) -> Int? {
+        if point.x < 0 || point.y < 0 {
+            return nil
+        }
+        for i in 0..<assetWithFrame.count {
+            let frame = assetWithFrame[i].frame
+            // outside of scrollview
+            if (frame.minY < 0 && frame.maxY < 0) || (frame.minX < 0 && frame.maxX < 0) {
+                continue
+            }
+            if frame.contains(point) {
+                return i
+            }
+        }
+        return nil
     }
 }

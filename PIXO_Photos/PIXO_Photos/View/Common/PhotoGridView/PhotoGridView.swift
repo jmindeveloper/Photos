@@ -11,9 +11,11 @@ import Photos
 protocol PhotoGridViewModelProtocol: ObservableObject {
     var assets: [PHAsset] { get set }
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] { get set }
-    var selectedAssets: [PHAsset] { get set }
+    var selectedAssets: Set<PHAsset> { get set }
     
     func setAssetFrame(index: Int, rect: CGRect)
+    func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
+    func finishDragingAssetSelect()
 }
 
 struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
@@ -21,6 +23,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
     
     @Binding var columnItemCount: Int
     @Binding var cellContentMode: ContentMode
+    
     private let spacingWidth: CGFloat = 1
     
     var cellOnAppearAction: ((_ asset: PHAsset) -> Void)
@@ -51,8 +54,12 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                     .isSelected(viewModel.selectedAssets.contains(asset))
                     .aspectRatio(1, contentMode: .fit)
                     .id(asset.localIdentifier)
-                    .readFrame(name: "CARDCELLFRAME") { rect in
-                        viewModel.setAssetFrame(index: index, rect: rect)
+                    .overlay {
+                        GeometryReader { proxy -> Color in
+                            let frame = proxy.frame(in: .named("CARDCELLFRAME"))
+                            viewModel.setAssetFrame(index: index, rect: frame)
+                            return Color.clear
+                        }
                     }
                     .onAppear {
                         cellOnAppearAction(asset)
@@ -62,9 +69,9 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                     }
                     .onTapGesture {
                         if viewModel.selectedAssets.contains(asset) {
-                            viewModel.selectedAssets.removeAll { $0 == asset }
+                            viewModel.selectedAssets.remove(asset)
                         } else {
-                            viewModel.selectedAssets.append(asset)
+                            viewModel.selectedAssets.insert(asset)
                         }
                     }
             }

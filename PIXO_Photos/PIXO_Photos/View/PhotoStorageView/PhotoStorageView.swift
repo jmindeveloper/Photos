@@ -9,16 +9,10 @@ import SwiftUI
 import Photos
 
 struct PhotoStorageView: View {
-    @State var assets: [PHAsset] = []
-    let library = PhotoLibrary()
+    @ObservedObject var viewModel = PhotoStorageViewModel()
     
     
     var body: some View {
-        PhotoGridView(assets: $assets)
-            .onAppear {
-                let collection = library.getAllAssetCollections()
-                let assets = library.getAssets(with: collection[0])
-                self.assets = assets.assets
-            }
+        PhotoGridView(assets: $viewModel.assets)
     }
 }

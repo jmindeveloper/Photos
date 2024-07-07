@@ -12,8 +12,23 @@ typealias FetchAssetResult = (assets: [PHAsset], fetchResult: PHFetchResult<PHAs
 
 final class PhotoLibrary {
     
-    func getAllAssetCollections() -> [PHAssetCollection] {
-        var collections = [PHAssetCollection]()
+    var collections: [PHAssetCollectionType: [PHAssetCollection]] = [:]
+    var currentCollection: PHAssetCollection
+    
+    init() {
+        self.currentCollection = PHAssetCollection()
+        self.collections = getAllAssetCollections()
+        self.currentCollection = collections[.smartAlbum]?.first ?? PHAssetCollection()
+        
+        collections.forEach { _, v in
+            v.forEach {
+                print("collectionName --> ", $0.localizedTitle)
+            }
+        }
+    }
+    
+    func getAllAssetCollections() -> [PHAssetCollectionType: [PHAssetCollection]] {
+        var collections = [PHAssetCollectionType: [PHAssetCollection]]()
     
         // MARK: - smartAlbum
         let smartCollection = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .any, options: nil)
@@ -21,7 +36,7 @@ final class PhotoLibrary {
         for i in 0..<smartCollection.count {
             let asset = PHAsset.fetchAssets(in: smartCollection[i], options: nil)
             if asset.count != 0 {
-                collections.append(smartCollection[i])
+                collections[.smartAlbum, default: []].append(smartCollection[i])
             }
         }
         
@@ -29,7 +44,7 @@ final class PhotoLibrary {
         let userAlbumCollection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         
         for i in 0..<userAlbumCollection.count {
-            collections.append(userAlbumCollection[i])
+            collections[.album, default: []].append(userAlbumCollection[i])
         }
         
         return collections

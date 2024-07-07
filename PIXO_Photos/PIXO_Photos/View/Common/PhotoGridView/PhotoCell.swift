@@ -12,9 +12,15 @@ struct PhotoCell: View {
     @State var uiImage: UIImage? = nil
     @State var duration: Int? = nil
     private var asset: PHAsset? = nil
+    private var contentMode = ContentMode.fill
     
     init(asset: PHAsset) {
         self.asset = asset
+    }
+    
+    private init(asset: PHAsset?, contentMode: ContentMode) {
+        self.asset = asset
+        self.contentMode = contentMode
     }
     
     var body: some View {
@@ -23,7 +29,7 @@ struct PhotoCell: View {
                 if let image = uiImage {
                     Image(uiImage: image)
                         .resizable()
-                        .scaledToFill()
+                        .aspectRatio(contentMode: contentMode)
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .clipped()
                 } else {
@@ -51,5 +57,9 @@ struct PhotoCell: View {
                     .padding([.bottom, .trailing], 2)
             }
         }
+    }
+    
+    func contentMode(_ mode: ContentMode) -> PhotoCell {
+        PhotoCell(asset: asset, contentMode: mode)
     }
 }

@@ -10,6 +10,9 @@ import Photos
 
 struct PhotoStorageView: View {
     @ObservedObject var viewModel = PhotoStorageViewModel()
+    @State var columnItemCount: Int = 3
+    @State var scrollAsset: PHAsset?
+    @State var cellContentMode: ContentMode = ContentMode.fill
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -19,8 +22,13 @@ struct PhotoStorageView: View {
                     Color.clear
                         .frame(height: 100)
                     
-                    PhotoGridView(assets: $viewModel.assets) { asset in
+                    PhotoGridView(
+                        assets: $viewModel.assets,
+                        columnItemCount: $columnItemCount,
+                        cellContentMode: $cellContentMode
+                    ) { asset in
                         if let date = asset.creationDate {
+                            scrollAsset = asset
                             viewModel.visibleAssetsDate.append(date)
                         }
                     } cellOnDisappearAction: { asset in
@@ -36,7 +44,11 @@ struct PhotoStorageView: View {
                         .padding(.vertical, 10)
                 }
                 .onAppear {
-                    proxy.scrollTo(viewModel.assets.last?.localIdentifier)
+                    scrollAsset = viewModel.assets.last
+                    proxy.scrollTo(scrollAsset?.localIdentifier)
+                }
+                .onChange(of: columnItemCount) { value in
+                    proxy.scrollTo(scrollAsset?.localIdentifier, anchor: .top)
                 }
             }
             
@@ -65,23 +77,31 @@ struct PhotoStorageView: View {
             }
             .padding(.trailing, 4)
             
-            Menu  {
-                Button {
-                    
-                } label: {
-                    Label("확대", systemImage: "plus.magnifyingglass")
+            Menu {
+                if columnItemCount > 1 {
+                    Button {
+                        columnItemCount -= 2
+                    } label: {
+                        Label("확대", systemImage: "plus.magnifyingglass")
+                    }
+                }
+                
+                if columnItemCount < 9 {
+                    Button {
+                        columnItemCount += 2       
+                    } label: {
+                        Label("축소", systemImage: "minus.magnifyingglass")
+                    }
                 }
                 
                 Button {
-                    
+                    if cellContentMode == .fit {
+                        cellContentMode = .fill
+                    } else {
+                        cellContentMode = .fit
+                    }
                 } label: {
-                    Label("축소", systemImage: "minus.magnifyingglass")
-                }
-                
-                Button {
-                    
-                } label: {
-                    Label("영상비 격자", systemImage: "aspectratio")
+                    Label(cellContentMode == .fill ? "영상비 격자" : "정방형 사진 격자", systemImage: "aspectratio")
                 }
             } label: {
                 Image(systemName: "ellipsis")

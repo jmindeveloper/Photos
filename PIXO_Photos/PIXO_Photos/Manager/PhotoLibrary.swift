@@ -39,7 +39,7 @@ final class PhotoLibrary {
         var assets = [PHAsset]()
         
         let fetchOption = PHFetchOptions()
-        fetchOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        fetchOption.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
         if let fetchLimit = fetchLimit {
             fetchOption.fetchLimit = fetchLimit
         }

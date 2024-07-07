@@ -13,6 +13,10 @@ struct PhotoCell: View {
     @State var duration: Int? = nil
     private var asset: PHAsset? = nil
     
+    init(asset: PHAsset) {
+        self.asset = asset
+    }
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             GeometryReader { proxy in
@@ -47,12 +51,6 @@ struct PhotoCell: View {
                     .padding([.bottom, .trailing], 2)
             }
         }
+        .background(Color.red)
     }
 }
-
-@available(iOS 17.0, *)
-#Preview {
-    PhotoCell()
-        .frame(width: 100, height: 100)
-}
-

@@ -49,7 +49,6 @@ struct PhotoGridView: View {
                         cellOnDisappearAction(asset)
                     }
             }
-            
         }
     }
 }

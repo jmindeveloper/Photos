@@ -19,6 +19,7 @@ final class PhotoStorageViewModel: ObservableObject {
     }
     
     @Published var assets: [PHAsset] = []
+    @Published var selectedAssets: [PHAsset] = []
     @Published var imageCount: Int = 0
     @Published var videoCount: Int = 0
     @Published var dateRangeString: String = ""

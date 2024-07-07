@@ -13,6 +13,15 @@ struct PhotoStorageView: View {
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
+    @State var selectMode: Bool = false {
+        didSet {
+            if selectMode {
+                UITabBar.hideTabBar(animated: false)
+            } else {
+                UITabBar.showTabBar(animated: false)
+            }
+        }
+    }
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -39,20 +48,61 @@ struct PhotoStorageView: View {
                         }
                     }
                     
-                    Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
-                        .font(.system(size: 17, weight: .semibold))
-                        .padding(.vertical, 10)
+                    if !selectMode {
+                        Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
+                            .font(.system(size: 17, weight: .semibold))
+                            .padding(.vertical, 10)
+                    }
                 }
                 .onAppear {
                     scrollAsset = viewModel.assets.last
                     proxy.scrollTo(scrollAsset?.localIdentifier)
                 }
-                .onChange(of: columnItemCount) { value in
+                .onChange(of: columnItemCount) { _ in
                     proxy.scrollTo(scrollAsset?.localIdentifier, anchor: .top)
+                }
+                .onChange(of: selectMode) { selectMode in
+                    if selectMode {
+                        UITabBar.hideTabBar(animated: false)
+                    } else {
+                        UITabBar.showTabBar(animated: false)
+                    }
                 }
             }
             
             navigationBar()
+        }
+        .toolbar {
+            if selectMode {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    HStack {
+                        Button {
+                            print("share")
+                        } label: {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        
+                        Button { } label: { Image(systemName: "square.and.arrow.up") }.opacity(0)
+                        
+                        Text("항목 선택")
+                            .font(.bold(fontSize: .body1))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        
+                        Button {
+                            
+                        } label: {
+                            Image(systemName: "ellipsis.circle")
+                        }
+                    }
+                    .disabled(viewModel.selectedAssets.isEmpty)
+                }
+            }
         }
     }
     
@@ -65,9 +115,9 @@ struct PhotoStorageView: View {
             Spacer()
             
             Button {
-                
+                selectMode.toggle()
             } label: {
-                Text("선택")
+                Text(selectMode ? "취소" : "선택")
                     .font(.medium(fontSize: .caption1))
                     .foregroundColor(.white)
                     .padding(8)
@@ -77,48 +127,55 @@ struct PhotoStorageView: View {
             }
             .padding(.trailing, 4)
             
-            Menu {
-                if columnItemCount > 1 {
-                    Button {
-                        columnItemCount -= 2
-                    } label: {
-                        Label("확대", systemImage: "plus.magnifyingglass")
-                    }
-                }
-                
-                if columnItemCount < 9 {
-                    Button {
-                        columnItemCount += 2       
-                    } label: {
-                        Label("축소", systemImage: "minus.magnifyingglass")
-                    }
-                }
-                
-                Button {
-                    if cellContentMode == .fit {
-                        cellContentMode = .fill
-                    } else {
-                        cellContentMode = .fit
-                    }
-                } label: {
-                    Label(cellContentMode == .fill ? "영상비 격자" : "정방형 사진 격자", systemImage: "aspectratio")
-                }
-            } label: {
-                Image(systemName: "ellipsis")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundColor(.white)
-                    .frame(width: 12, height: 12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 1000).fill(.gray)
-                            .frame(width: 28, height: 28)
-                    )
+            if !selectMode {
+                navigationBarMenuButton()
             }
-            .frame(width: 28, height: 28)
         }
         .padding(.horizontal, 16)
         .background(
             LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.6), Color.clear]), startPoint: .top, endPoint: .bottom)
         )
+    }
+    
+    @ViewBuilder
+    private func navigationBarMenuButton() -> some View {
+        Menu {
+            if columnItemCount > 1 {
+                Button {
+                    columnItemCount -= 2
+                } label: {
+                    Label("확대", systemImage: "plus.magnifyingglass")
+                }
+            }
+            
+            if columnItemCount < 9 {
+                Button {
+                    columnItemCount += 2
+                } label: {
+                    Label("축소", systemImage: "minus.magnifyingglass")
+                }
+            }
+            
+            Button {
+                if cellContentMode == .fit {
+                    cellContentMode = .fill
+                } else {
+                    cellContentMode = .fit
+                }
+            } label: {
+                Label(cellContentMode == .fill ? "영상비 격자" : "정방형 사진 격자", systemImage: "aspectratio")
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .resizable()
+                .scaledToFit()
+                .foregroundColor(.white)
+                .frame(width: 12, height: 12)
+                .background(
+                    RoundedRectangle(cornerRadius: 1000).fill(.gray)
+                        .frame(width: 28, height: 28)
+                )
+        }
+        .frame(width: 28, height: 28)
     }
 }

@@ -44,6 +44,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
             ForEach(viewModel.assets, id: \.localIdentifier) { asset in
                 PhotoCell(asset: asset)
                     .contentMode(cellContentMode)
+                    .isSelected(viewModel.selectedAssets.contains(asset))
                     .aspectRatio(1, contentMode: .fit)
                     .id(asset.localIdentifier)
                     .onAppear {
@@ -51,6 +52,13 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                     }
                     .onDisappear {
                         cellOnDisappearAction(asset)
+                    }
+                    .onTapGesture {
+                        if viewModel.selectedAssets.contains(asset) {
+                            viewModel.selectedAssets.removeAll { $0 == asset }
+                        } else {
+                            viewModel.selectedAssets.append(asset)
+                        }
                     }
             }
         }

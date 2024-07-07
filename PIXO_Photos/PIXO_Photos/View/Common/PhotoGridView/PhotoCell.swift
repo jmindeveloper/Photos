@@ -13,14 +13,16 @@ struct PhotoCell: View {
     @State var duration: Int? = nil
     private var asset: PHAsset? = nil
     private var contentMode = ContentMode.fill
+    private var isSelected: Bool = false
     
     init(asset: PHAsset) {
         self.asset = asset
     }
     
-    private init(asset: PHAsset?, contentMode: ContentMode) {
+    private init(asset: PHAsset?, contentMode: ContentMode, isSelected: Bool) {
         self.asset = asset
         self.contentMode = contentMode
+        self.isSelected = isSelected
     }
     
     var body: some View {
@@ -31,6 +33,7 @@ struct PhotoCell: View {
                         .resizable()
                         .aspectRatio(contentMode: contentMode)
                         .frame(width: proxy.size.width, height: proxy.size.height)
+                        .contentShape(Rectangle())
                         .clipped()
                 } else {
                     Image(systemName: "photo")
@@ -56,10 +59,22 @@ struct PhotoCell: View {
                     .font(.system(size: 14))
                     .padding([.bottom, .trailing], 2)
             }
+            
+            if isSelected {
+                Image(systemName: "checkmark.circle")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .background(Circle().fill(Color.blue))
+                    .padding([.bottom, .trailing], 2)
+            }
         }
     }
     
     func contentMode(_ mode: ContentMode) -> PhotoCell {
-        PhotoCell(asset: asset, contentMode: mode)
+        PhotoCell(asset: asset, contentMode: mode, isSelected: isSelected)
+    }
+    
+    func isSelected(_ isSelected: Bool) -> PhotoCell {
+        PhotoCell(asset: asset, contentMode: contentMode, isSelected: isSelected)
     }
 }

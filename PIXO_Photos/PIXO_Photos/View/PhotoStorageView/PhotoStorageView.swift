@@ -76,7 +76,8 @@ struct PhotoStorageView: View {
                         
                         Button { } label: { Image(systemName: "square.and.arrow.up") }.opacity(0)
                         
-                        Text("항목 선택")
+                        let title = viewModel.selectedAssets.isEmpty ? "항목 선택" : "\(viewModel.selectedAssets.count)개의 항목 선택됨"
+                        Text(title)
                             .font(.bold(fontSize: .body1))
                             .frame(maxWidth: .infinity, alignment: .center)
                         
@@ -108,6 +109,7 @@ struct PhotoStorageView: View {
             
             Button {
                 selectMode.toggle()
+                viewModel.selectedAssets.removeAll()
             } label: {
                 Text(selectMode ? "취소" : "선택")
                     .font(.medium(fontSize: .caption1))

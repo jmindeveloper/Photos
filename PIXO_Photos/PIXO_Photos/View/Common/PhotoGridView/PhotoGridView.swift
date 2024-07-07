@@ -17,6 +17,7 @@ protocol PhotoGridViewModelProtocol: ObservableObject {
     func setAssetFrame(index: Int, rect: CGRect)
     func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
     func finishDragingAssetSelect()
+    func toggleSelectPhoto(index: Int)
 }
 
 struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
@@ -48,8 +49,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
             count: columnItemCount
         )
         LazyVGrid(columns: gridItem, spacing: spacingWidth) {
-            ForEach(0..<viewModel.assets.count, id: \.self) { index in
-                let asset = viewModel.assets[index]
+            ForEach(Array(zip(viewModel.assets.indices, viewModel.assets)), id: \.1) { index, asset in
                 PhotoCell(asset: asset)
                     .contentMode(cellContentMode)
                     .isSelected(viewModel.selectedAssets.contains(asset))
@@ -70,11 +70,8 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                     }
                     .onTapGesture {
                         if viewModel.selectMode {
-                            if viewModel.selectedAssets.contains(asset) {
-                                viewModel.selectedAssets.remove(asset)
-                            } else {
-                                viewModel.selectedAssets.insert(asset)
-                            }
+                            print("select", index)
+                            viewModel.toggleSelectPhoto(index: index)
                         }
                     }
             }

@@ -64,6 +64,15 @@ class AssetDragSelectManager: NSObject {
         beforeSelectedAssets.removeAll()
     }
     
+    func toggleSelectPhoto(index: Int) {
+        let asset = assetWithFrame[index].asset
+        if selectedAssets.contains(asset) {
+            selectedAssets.remove(asset)
+        } else {
+            selectedAssets.insert(asset)
+        }
+    }
+    
     private func itemIndexFromPoint(_ point: CGPoint) -> Int? {
         if point.x < 0 || point.y < 0 {
             return nil

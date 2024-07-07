@@ -62,12 +62,27 @@ struct PhotoStorageView: View {
                     .background(
                         RoundedRectangle(cornerRadius: 1000).fill(.gray)
                     )
-                    .contentShape(Rectangle())
             }
             .padding(.trailing, 4)
             
-            Button {
+            Menu  {
+                Button {
+                    
+                } label: {
+                    Label("확대", systemImage: "plus.magnifyingglass")
+                }
                 
+                Button {
+                    
+                } label: {
+                    Label("축소", systemImage: "minus.magnifyingglass")
+                }
+                
+                Button {
+                    
+                } label: {
+                    Label("영상비 격자", systemImage: "aspectratio")
+                }
             } label: {
                 Image(systemName: "ellipsis")
                     .resizable()
@@ -78,7 +93,6 @@ struct PhotoStorageView: View {
                         RoundedRectangle(cornerRadius: 1000).fill(.gray)
                             .frame(width: 28, height: 28)
                     )
-                    .contentShape(Rectangle())
             }
             .frame(width: 28, height: 28)
         }

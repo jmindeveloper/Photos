@@ -27,21 +27,15 @@ struct PhotoGridView: View {
                 LazyVGrid(columns: gridItem, spacing: spacingWidth) {
                     ForEach(assets, id: \.localIdentifier) { asset in
                         PhotoCell(asset: asset)
-                            .frame(height: getPhotoCellHeight())
+                            .aspectRatio(1, contentMode: .fit)
                             .id(asset.localIdentifier)
                     }
                 }
             }
-            .onChange(of: assets) {
+            .onAppear {
                  proxy.scrollTo(assets.last?.localIdentifier)
             }
         }
-    }
-    
-    private func getPhotoCellHeight() -> CGFloat {
-        let spacingWidth = (CGFloat(columnItemCount) - 1) * spacingWidth
-        
-        return (Constant.SCREEN_WIDTH - spacingWidth) / CGFloat(columnItemCount)
     }
 }
 

@@ -9,11 +9,10 @@ import SwiftUI
 import Photos
 
 struct PhotoStorageView: View {
-    @State var assets: [PHAsset] = []
-    let viewModel = PhotoStorageViewModel()
+    @ObservedObject var viewModel = PhotoStorageViewModel()
     
     
     var body: some View {
-        PhotoGridView(assets: $assets)
+        PhotoGridView(assets: $viewModel.assets)
     }
 }

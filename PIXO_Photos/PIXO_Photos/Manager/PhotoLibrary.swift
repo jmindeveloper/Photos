@@ -36,7 +36,7 @@ final class PhotoLibrary {
         for i in 0..<smartCollection.count {
             let asset = PHAsset.fetchAssets(in: smartCollection[i], options: nil)
             if asset.count != 0 {
-                collections[.smartAlbum]?.append(smartCollection[i])
+                collections[.smartAlbum, default: []].append(smartCollection[i])
             }
         }
         
@@ -44,7 +44,7 @@ final class PhotoLibrary {
         let userAlbumCollection = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         
         for i in 0..<userAlbumCollection.count {
-            collections[.album]?.append(smartCollection[i])
+            collections[.album, default: []].append(userAlbumCollection[i])
         }
         
         return collections

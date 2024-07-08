@@ -53,4 +53,25 @@ final class AlbumViewModel: ObservableObject {
         // 최근항목
         userAlbum.insert(smartAlbum.removeFirst(), at: 0)
     }
+    
+    func creatAlbum(title: String) {
+        library.createAlbum(withName: title) { [weak self] collection in
+            guard let self = self else {
+                return
+            }
+            guard let collection = collection else {
+                fatalError("앨범생성에 실패했습니다")
+            }
+            let assets = library.getAssets(with: collection)
+            userAlbum.append(
+                Album(
+                    id: collection.localIdentifier,
+                    title: collection.localizedTitle ?? "",
+                    assets: assets.assets,
+                    assetCount: assets.assets.count,
+                    fetchResult: assets.fetchResult
+                )
+            )
+        }
+    }
 }

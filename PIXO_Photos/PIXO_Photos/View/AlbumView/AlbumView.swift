@@ -79,6 +79,24 @@ struct AlbumView: View {
                 }
                 .padding(.horizontal, 16)
             }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        AlertManager(title: "새로운 앨범", message: "이 앨범의 이름을 입력하십시오.")
+                            .addTextField(placeHolder: "제목")
+                            .addAction(actionTitle: "저장", style: .default) { controller in
+                                if let albumTitle = controller.textFields?.first?.text, !albumTitle.isEmpty {
+                                    viewModel.creatAlbum(title: albumTitle)
+                                }
+                            }
+                            .addAction(actionTitle: "취소", style: .cancel)
+                            .present()
+                        
+                    } label: {
+                        Image(systemName: "plus")
+                    }
+                }
+            }
             .navigationBarTitleDisplayMode(.large)
             .navigationTitle("앨범")
         }
@@ -93,7 +111,7 @@ struct AlbumView: View {
             
             Spacer()
             
-            Button {
+            NavigationLink {
                 
             } label: {
                 Text("전체보기")

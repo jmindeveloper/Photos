@@ -241,4 +241,28 @@ final class PhotoLibrary {
             }
         }
     }
+    
+    func createAlbum(withName name: String, completion: @escaping (PHAssetCollection?) -> Void) {
+        var placeholder: PHObjectPlaceholder?
+        
+        PHPhotoLibrary.shared().performChanges({
+            let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: name)
+            placeholder = createAlbumRequest.placeholderForCreatedAssetCollection
+        }, completionHandler: { success, error in
+            DispatchQueue.main.async {
+                if success {
+                    guard let placeholder = placeholder else {
+                        completion(nil)
+                        return
+                    }
+                    let fetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [placeholder.localIdentifier], options: nil)
+                    let collection = fetchResult.firstObject
+                    completion(collection)
+                } else {
+                    print("앨범 생성 실패: \(error?.localizedDescription ?? "")")
+                    completion(nil)
+                }
+            }
+        })
+    }
 }

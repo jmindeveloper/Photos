@@ -15,6 +15,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: horizontalSwipeLayout())
         collectionView.backgroundColor = .black
         collectionView.alwaysBounceVertical = false
+//        collectionView.isScrollEnabled = false
         
         collectionView.register(
             ImageCollectionViewCell.self,
@@ -30,6 +31,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setSubViews()
     }
     
     // MARK: - setSubViews
@@ -48,12 +50,13 @@ final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - CollectionViewLayout
     private func horizontalSwipeLayout() -> UICollectionViewCompositionalLayout {
-        let viewFrame = UIScreen.main.bounds
+        let width = Constant.SCREEN_WIDTH - Constant.SAFEAREA_INSETS.left - Constant.SAFEAREA_INSETS.right
+        let height = Constant.SCREEN_HEIGHT - Constant.SAFEAREA_INSETS.top - Constant.SAFEAREA_INSETS.bottom
         
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(viewFrame.width), heightDimension: .absolute(viewFrame.height))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .absolute(height))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(viewFrame.width), heightDimension: .absolute(viewFrame.height))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .absolute(height))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)

@@ -25,6 +25,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
     
     @Binding var columnItemCount: Int
     @Binding var cellContentMode: ContentMode
+    @State var presentPhotoDetailView: Bool = false
     
     private let spacingWidth: CGFloat = 1
     
@@ -72,7 +73,12 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                         if viewModel.selectMode {
                             print("select", index)
                             viewModel.toggleSelectPhoto(index: index)
+                        } else {
+                            presentPhotoDetailView = true
                         }
+                    }
+                    .fullScreenCover(isPresented: $presentPhotoDetailView) {
+                        PhotoDetailViewControllerRepresentableView(assets: viewModel.assets)
                     }
             }
         }

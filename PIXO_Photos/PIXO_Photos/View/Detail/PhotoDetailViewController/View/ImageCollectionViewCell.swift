@@ -15,7 +15,7 @@ final class ImageCollectionViewCell: UICollectionViewCell {
     // MARK: - ViewProperties
     let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
+        imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
         imageView.layer.cornerRadius = 20
         imageView.layer.masksToBounds = true
@@ -51,7 +51,6 @@ final class ImageCollectionViewCell: UICollectionViewCell {
         imageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        
     }
     
     func setImage(url: URL?) {

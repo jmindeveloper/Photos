@@ -19,8 +19,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let tabbarController = MainTabbarController()
         window?.rootViewController = tabbarController
-        
         window?.makeKeyAndVisible()
+        
+        Constant.KEY_WINDOW = window
         
         checkAccessAuthority()
     }

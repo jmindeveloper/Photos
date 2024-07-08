@@ -13,23 +13,7 @@ import Photos
 final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
     @Published var assets: [PHAsset] = [] {
         didSet {
-            isAssetsCahnge = true
-        }
-    }
-    @Published var beforeItemIndex: Int = 0 {
-        didSet {
-            if currentItemIndex == oldValue {
-                beforeItemIndex = oldValue
-            }
-        }
-    }
-    var currentItemIndex: Int {
-        didSet {
-            if oldValue != beforeItemIndex {
-                beforeItemIndex = oldValue
-            }
-            self.currentAsset = assets[currentItemIndex]
-            print("asdf", "before: ", beforeItemIndex, "current: ", currentItemIndex)
+            isAssetsChange = true
         }
     }
     @Published var currentAsset: PHAsset {
@@ -39,16 +23,8 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
             }
         }
     }
-    var isVideo: Bool {
-        currentAsset.mediaType == .video
-    }
-    var isAssetsCahnge: Bool = false
-    let library: PhotoLibrary
-    
     @Published var isPlayVideo: Bool = false
-    
     @Published var hiddenToolBar: Bool = false
-    
     @Published var detailCollectionViewShowCellIndex: Int = 0 {
         didSet {
             detailScrollToItemBlock = true
@@ -63,10 +39,19 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
     }
     @Published var userAlbum: [Album] = []
     
-    private var subscriptions = Set<AnyCancellable>()
-    
+    var isAssetsChange: Bool = false
+    let library: PhotoLibrary
+    var isVideo: Bool {
+        currentAsset.mediaType == .video
+    }
+    var currentItemIndex: Int {
+        didSet {
+            self.currentAsset = assets[currentItemIndex]
+        }
+    }
     var detailScrollToItemBlock: Bool = false
     var thumbnailScrollToItemBlock: Bool = false
+    private var subscriptions = Set<AnyCancellable>()
     
     let detailScrollToItemPublisher = PassthroughSubject<Int, Never>()
     let thumbnailScrollToItemPublisher = PassthroughSubject<Int, Never>()

@@ -21,6 +21,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         viewController.detailCollectionView.dataSource = context.coordinator
         viewController.detailCollectionView.delegate = context.coordinator
         viewController.thumbnailCollectionView.dataSource = context.coordinator
+        
         viewController.setViewModel(viewModel: viewModel)
         context.coordinator.viewController = viewController
         
@@ -28,11 +29,11 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
     }
     
     func updateUIViewController(_ uiViewController: PhotoDetailCollectionViewController, context: Context) {
-        if viewModel.isAssetsCahnge {
+        if viewModel.isAssetsChange {
             context.coordinator.assets = viewModel.assets
             uiViewController.detailCollectionView.reloadData()
             uiViewController.thumbnailCollectionView.reloadData()
-            viewModel.isAssetsCahnge = false
+            viewModel.isAssetsChange = false
         }
         
         UIView.animate(withDuration: 0.2) {
@@ -40,59 +41,36 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         }
         
         if viewModel.currentAsset.mediaType == .video {
-            startVideo(vc: uiViewController)
-            if viewModel.isPlayVideo {
-                playVideo(vc: uiViewController)
-            } else {
-                pauseVideo(vc: uiViewController)
-            }
+            startVideo(in: uiViewController)
+            viewModel.isPlayVideo ? playVideo(in: uiViewController) : pauseVideo(in: uiViewController)
         }
     }
     
-    func startVideo(vc: PhotoDetailCollectionViewController) {
-        if viewModel.currentAsset.mediaType != .video {
-            return
-        }
-        guard let cell = vc.detailCollectionView.cellForItem(
-            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
-        ) as? VideoCollectionViewCell else {
-            return
-        }
+    private func startVideo(in vc: PhotoDetailCollectionViewController) {
+        guard viewModel.currentAsset.mediaType == .video,
+              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell,
+              let asset = cell.videoAsset else { return }
         
-        if let asset = cell.videoAsset {
-            vc.videoTimeLineView.setTimeLineView(asset: asset) {
-                vc.videoTimeLineView.isHidden = false
-                vc.thumbnailCollectionView.isHidden = true
-                vc.selectImageBoxView.isHidden = true
-            }
+        vc.videoTimeLineView.setTimeLineView(asset: asset) {
+            vc.videoTimeLineView.isHidden = false
+            vc.thumbnailCollectionView.isHidden = true
+            vc.currentImageBoxView.isHidden = true
         }
         
         cell.startVideo()
     }
     
-    func playVideo(vc: PhotoDetailCollectionViewController) {
-        if viewModel.currentAsset.mediaType != .video {
-            return
-        }
-        guard let cell = vc.detailCollectionView.cellForItem(
-            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
-        ) as? VideoCollectionViewCell else {
-            return
-        }
+    private func playVideo(in vc: PhotoDetailCollectionViewController) {
+        guard viewModel.currentAsset.mediaType == .video,
+              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
         
         vc.observeVideoCellVideo()
         cell.playVideo()
     }
     
-    func pauseVideo(vc: PhotoDetailCollectionViewController) {
-        if viewModel.currentAsset.mediaType != .video {
-            return
-        }
-        guard let cell = vc.detailCollectionView.cellForItem(
-            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
-        ) as? VideoCollectionViewCell else {
-            return
-        }
+    private func pauseVideo(in vc: PhotoDetailCollectionViewController) {
+        guard viewModel.currentAsset.mediaType == .video,
+              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
         
         cell.pauseVideo()
     }
@@ -100,7 +78,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
     class Coordinator: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
         var assets: [PHAsset] = []
         var parent: PhotoDetailViewControllerRepresentableView
-        var viewController: PhotoDetailCollectionViewController?
+        weak var viewController: PhotoDetailCollectionViewController?
         
         init(_ parent: PhotoDetailViewControllerRepresentableView) {
             self.parent = parent
@@ -114,61 +92,56 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let asset = assets[indexPath.item]
             if collectionView === parent.viewController.detailCollectionView {
-                switch asset.mediaType {
-                case .image:
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: ImageCollectionViewCell.identifier,
-                        for: indexPath
-                    ) as? ImageCollectionViewCell else {
-                        return UICollectionViewCell()
-                    }
-                    
-                    PhotoLibrary.requestImageURL(with: asset) { url in
-                        cell.setImage(url: url, contentMode: .scaleAspectFit)
-                    }
-                    
-                    return cell
-                case .video:
-                    guard let cell = collectionView.dequeueReusableCell(
-                        withReuseIdentifier: VideoCollectionViewCell.identifier,
-                        for: indexPath
-                    ) as? VideoCollectionViewCell else {
-                        return UICollectionViewCell()
-                    }
-                    
-                    PhotoLibrary.requestImage(with: asset) { image, _ in
-                        cell.setImage(image: image)
-                    }
-                    
-                    PhotoLibrary.getVideoAsset(with: asset) { asset in
-                        cell.setVideoAsset(asset: asset)
-                    }
-                    
-                    return cell
-                default:
-                    return UICollectionViewCell()
-                }
+                return configureDetailCell(for: collectionView, at: indexPath, with: asset)
             } else {
-                guard let cell = collectionView.dequeueReusableCell(
-                    withReuseIdentifier: ImageCollectionViewCell.identifier,
-                    for: indexPath
-                ) as? ImageCollectionViewCell else {
-                    return UICollectionViewCell()
-                }
-                
-                PhotoLibrary.requestImage(with: asset) { image, _ in
-                    cell.setImage(image: image, contentMode: .scaleAspectFill)
-                }
-                
-                return cell
+                return configureThumbnailCell(for: collectionView, at: indexPath, with: asset)
             }
         }
         
+        private func configureDetailCell(for collectionView: UICollectionView, at indexPath: IndexPath, with asset: PHAsset) -> UICollectionViewCell {
+            switch asset.mediaType {
+            case .image:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.identifier, for: indexPath) as? ImageCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                PhotoLibrary.requestImageURL(with: asset) { url in
+                    cell.setImage(url: url, contentMode: .scaleAspectFit)
+                }
+                return cell
+                
+            case .video:
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VideoCollectionViewCell.identifier, for: indexPath) as? VideoCollectionViewCell else {
+                    return UICollectionViewCell()
+                }
+                PhotoLibrary.requestImage(with: asset) { image, _ in
+                    cell.setImage(image: image)
+                }
+                PhotoLibrary.getVideoAsset(with: asset) { asset in
+                    cell.setVideoAsset(asset: asset)
+                }
+                return cell
+                
+            default:
+                return UICollectionViewCell()
+            }
+        }
+        
+        private func configureThumbnailCell(for collectionView: UICollectionView, at indexPath: IndexPath, with asset: PHAsset) -> UICollectionViewCell {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageCollectionViewCell.identifier, for: indexPath) as? ImageCollectionViewCell else {
+                return UICollectionViewCell()
+            }
+            PhotoLibrary.requestImage(with: asset) { image, _ in
+                cell.setImage(image: image, contentMode: .scaleAspectFill)
+            }
+            return cell
+        }
+        
         func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-            let cell = cell as? VideoCollectionViewCell
-            cell?.stopVideo()
+            if let cell = cell as? VideoCollectionViewCell {
+                cell.stopVideo()
+            }
             viewController?.videoTimeLineView.isHidden = true
-            viewController?.selectImageBoxView.isHidden = false
+            viewController?.currentImageBoxView.isHidden = false
             viewController?.thumbnailCollectionView.isHidden = false
         }
     }

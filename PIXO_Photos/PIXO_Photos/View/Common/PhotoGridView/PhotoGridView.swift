@@ -71,7 +71,6 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                     }
                     .onTapGesture {
                         if viewModel.selectMode {
-                            print("select", index)
                             viewModel.toggleSelectPhoto(index: index)
                         } else {
                             let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, currentItemIndex: index)

@@ -8,12 +8,11 @@
 import UIKit
 import Combine
 import SnapKit
-import SDWebImage
 import AVFoundation
 
 final class PhotoDetailCollectionViewController: UIViewController {
     
-    // MARK: - ViewProperties
+    // MARK: - View Properties
     lazy var detailCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: horizontalSwipeLayout())
         collectionView.backgroundColor = .systemBackground
@@ -45,7 +44,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return collectionView
     }()
     
-    let selectImageBoxView: UIView = {
+    let currentImageBoxView: UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.label.cgColor
         view.layer.borderWidth = 2
@@ -58,33 +57,33 @@ final class PhotoDetailCollectionViewController: UIViewController {
     // MARK: - Properties
     private var viewModel: PhotoDetailViewModel?
     private var subscriptions = Set<AnyCancellable>()
+    private let cellColumnCount: CGFloat = 9
     
+    // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        setSubViews()
+        setupSubviews()
         binding()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
-        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
-            cell.stopVideo()
-        }
+        super.viewWillDisappear(animated)
+        stopCurrentVideo()
     }
     
     // MARK: - setSubViews
-    private func setSubViews() {
+    private func setupSubviews() {
         view.backgroundColor = .black
         view.addSubview(detailCollectionView)
         view.addSubview(thumbnailCollectionView)
-        view.addSubview(selectImageBoxView)
+        view.addSubview(currentImageBoxView)
         view.addSubview(videoTimeLineView)
         videoTimeLineView.isHidden = true
         
-        setConstraints()
+        setupConstraints()
     }
     
-    private func setConstraints() {
+    private func setupConstraints() {
         detailCollectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -92,12 +91,12 @@ final class PhotoDetailCollectionViewController: UIViewController {
         thumbnailCollectionView.snp.makeConstraints {
             $0.bottom.equalTo(view.safeAreaLayoutGuide)
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(Constant.SCREEN_WIDTH / 9)
+            $0.height.equalTo(Constant.SCREEN_WIDTH / cellColumnCount)
         }
         
-        selectImageBoxView.snp.makeConstraints {
+        currentImageBoxView.snp.makeConstraints {
             $0.centerY.verticalEdges.equalTo(thumbnailCollectionView)
-            $0.width.equalTo(Constant.SCREEN_WIDTH / 9)
+            $0.width.equalTo(Constant.SCREEN_WIDTH / cellColumnCount)
             $0.leading.equalToSuperview()
         }
         
@@ -106,43 +105,45 @@ final class PhotoDetailCollectionViewController: UIViewController {
         }
     }
     
-    // MARK: - Method
+    // MARK: - Methods
     private func binding() {
         viewModel?.detailScrollToItemPublisher
             .sink { [weak self] index in
-                guard let self = self else { return }
-                detailCollectionView.scrollToItem(
-                    at: IndexPath(item: index, section: 0),
-                    at: .centeredHorizontally,
-                    animated: false
-                )
+                self?.scrollToItem(in: self?.detailCollectionView, at: index, position: .centeredHorizontally)
             }.store(in: &subscriptions)
         
         viewModel?.thumbnailScrollToItemPublisher
             .sink { [weak self] index in
-                guard let self = self else { return }
-                thumbnailCollectionView.scrollToItem(
-                    at: IndexPath(item: index, section: 0),
-                    at: .left,
-                    animated: false
-                )
+                self?.scrollToItem(in: self?.thumbnailCollectionView, at: index, position: .left)
             }.store(in: &subscriptions)
         
         videoTimeLineView.seekPublisher
             .sink { [weak self] time in
-                guard let self = self else {
-                    return
-                }
-                if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
-                    cell.player?.seek(to: time, completionHandler: { _ in })
-                }
+                self?.seekVideo(to: time)
             }.store(in: &subscriptions)
     }
     
+    private func scrollToItem(in collectionView: UICollectionView?, at index: Int, position: UICollectionView.ScrollPosition) {
+        collectionView?.scrollToItem(at: IndexPath(item: index, section: 0), at: position, animated: false)
+    }
+    
+    private func seekVideo(to time: CMTime) {
+        videoCellAction { cell in
+            cell.player?.seek(to: time, completionHandler: { _ in })
+        }
+    }
+    
+    private func stopCurrentVideo() {
+        videoCellAction { cell in
+            cell.stopVideo()
+        }
+    }
+    
     func setThumbnailViewOpacity(_ isHidden: Bool) {
-        thumbnailCollectionView.alpha = isHidden ? 0 : 1
-        selectImageBoxView.alpha = isHidden ? 0 : 1
-        videoTimeLineView.alpha = isHidden ? 0 : 1
+        let alpha: CGFloat = isHidden ? 0 : 1
+        thumbnailCollectionView.alpha = alpha
+        currentImageBoxView.alpha = alpha
+        videoTimeLineView.alpha = alpha
     }
     
     func setViewModel(viewModel: PhotoDetailViewModel) {
@@ -150,26 +151,33 @@ final class PhotoDetailCollectionViewController: UIViewController {
     }
     
     func observeVideoCellVideo() {
-        if viewModel?.currentAsset.mediaType != .video {
-            return
-        }
-        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+        guard viewModel?.currentAsset.mediaType == .video else { return }
+        videoCellAction { [weak self] cell in
+            guard let self = self else { return }
             let interval = CMTimeMake(value: 1, timescale: 60)
-            let _ = cell.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main, using: { [weak self] time in
-                self?.videoTimeLineView.setTimeLinePosition(currentTime: cell.player?.currentItem?.currentTime().seconds ?? 0, totalTime: cell.player?.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
-            })
-            
+            cell.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+                self?.videoTimeLineView.setTimeLinePosition(
+                    currentTime: time.seconds,
+                    totalTime: cell.player?.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)
+                )
+            }
             NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: cell.player?.currentItem)
                 .sink { [weak self] _ in
-                    self?.viewModel?.isPlayVideo = false
+                    guard let self = self else { return }
+                    viewModel?.isPlayVideo = false
                 }.store(in: &subscriptions)
         }
     }
     
-    // MARK: - CollectionViewLayout
+    private func videoCellAction(action: @escaping (VideoCollectionViewCell) -> Void) {
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            action(cell)
+        }
+    }
+    
+    // MARK: - CollectionView Layouts
     private func horizontalSwipeLayout() -> UICollectionViewCompositionalLayout {
         let width = Constant.SCREEN_WIDTH - Constant.SAFEAREA_INSETS.left - Constant.SAFEAREA_INSETS.right
-        
         let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
@@ -181,9 +189,9 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, offset, _ in
             guard let self = self else { return }
-            // 이미지 넘기는 도중에는 작동하지 않도록
             var visibleItems = visibleItems
             visibleItems.removeAll { $0.frame.minX < offset.x - $0.frame.width }
+            // 이미지 넘기는 도중에는 작동하지 않도록
             if visibleItems.count == 1 {
                 viewModel?.detailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
             }
@@ -193,8 +201,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     }
     
     private func thumbnailLayout() -> UICollectionViewCompositionalLayout {
-        let size: CGFloat = Constant.SCREEN_WIDTH / 9
-        
+        let size: CGFloat = Constant.SCREEN_WIDTH / cellColumnCount
         let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(size), heightDimension: .absolute(size))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
@@ -203,7 +210,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / 9 / 2)
+        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / cellColumnCount / 2)
         
         section.contentInsets = .init(top: .zero, leading: .zero, bottom: .zero, trailing: inset)
         
@@ -214,10 +221,10 @@ final class PhotoDetailCollectionViewController: UIViewController {
             // scrollOffset이랑 비교해서 작은값들은 remove
             var visibleItems = visibleItems
             visibleItems.removeAll { $0.frame.minX < offset.x }
-            
-            viewModel?.thumbnailCollectionViewShowCellIndex = visibleItems.first?.indexPath.item ?? 0
+            self.viewModel?.thumbnailCollectionViewShowCellIndex = visibleItems.first?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)
     }
 }
+

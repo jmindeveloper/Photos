@@ -130,7 +130,7 @@ final class PhotoLibrary {
         }
     }
     
-    func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         

@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import Combine
 import Photos
 
 struct Album: Identifiable, Hashable {
     var id: String
     let title: String
-    let assets: [PHAsset]
-    let assetCount: Int
+    var assets: [PHAsset]
+    var assetCount: Int
     let fetchResult: PHFetchResult<PHAsset>
 }
 
@@ -21,6 +22,8 @@ final class AlbumViewModel: AlbumGridViewModelProtocol {
     
     @Published var smartAlbum: [Album]
     @Published var userAlbum: [Album]
+    
+    private var subscriptions = Set<AnyCancellable>()
     
     init(library: PhotoLibrary) {
         self.library = library
@@ -52,6 +55,19 @@ final class AlbumViewModel: AlbumGridViewModelProtocol {
         
         // 최근항목
         userAlbum.insert(smartAlbum.removeFirst(), at: 0)
+        binding()
+    }
+    
+    private func binding() {
+        library.addAssetsToAlbumPublisher
+            .sink { [weak self] (collection, assets) in
+                guard let self = self else { return }
+                let index = userAlbum.firstIndex { $0.id == collection.localIdentifier }
+                if let index = index {
+                    userAlbum[index].assets.append(contentsOf: assets)
+                    userAlbum[index].assetCount += assets.count
+                }
+            }.store(in: &subscriptions)
     }
     
     func creatAlbum(title: String) {

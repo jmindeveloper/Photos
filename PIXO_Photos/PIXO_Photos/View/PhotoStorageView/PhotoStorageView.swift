@@ -14,6 +14,7 @@ struct PhotoStorageView: View {
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
     @State var isEnableDragToSelect: Bool = false
+    @State var isPresentAlbumGridView: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -190,7 +191,7 @@ struct PhotoStorageView: View {
         Menu {
             Group {
                 Button {
-                    
+                    isPresentAlbumGridView = true
                 } label: {
                     Label("앨범에 추가", systemImage: "rectangle.stack.badge.plus")
                 }
@@ -217,6 +218,18 @@ struct PhotoStorageView: View {
             }
         } label: {
             Image(systemName: "ellipsis.circle")
+        }
+        .sheet(isPresented: $isPresentAlbumGridView) {
+            NavigationView {
+                UserAlbumGridView<PhotoStorageViewModel>(isNavigate: false) { album in
+                    print(album.title)
+                    viewModel.addAssetsToAlbum(albumName: album.title)
+                    isPresentAlbumGridView = false
+                }
+                .navigationTitle("앨범에 추가")
+                .navigationBarTitleDisplayMode(.inline)
+                .environmentObject(viewModel)
+            }
         }
     }
 }

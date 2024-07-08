@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct AlbumView: View {
+import SwiftUI
+
+struct AlbumView<VM: AlbumViewModelProtocol>: View {
     
-    @EnvironmentObject var viewModel: AlbumViewModel
+    @EnvironmentObject var viewModel: VM
     
     @State var rowCount: Int = 2
     @State var spacingWidth: CGFloat = 10
@@ -25,80 +27,26 @@ struct AlbumView: View {
                 
                 GeometryReader { proxy in
                     ScrollView(.horizontal, showsIndicators: false) {
-                        let gridItem = Array(
-                            repeating: GridItem(.flexible(), spacing: spacingWidth),
-                            count: rowCount
-                        )
-                        
-                        LazyHGrid(rows: gridItem, spacing: spacingWidth){
-                            ForEach(viewModel.userAlbum, id: \.self) { album in
-                                NavigationLink {
-                                    LazyView(
-                                        PhotoStorageView<PhotoStorageViewModel>()
-                                            .environmentObject(
-                                                PhotoStorageViewModel(library: viewModel.library, album: album)
-                                            )
-                                            .navigationBarHidden(
-                                                true
-                                            )
-                                    )
-                                } label: {
-                                    AlbumCoverView(album: album)
-                                        .frame(width: proxy.size.width / 2 - 30)
-                                }
-                            }
-                        }
+                        albumGridView(proxy: proxy)
                     }
                     .contentMargins(.horizontal, 16, for: .scrollContent)
                 }
                 .frame(height: 400)
+                .padding(.bottom, 10)
                 
                 Divider()
                     .padding(.top, 4)
                 
-                HStack {
-                    Text("미디어 유형")
-                        .font(.bold(fontSize: .subHead2))
-                    Spacer()
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 4)
+                mediaTypeSectionHeader()
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 4)
                 
-                LazyVStack {
-                    ForEach(viewModel.smartAlbum, id: \.self) { album in
-                        NavigationLink {
-                            LazyView(
-                                PhotoStorageView<PhotoStorageViewModel>()
-                                    .environmentObject(
-                                        PhotoStorageViewModel(library: viewModel.library, album: album)
-                                    )
-                                    .navigationBarHidden(
-                                        true
-                                    )
-                            )
-                        } label: {
-                            albumListCell(album: album, imageName: "heart")
-                        }
-                    }
-                }
-                .padding(.horizontal, 16)
+                albumListView()
+                    .padding(.horizontal, 16)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button {
-                        AlertManager(title: "새로운 앨범", message: "이 앨범의 이름을 입력하십시오.")
-                            .addTextField(placeHolder: "제목")
-                            .addAction(actionTitle: "저장", style: .default) { controller in
-                                if let albumTitle = controller.textFields?.first?.text, !albumTitle.isEmpty {
-                                    viewModel.creatAlbum(title: albumTitle)
-                                }
-                            }
-                            .addAction(actionTitle: "취소", style: .cancel)
-                            .present()
-                        
-                    } label: {
-                        Image(systemName: "plus")
-                    }
+                    addButton
                 }
             }
             .navigationBarTitleDisplayMode(.large)
@@ -107,6 +55,7 @@ struct AlbumView: View {
         .navigationViewStyle(StackNavigationViewStyle())
     }
     
+    // MARK: - Subviews
     @ViewBuilder
     private func myAlbumHeader() -> some View {
         HStack {
@@ -122,6 +71,52 @@ struct AlbumView: View {
                     .navigationBarTitleDisplayMode(.inline)
             } label: {
                 Text("전체보기")
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func albumGridView(proxy: GeometryProxy) -> some View {
+        let gridItem = Array(repeating: GridItem(.flexible(), spacing: spacingWidth), count: rowCount)
+        
+        LazyHGrid(rows: gridItem, spacing: spacingWidth) {
+            ForEach(viewModel.userAlbum, id: \.self) { album in
+                NavigationLink {
+                    LazyView(
+                        PhotoStorageView<PhotoStorageViewModel>()
+                            .environmentObject(PhotoStorageViewModel(library: viewModel.library, album: album))
+                            .navigationBarHidden(true)
+                    )
+                } label: {
+                    AlbumCoverView(album: album)
+                        .frame(width: proxy.size.width / 2 - 30)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func mediaTypeSectionHeader() -> some View {
+        HStack {
+            Text("미디어 유형")
+                .font(.bold(fontSize: .subHead2))
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private func albumListView() -> some View {
+        LazyVStack {
+            ForEach(viewModel.smartAlbum, id: \.self) { album in
+                NavigationLink {
+                    LazyView(
+                        PhotoStorageView<PhotoStorageViewModel>()
+                            .environmentObject(PhotoStorageViewModel(library: viewModel.library, album: album))
+                            .navigationBarHidden(true)
+                    )
+                } label: {
+                    albumListCell(album: album, imageName: "heart")
+                }
             }
         }
     }
@@ -149,5 +144,22 @@ struct AlbumView: View {
                 .padding(.top, 12)
         }
         .frame(height: 40)
+    }
+    
+    @ViewBuilder
+    private var addButton: some View {
+        Button {
+            AlertManager(title: "새로운 앨범", message: "이 앨범의 이름을 입력하십시오.")
+                .addTextField(placeHolder: "제목")
+                .addAction(actionTitle: "저장", style: .default) { controller in
+                    if let albumTitle = controller.textFields?.first?.text, !albumTitle.isEmpty {
+                        viewModel.createAlbum(title: albumTitle)
+                    }
+                }
+                .addAction(actionTitle: "취소", style: .cancel)
+                .present()
+        } label: {
+            Image(systemName: "plus")
+        }
     }
 }

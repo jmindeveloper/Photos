@@ -35,6 +35,7 @@ struct AlbumCoverView: View {
             
             Text(album.title)
                 .foregroundColor(Color(uiColor: .label))
+                .multilineTextAlignment(.leading)
             
             Text("\(album.assetCount)")
                 .foregroundColor(.gray)

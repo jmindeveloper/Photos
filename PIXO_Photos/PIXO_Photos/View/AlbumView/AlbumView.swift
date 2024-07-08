@@ -112,7 +112,10 @@ struct AlbumView: View {
             Spacer()
             
             NavigationLink {
-                
+                UserAlbumGridView<AlbumViewModel>(albums: viewModel.userAlbum)
+                    .environmentObject(viewModel)
+                    .navigationTitle("나의 앨범")
+                    .navigationBarTitleDisplayMode(.inline)
             } label: {
                 Text("전체보기")
             }

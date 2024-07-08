@@ -16,7 +16,7 @@ struct Album: Identifiable, Hashable {
     let fetchResult: PHFetchResult<PHAsset>
 }
 
-final class AlbumViewModel: ObservableObject {
+final class AlbumViewModel: AlbumGridViewModelProtocol {
     let library: PhotoLibrary
     
     @Published var smartAlbum: [Album]

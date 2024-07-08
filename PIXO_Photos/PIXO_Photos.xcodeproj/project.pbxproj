@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */; };
 		0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E1482C3BA17600B04BB0 /* SnapKit */; };
+		0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */; };
+		0E14E1502C3BA2BC00B04BB0 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E14F2C3BA2BC00B04BB0 /* SDWebImage */; };
 		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
 		0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E82C3A3A09004C29CE /* AlbumView.swift */; };
 		0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */; };
@@ -38,6 +40,7 @@
 
 /* Begin PBXFileReference section */
 		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
+		0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
 		0E64E2E82C3A3A09004C29CE /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageView.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E14E1502C3BA2BC00B04BB0 /* SDWebImage in Frameworks */,
 				0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,9 +86,26 @@
 		0E14E1442C3BA0E400B04BB0 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */,
+				0E14E14A2C3BA23800B04BB0 /* PhotoDetailViewController */,
 			);
 			path = Detail;
+			sourceTree = "<group>";
+		};
+		0E14E14A2C3BA23800B04BB0 /* PhotoDetailViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0E14E14B2C3BA24700B04BB0 /* View */,
+				0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */,
+			);
+			path = PhotoDetailViewController;
+			sourceTree = "<group>";
+		};
+		0E14E14B2C3BA24700B04BB0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 		0E64E2E22C3A39C0004C29CE /* View */ = {
@@ -219,6 +240,7 @@
 			name = PIXO_Photos;
 			packageProductDependencies = (
 				0E14E1482C3BA17600B04BB0 /* SnapKit */,
+				0E14E14F2C3BA2BC00B04BB0 /* SDWebImage */,
 			);
 			productName = PIXO_Photos;
 			productReference = 0E84319B2C3A18CC0047157C /* PIXO_Photos.app */;
@@ -250,6 +272,7 @@
 			mainGroup = 0E8431922C3A18CC0047157C;
 			packageReferences = (
 				0E14E1472C3BA17600B04BB0 /* XCRemoteSwiftPackageReference "SnapKit" */,
+				0E14E14E2C3BA2BC00B04BB0 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 			);
 			productRefGroup = 0E84319C2C3A18CC0047157C /* Products */;
 			projectDirPath = "";
@@ -278,6 +301,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
+				0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */,
@@ -527,6 +551,14 @@
 				minimumVersion = 5.7.1;
 			};
 		};
+		0E14E14E2C3BA2BC00B04BB0 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -534,6 +566,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 0E14E1472C3BA17600B04BB0 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		0E14E14F2C3BA2BC00B04BB0 /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14E14E2C3BA2BC00B04BB0 /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -33,13 +33,14 @@ struct UserAlbumGridView<VM: AlbumGridViewModelProtocol>: View {
                 ForEach(viewModel.userAlbum, id: \.self) { album in
                     if isNavigate {
                         NavigationLink {
-                            let viewModel = PhotoStorageViewModel(
-                                library: self.viewModel.library,
-                                album: album
+                            LazyView(
+                                PhotoStorageView<PhotoStorageViewModel>()
+                                    .environmentObject(PhotoStorageViewModel(
+                                        library: viewModel.library,
+                                        album: album
+                                    ))
+                                    .navigationBarHidden(true)
                             )
-                            PhotoStorageView()
-                                .environmentObject(viewModel)
-                                .navigationBarHidden(true)
                         } label: {
                             AlbumCoverView(album: album)
                                 .aspectRatio(0.9, contentMode: .fill)

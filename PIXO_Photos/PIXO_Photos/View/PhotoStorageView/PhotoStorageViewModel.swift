@@ -10,7 +10,28 @@ import UIKit
 import Combine
 import Photos
 
-final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol, AlbumGridViewModelProtocol {
+protocol PhotoStorageViewModelProtocol: ObservableObject {
+    var selectMode: Bool { get set }
+    var imageCount: Int { get set }
+    var videoCount: Int { get set }
+    var assets: [PHAsset] { get set }
+    var dateRangeString: String { get set }
+    var selectedAssets: Set<PHAsset> { get set }
+    var selectedAssetsTitle: String { get }
+    var visibleAssetsDate: [Date] { get set }
+    
+    func duplicateSelectedAssets()
+    func setFavoriteSelectedAssets()
+    func copySelectedImageToClipboard()
+    func addAssetsToAlbum(albumName: String)
+    func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void)
+    func deleteSelectedAssets()
+    func draggingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
+    func finishDraggingAssetSelect()
+}
+
+final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModelProtocol, PhotoGridViewModelProtocol, AlbumGridViewModelProtocol {
+    
     let library: PhotoLibrary
     private var recentsCollection: PHAssetCollection {
         if let collection = library.collections[.smartAlbum]?.first {
@@ -34,6 +55,10 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         didSet {
             dateRangeString = getDateRange(date1: visibleAssetsDate.min() ?? Date(), date2: visibleAssetsDate.max() ?? Date())
         }
+    }
+    
+    var selectedAssetsTitle: String {
+        selectedAssets.isEmpty ? "항목 선택" : "\(selectedAssets.count)개의 항목 선택됨"
     }
     
     init(library: PhotoLibrary) {

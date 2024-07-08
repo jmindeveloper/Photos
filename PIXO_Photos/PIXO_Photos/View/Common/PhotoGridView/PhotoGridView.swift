@@ -16,8 +16,8 @@ protocol PhotoGridViewModelProtocol: ObservableObject {
     var selectMode: Bool { get set }
     
     func setAssetFrame(index: Int, rect: CGRect)
-    func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
-    func finishDragingAssetSelect()
+    func draggingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
+    func finishDraggingAssetSelect()
     func toggleSelectPhoto(index: Int)
 }
 

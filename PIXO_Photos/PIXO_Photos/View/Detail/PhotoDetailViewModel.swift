@@ -18,9 +18,23 @@ final class PhotoDetailViewModel: ObservableObject {
     var currentItemIndex: Int
     var isAssetsCahnge: Bool = false
     
-    @Published var detailCollectionViewShowCellIndex: Int = 0
-    @Published var thumbnailCollectionViewShowCellIndex: Int = 0
+    @Published var detailCollectionViewShowCellIndex: Int = 0 {
+        didSet {
+            detailScrollToItemBlock = true
+            thumbnailScrollToItemBlock = false
+        }
+    }
+    @Published var thumbnailCollectionViewShowCellIndex: Int = 0  {
+        didSet {
+            detailScrollToItemBlock = false
+            thumbnailScrollToItemBlock = true
+        }
+    }
+    
     private var subscriptions = Set<AnyCancellable>()
+    
+    var detailScrollToItemBlock: Bool = false
+    var thumbnailScrollToItemBlock: Bool = false
     
     let detailScrollToItemPublisher = PassthroughSubject<Int, Never>()
     let thumbnailScrollToItemPublisher = PassthroughSubject<Int, Never>()
@@ -29,7 +43,7 @@ final class PhotoDetailViewModel: ObservableObject {
         self.assets = assets
         self.currentItemIndex = currentItemIndex
         binding()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.detailScrollToItemPublisher.send(currentItemIndex)
             self?.thumbnailScrollToItemPublisher.send(currentItemIndex)
         }
@@ -39,14 +53,18 @@ final class PhotoDetailViewModel: ObservableObject {
         $detailCollectionViewShowCellIndex
             .sink { [weak self] index in
                 self?.currentItemIndex = index
-                self?.thumbnailScrollToItemPublisher.send(index)
+                if self?.thumbnailScrollToItemBlock == false {
+                    self?.thumbnailScrollToItemPublisher.send(index)
+                }
             }.store(in: &subscriptions)
         
         $thumbnailCollectionViewShowCellIndex
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] index in
                 self?.currentItemIndex = index
-                self?.detailScrollToItemPublisher.send(index)
+                if self?.detailScrollToItemBlock == false {
+                    self?.detailScrollToItemPublisher.send(index)
+                }
             }.store(in: &subscriptions)
     }
 }

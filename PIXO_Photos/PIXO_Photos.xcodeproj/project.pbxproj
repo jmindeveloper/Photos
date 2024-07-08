@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */; };
 		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
 		0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E82C3A3A09004C29CE /* AlbumView.swift */; };
 		0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
 		0E64E2E82C3A3A09004C29CE /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageView.swift; sourceTree = "<group>"; };
@@ -75,9 +77,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E14E1442C3BA0E400B04BB0 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
 		0E64E2E22C3A39C0004C29CE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0E14E1442C3BA0E400B04BB0 /* Detail */,
 				0E64E2F52C3A4DAE004C29CE /* Common */,
 				0E64E2E72C3A39FF004C29CE /* AlbumView */,
 				0E64E2E52C3A39D6004C29CE /* PhotoStorageView */,
@@ -270,6 +281,7 @@
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E6AF6142C3B87C60001263F /* UserAlbumGridView.swift in Sources */,
+				0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */,
 				0E9B8FFB2C3B0783004E2A7A /* UINavigationController+.swift in Sources */,
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,

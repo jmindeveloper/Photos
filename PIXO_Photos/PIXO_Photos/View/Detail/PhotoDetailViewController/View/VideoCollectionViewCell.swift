@@ -96,8 +96,8 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func setImage(url: URL?) {
-        imageView.sd_setImage(with: url)
+    func setImage(image: UIImage?) {
+        imageView.image = image
     }
     
     func setVideoAsset(asset: AVAsset) {

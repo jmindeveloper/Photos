@@ -73,6 +73,21 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         imageCount = assets.count - videoCount
         assetWithFrame = assets.map { ($0, .zero) }
         PHPhotoLibrary.shared().register(self)
+        
+        self.userAlbum = library.collections[.album]?.map { collection in
+            let asset = library.getAssets(with: collection)
+            return Album(
+                id: collection.localIdentifier,
+                title: collection.localizedTitle ?? "",
+                assets: asset.assets,
+                assetCount: asset.assets.count,
+                fetchResult: asset.fetchResult
+            )
+        } ?? []
+        
+        userAlbum.sort {
+            $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
+        }
         binding()
     }
     

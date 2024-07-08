@@ -10,6 +10,7 @@ import Photos
 
 protocol PhotoGridViewModelProtocol: ObservableObject {
     var assets: [PHAsset] { get set }
+    var library: PhotoLibrary { get }
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] { get set }
     var selectedAssets: Set<PHAsset> { get set }
     var selectMode: Bool { get set }
@@ -73,7 +74,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                             print("select", index)
                             viewModel.toggleSelectPhoto(index: index)
                         } else {
-                            let viewModel = PhotoDetailViewModel(assets: viewModel.assets, currentItemIndex: index)
+                            let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, currentItemIndex: index)
                             present(view: PhotoDetailView().environmentObject(viewModel), modalStyle: .fullScreen)
                         }
                     }

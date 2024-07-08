@@ -105,9 +105,9 @@ struct PhotoDetailView: View {
     private func bottomToolbarItems() -> some View {
         HStack {
             Button {
-                //                viewModel.getSelectedAssetsImage { images in
-                //                    present(view: ActivityView(activityItmes: images))
-                //                }
+                viewModel.getCurrentAssetImage { images in
+                    present(view: ActivityView(activityItmes: images))
+                }
             } label: {
                 Image(systemName: "square.and.arrow.up")
             }
@@ -131,7 +131,7 @@ struct PhotoDetailView: View {
             Spacer()
             
             Button {
-                
+                viewModel.deleteCurrentAsset()
             } label: {
                 Image(systemName: "trash")
             }

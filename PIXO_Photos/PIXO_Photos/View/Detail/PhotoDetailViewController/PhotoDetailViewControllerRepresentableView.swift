@@ -29,6 +29,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         if viewModel.isAssetsCahnge {
             context.coordinator.assets = viewModel.assets
             uiViewController.detailCollectionView.reloadData()
+            uiViewController.thumbnailCollectionView.reloadData()
             viewModel.isAssetsCahnge = false
         }
         

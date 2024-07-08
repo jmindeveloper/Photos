@@ -17,8 +17,6 @@ final class ImageCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.layer.masksToBounds = true
-        imageView.layer.cornerRadius = 20
-        imageView.layer.masksToBounds = true
         imageView.isUserInteractionEnabled = true
         
         return imageView
@@ -53,8 +51,20 @@ final class ImageCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    func setImage(url: URL?) {
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        imageView.image = UIImage()
+        imageView.sd_cancelCurrentImageLoad()
+    }
+    
+    func setImage(url: URL?, contentMode: ContentMode) {
         imageView.sd_setImage(with: url)
+        imageView.contentMode = contentMode
+    }
+    
+    func setImage(image: UIImage?, contentMode: ContentMode) {
+        imageView.image = image
+        imageView.contentMode = contentMode
     }
 }
 

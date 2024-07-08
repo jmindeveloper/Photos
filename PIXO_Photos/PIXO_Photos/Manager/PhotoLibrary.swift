@@ -143,6 +143,21 @@ final class PhotoLibrary {
         }
     }
     
+    static func getData(with asset: PHAsset, completion: @escaping ((Data) -> Void)) {
+        let option = PHImageRequestOptions()
+        option.isNetworkAccessAllowed = true
+        
+        PHCachingImageManager.default().requestImageDataAndOrientation(for: asset, options: option) { data, _, _, _ in
+            DispatchQueue.main.async {
+                if let data = data {
+                    DispatchQueue.main.async {
+                        completion(data)
+                    }
+                }
+            }
+        }
+    }
+    
     func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         if asset.mediaType == .video {
             let options = PHVideoRequestOptions()

@@ -7,15 +7,15 @@
 
 import UIKit
 import SnapKit
+import SDWebImage
 
 final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - ViewProperties
     lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: horizontalSwipeLayout())
-        collectionView.backgroundColor = .black
+        collectionView.backgroundColor = .systemBackground
         collectionView.alwaysBounceVertical = false
-//        collectionView.isScrollEnabled = false
         
         collectionView.register(
             ImageCollectionViewCell.self,
@@ -29,10 +29,42 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return collectionView
     }()
     
+    lazy var thumbnailCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: thumbnailLayout())
+        collectionView.backgroundColor = .systemBackground
+        collectionView.alwaysBounceVertical = false
+        collectionView.alwaysBounceHorizontal = false
+        
+        collectionView.register(
+            ImageCollectionViewCell.self,
+            forCellWithReuseIdentifier: ImageCollectionViewCell.identifier
+        )
+        
+        return collectionView
+    }()
+    
+    private let selectImageBoxView: UIView = {
+        let view = UIView()
+        view.layer.borderColor = UIColor.label.cgColor
+        view.layer.borderWidth = 2
+        
+        return view
+    }()
+    
     // MARK: - Properties
-    private lazy var currentShowCellIndex: Int = 0 {
+    lazy var currentShowCellIndex: Int = 0 {
         didSet {
             print("currentIndex", currentShowCellIndex)
+            thumbnailCollectionView.scrollToItem(
+                at: IndexPath(item: currentShowCellIndex, section: 0),
+                at: .left,
+                animated: false
+            )
+            collectionView.scrollToItem(
+                at: IndexPath(item: currentShowCellIndex, section: 0),
+                at: .centeredHorizontally,
+                animated: false
+            )
         }
     }
     
@@ -45,6 +77,8 @@ final class PhotoDetailCollectionViewController: UIViewController {
     private func setSubViews() {
         view.backgroundColor = .black
         view.addSubview(collectionView)
+        view.addSubview(thumbnailCollectionView)
+        view.addSubview(selectImageBoxView)
         
         setConstraints()
     }
@@ -52,6 +86,18 @@ final class PhotoDetailCollectionViewController: UIViewController {
     private func setConstraints() {
         collectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+        
+        thumbnailCollectionView.snp.makeConstraints {
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(Constant.SCREEN_WIDTH / 9)
+        }
+        
+        selectImageBoxView.snp.makeConstraints {
+            $0.centerY.verticalEdges.equalTo(thumbnailCollectionView)
+            $0.width.equalTo(Constant.SCREEN_WIDTH / 9)
+            $0.leading.equalToSuperview()
         }
     }
     
@@ -67,11 +113,34 @@ final class PhotoDetailCollectionViewController: UIViewController {
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .groupPaging
-                
+        section.orthogonalScrollingBehavior = .groupPagingCentered
+        
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
             guard let self = self else { return }
-            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+//            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+        }
+        
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+    
+    private func thumbnailLayout() -> UICollectionViewCompositionalLayout {
+        let size: CGFloat = Constant.SCREEN_WIDTH / 9
+        
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(size), heightDimension: .absolute(size))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(size), heightDimension: .absolute(size))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / 9 / 2)
+        
+        section.contentInsets = .init(top: .zero, leading: .zero, bottom: .zero, trailing: inset)
+        
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
+            guard let self = self else { return }
+//            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)

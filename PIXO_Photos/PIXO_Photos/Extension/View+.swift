@@ -18,8 +18,9 @@ extension View {
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
     }
     
-    func present(view: some View, animated: Bool = true) {
+    func present(view: some View, modalStyle: UIModalPresentationStyle = .automatic, animated: Bool = true) {
         let vc = UIHostingController(rootView: view)
+        vc.modalPresentationStyle = .fullScreen
         UIApplication.topViewController()?.present(vc, animated: animated)
     }
 }

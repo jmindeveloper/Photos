@@ -41,6 +41,11 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
             stopVideo(vc: uiViewController, index: viewModel.beforeItemIndex)
         } else {
             startVideo(vc: uiViewController)
+            if viewModel.isPlayVideo {
+                playVideo(vc: uiViewController)
+            } else {
+                pauseVideo(vc: uiViewController)
+            }
         }
     }
     

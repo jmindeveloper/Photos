@@ -151,6 +151,16 @@ struct PhotoDetailView: View {
             
             Spacer()
             
+            if viewModel.isVideo {
+                Button {
+                    viewModel.isPlayVideo.toggle()
+                } label: {
+                    Image(systemName: viewModel.isPlayVideo ? "pause.fill" : "play.fill")
+                }
+                
+                Spacer()
+            }
+            
             Button {
                 
             } label: {

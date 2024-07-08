@@ -25,9 +25,20 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
             self.currentAsset = assets[currentItemIndex]
         }
     }
-    @Published var currentAsset: PHAsset
+    @Published var currentAsset: PHAsset {
+        didSet {
+            if currentAsset.mediaType == .video {
+                isPlayVideo = true
+            }
+        }
+    }
+    var isVideo: Bool {
+        currentAsset.mediaType == .video
+    }
     var isAssetsCahnge: Bool = false
     let library: PhotoLibrary
+    
+    @Published var isPlayVideo: Bool = false
     
     @Published var hiddenToolBar: Bool = false
     

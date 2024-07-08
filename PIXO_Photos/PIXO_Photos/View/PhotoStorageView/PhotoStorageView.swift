@@ -15,6 +15,7 @@ struct PhotoStorageView: View {
     @State var cellContentMode: ContentMode = ContentMode.fill
     @State var isEnableDragToSelect: Bool = false
     @State var isPresentAlbumGridView: Bool = false
+    @State var isAppeared: Bool = false
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -49,8 +50,11 @@ struct PhotoStorageView: View {
                 .scrollDisabled(isEnableDragToSelect)
                 .coordinateSpace(name: "CARDCELLFRAME")
                 .onAppear {
-                    scrollAsset = viewModel.assets.last
-                    proxy.scrollTo(scrollAsset?.localIdentifier)
+                    if !isAppeared {
+                        scrollAsset = viewModel.assets.last
+                        proxy.scrollTo(scrollAsset?.localIdentifier)
+                        isAppeared = true
+                    }
                 }
                 .onChange(of: columnItemCount) { _ in
                     proxy.scrollTo(scrollAsset?.localIdentifier, anchor: .top)

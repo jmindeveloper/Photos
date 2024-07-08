@@ -12,7 +12,7 @@ import SDWebImage
 final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - ViewProperties
-    lazy var collectionView: UICollectionView = {
+    lazy var detailCollectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: horizontalSwipeLayout())
         collectionView.backgroundColor = .systemBackground
         collectionView.alwaysBounceVertical = false
@@ -52,6 +52,8 @@ final class PhotoDetailCollectionViewController: UIViewController {
     }()
     
     // MARK: - Properties
+    private var viewModel: PhotoDetailViewModel?
+    
     lazy var currentShowCellIndex: Int = 0 {
         didSet {
             print("currentIndex", currentShowCellIndex)
@@ -60,13 +62,16 @@ final class PhotoDetailCollectionViewController: UIViewController {
                 at: .left,
                 animated: false
             )
-            collectionView.scrollToItem(
+            detailCollectionView.scrollToItem(
                 at: IndexPath(item: currentShowCellIndex, section: 0),
                 at: .centeredHorizontally,
                 animated: false
             )
         }
     }
+    
+    private var detailCollectionViewShowCellIndex: Int = 0
+    private var thumbnailCollectionViewShowCellIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,7 +81,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     // MARK: - setSubViews
     private func setSubViews() {
         view.backgroundColor = .black
-        view.addSubview(collectionView)
+        view.addSubview(detailCollectionView)
         view.addSubview(thumbnailCollectionView)
         view.addSubview(selectImageBoxView)
         
@@ -84,7 +89,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     }
     
     private func setConstraints() {
-        collectionView.snp.makeConstraints {
+        detailCollectionView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
         
@@ -99,6 +104,11 @@ final class PhotoDetailCollectionViewController: UIViewController {
             $0.width.equalTo(Constant.SCREEN_WIDTH / 9)
             $0.leading.equalToSuperview()
         }
+    }
+    
+    // MARK: - Method
+    func setViewModel(viewModel: PhotoDetailViewModel) {
+        self.viewModel = viewModel
     }
     
     // MARK: - CollectionViewLayout
@@ -117,7 +127,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
             guard let self = self else { return }
-//            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+            self.detailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)
@@ -140,7 +150,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
             guard let self = self else { return }
-//            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+            self.thumbnailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)

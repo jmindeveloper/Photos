@@ -10,8 +10,7 @@ import Photos
 import UIKit
 
 struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable {
-    @State var assets: [PHAsset] = []
-    @State var currentItemIndex: Int
+    @EnvironmentObject var viewModel: PhotoDetailViewModel
     let viewController = PhotoDetailCollectionViewController()
     
     func makeCoordinator() -> Coordinator {
@@ -19,18 +18,19 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
     }
     
     func makeUIViewController(context: Context) -> PhotoDetailCollectionViewController {
-        viewController.collectionView.dataSource = context.coordinator
+        viewController.detailCollectionView.dataSource = context.coordinator
         viewController.thumbnailCollectionView.dataSource = context.coordinator
+        viewController.setViewModel(viewModel: viewModel)
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            viewController.currentShowCellIndex = currentItemIndex
+            viewController.currentShowCellIndex = viewModel.currentItemIndex
         }
         
         return viewController
     }
     
     func updateUIViewController(_ uiViewController: PhotoDetailCollectionViewController, context: Context) {
-        context.coordinator.assets = assets
-        uiViewController.collectionView.reloadData()
+        context.coordinator.assets = viewModel.assets
+        uiViewController.detailCollectionView.reloadData()
     }
     
     class Coordinator: NSObject, UICollectionViewDataSource {
@@ -39,7 +39,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         
         init(_ parent: PhotoDetailViewControllerRepresentableView) {
             self.parent = parent
-            self.assets = parent.assets
+            self.assets = parent.viewModel.assets
         }
         
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -48,7 +48,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let asset = assets[indexPath.item]
-            if collectionView === parent.viewController.collectionView {
+            if collectionView === parent.viewController.detailCollectionView {
                 switch asset.mediaType {
                 case .image:
                     guard let cell = collectionView.dequeueReusableCell(

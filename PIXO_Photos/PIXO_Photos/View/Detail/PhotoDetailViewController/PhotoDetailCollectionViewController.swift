@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 import SnapKit
 import SDWebImage
 
@@ -53,29 +54,12 @@ final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - Properties
     private var viewModel: PhotoDetailViewModel?
-    
-    lazy var currentShowCellIndex: Int = 0 {
-        didSet {
-            print("currentIndex", currentShowCellIndex)
-            thumbnailCollectionView.scrollToItem(
-                at: IndexPath(item: currentShowCellIndex, section: 0),
-                at: .left,
-                animated: false
-            )
-            detailCollectionView.scrollToItem(
-                at: IndexPath(item: currentShowCellIndex, section: 0),
-                at: .centeredHorizontally,
-                animated: false
-            )
-        }
-    }
-    
-    private var detailCollectionViewShowCellIndex: Int = 0
-    private var thumbnailCollectionViewShowCellIndex: Int = 0
+    private var subscriptions = Set<AnyCancellable>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setSubViews()
+        binding()
     }
     
     // MARK: - setSubViews
@@ -107,6 +91,23 @@ final class PhotoDetailCollectionViewController: UIViewController {
     }
     
     // MARK: - Method
+    private func binding() {
+        viewModel?.collectionViewScrollToItemPublisher
+            .sink { [weak self] index in
+                guard let self = self else { return }
+                thumbnailCollectionView.scrollToItem(
+                    at: IndexPath(item: index, section: 0),
+                    at: .left,
+                    animated: false
+                )
+                detailCollectionView.scrollToItem(
+                    at: IndexPath(item: index, section: 0),
+                    at: .centeredHorizontally,
+                    animated: false
+                )
+            }.store(in: &subscriptions)
+    }
+    
     func setViewModel(viewModel: PhotoDetailViewModel) {
         self.viewModel = viewModel
     }
@@ -127,7 +128,9 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
             guard let self = self else { return }
-            self.detailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+            if let index = visibleItems.last?.indexPath.item {
+                self.viewModel?.detailCollectionViewShowCellIndex = index
+            }
         }
         
         return UICollectionViewCompositionalLayout(section: section)
@@ -150,7 +153,12 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
             guard let self = self else { return }
-            self.thumbnailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+            // MARK: - visibleItem Error
+            // visibleItem에 0..<item.count 만큼의 range가 포함돼서 나옴
+            // item 의 개수 이상이면 그 이후의 item을 first로 판단
+            let index = visibleItems.count > 9 ? 9 : visibleItems.first?.indexPath.item ?? .zero
+            let visibleIndex = visibleItems[index].indexPath.item
+            self.viewModel?.thumbnailCollectionViewShowCellIndex = visibleIndex
         }
         
         return UICollectionViewCompositionalLayout(section: section)

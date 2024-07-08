@@ -21,16 +21,16 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         viewController.detailCollectionView.dataSource = context.coordinator
         viewController.thumbnailCollectionView.dataSource = context.coordinator
         viewController.setViewModel(viewModel: viewModel)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            viewController.currentShowCellIndex = viewModel.currentItemIndex
-        }
         
         return viewController
     }
     
     func updateUIViewController(_ uiViewController: PhotoDetailCollectionViewController, context: Context) {
-        context.coordinator.assets = viewModel.assets
-        uiViewController.detailCollectionView.reloadData()
+        if viewModel.isAssetsCahnge {
+            context.coordinator.assets = viewModel.assets
+            uiViewController.detailCollectionView.reloadData()
+            viewModel.isAssetsCahnge = false
+        }
     }
     
     class Coordinator: NSObject, UICollectionViewDataSource {
@@ -69,6 +69,10 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
                         for: indexPath
                     ) as? VideoCollectionViewCell else {
                         return UICollectionViewCell()
+                    }
+                    
+                    PhotoLibrary.requestImage(with: asset) { image, _ in
+                        cell.setImage(image: image)
                     }
                     
                     return cell

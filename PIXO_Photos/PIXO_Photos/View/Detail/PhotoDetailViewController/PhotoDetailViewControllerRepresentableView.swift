@@ -59,6 +59,14 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
             return
         }
         
+        if let asset = cell.videoAsset {
+            vc.videoTimeLineView.setTimeLineView(asset: asset) {
+                vc.videoTimeLineView.isHidden = false
+                vc.thumbnailCollectionView.isHidden = true
+                vc.selectImageBoxView.isHidden = true
+            }
+        }
+        
         cell.startVideo()
     }
     
@@ -89,14 +97,15 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
     }
     
     func stopVideo(vc: PhotoDetailCollectionViewController, index: Int) {
-        if viewModel.currentAsset.mediaType != .video {
-            return
-        }
         guard let cell = vc.detailCollectionView.cellForItem(
             at: IndexPath(item: index, section: 0)
         ) as? VideoCollectionViewCell else {
             return
         }
+        
+        vc.videoTimeLineView.isHidden = true
+        vc.selectImageBoxView.isHidden = false
+        vc.thumbnailCollectionView.isHidden = false
         
         cell.stopVideo()
     }

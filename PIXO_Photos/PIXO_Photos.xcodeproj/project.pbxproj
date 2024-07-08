@@ -41,6 +41,8 @@
 		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
 		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
 		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
+		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
+		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
 		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
+		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,7 @@
 			children = (
 				0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */,
 				0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */,
+				0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -159,6 +164,7 @@
 				0E64E2ED2C3A4871004C29CE /* AlertManager.swift */,
 				0E64E2F32C3A4A08004C29CE /* PhotoLibrary.swift */,
 				0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */,
+				0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -324,6 +330,7 @@
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
 				0E4FB47B2C3BF4E800DD7D79 /* PhotoDetailView.swift in Sources */,
+				0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */,
 				0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */,
 				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
@@ -341,6 +348,7 @@
 				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */,
+				0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */,
 				0E64E2FC2C3A5430004C29CE /* Constant.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,

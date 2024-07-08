@@ -52,6 +52,8 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return view
     }()
     
+    let videoTimeLineView = VideoTimeLineView()
+    
     // MARK: - Properties
     private var viewModel: PhotoDetailViewModel?
     private var subscriptions = Set<AnyCancellable>()
@@ -68,6 +70,8 @@ final class PhotoDetailCollectionViewController: UIViewController {
         view.addSubview(detailCollectionView)
         view.addSubview(thumbnailCollectionView)
         view.addSubview(selectImageBoxView)
+        view.addSubview(videoTimeLineView)
+        videoTimeLineView.isHidden = true
         
         setConstraints()
     }
@@ -87,6 +91,10 @@ final class PhotoDetailCollectionViewController: UIViewController {
             $0.centerY.verticalEdges.equalTo(thumbnailCollectionView)
             $0.width.equalTo(Constant.SCREEN_WIDTH / 9)
             $0.leading.equalToSuperview()
+        }
+        
+        videoTimeLineView.snp.makeConstraints {
+            $0.edges.equalTo(thumbnailCollectionView)
         }
     }
     
@@ -118,6 +126,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     func setThumbnailViewOpacity(_ isHidden: Bool) {
         thumbnailCollectionView.alpha = isHidden ? 0 : 1
         selectImageBoxView.alpha = isHidden ? 0 : 1
+        videoTimeLineView.alpha = isHidden ? 0 : 1
     }
     
     func setViewModel(viewModel: PhotoDetailViewModel) {

@@ -74,7 +74,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                             viewModel.toggleSelectPhoto(index: index)
                         } else {
                             let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, currentItemIndex: index)
-                            present(view: PhotoDetailView().environmentObject(viewModel), modalStyle: .fullScreen)
+                            present(view: PhotoDetailView<PhotoDetailViewModel>().environmentObject(viewModel), modalStyle: .fullScreen)
                         }
                     }
             }

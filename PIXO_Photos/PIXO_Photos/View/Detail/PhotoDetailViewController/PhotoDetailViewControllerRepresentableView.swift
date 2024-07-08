@@ -9,7 +9,7 @@ import SwiftUI
 import Photos
 import UIKit
 
-struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable {
+struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtocol>: UIViewControllerRepresentable {
     @EnvironmentObject var viewModel: PhotoDetailViewModel
     let viewController = PhotoDetailCollectionViewController()
     

@@ -29,7 +29,12 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         if viewModel.isAssetsCahnge {
             context.coordinator.assets = viewModel.assets
             uiViewController.detailCollectionView.reloadData()
+            uiViewController.thumbnailCollectionView.reloadData()
             viewModel.isAssetsCahnge = false
+        }
+        
+        UIView.animate(withDuration: 0.2) {
+            uiViewController.setThumbnailViewOpacity(viewModel.hiddenToolBar)
         }
     }
     

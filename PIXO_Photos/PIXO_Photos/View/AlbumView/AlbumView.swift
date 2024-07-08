@@ -33,13 +33,15 @@ struct AlbumView: View {
                         LazyHGrid(rows: gridItem, spacing: spacingWidth){
                             ForEach(viewModel.userAlbum, id: \.self) { album in
                                 NavigationLink {
-                                    let viewModel = PhotoStorageViewModel(
-                                        library: self.viewModel.library,
-                                        album: album
+                                    LazyView(
+                                        PhotoStorageView()
+                                            .environmentObject(
+                                                PhotoStorageViewModel(library: viewModel.library, album: album)
+                                            )
+                                            .navigationBarHidden(
+                                                true
+                                            )
                                     )
-                                    PhotoStorageView()
-                                        .environmentObject(viewModel)
-                                        .navigationBarHidden(true)
                                 } label: {
                                     AlbumCoverView(album: album)
                                         .frame(width: proxy.size.width / 2 - 30)
@@ -65,13 +67,15 @@ struct AlbumView: View {
                 LazyVStack {
                     ForEach(viewModel.smartAlbum, id: \.self) { album in
                         NavigationLink {
-                            let viewModel = PhotoStorageViewModel(
-                                library: self.viewModel.library,
-                                album: album
+                            LazyView(
+                                PhotoStorageView()
+                                    .environmentObject(
+                                        PhotoStorageViewModel(library: viewModel.library, album: album)
+                                    )
+                                    .navigationBarHidden(
+                                        true
+                                    )
                             )
-                            PhotoStorageView()
-                                .environmentObject(viewModel)
-                                .navigationBarHidden(true)
                         } label: {
                             albumListCell(album: album, imageName: "heart")
                         }

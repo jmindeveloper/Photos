@@ -120,12 +120,11 @@ final class PhotoDetailCollectionViewController: UIViewController {
     // MARK: - CollectionViewLayout
     private func horizontalSwipeLayout() -> UICollectionViewCompositionalLayout {
         let width = Constant.SCREEN_WIDTH - Constant.SAFEAREA_INSETS.left - Constant.SAFEAREA_INSETS.right
-        let height = Constant.SCREEN_HEIGHT - Constant.SAFEAREA_INSETS.top - Constant.SAFEAREA_INSETS.bottom
         
-        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .absolute(height))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .absolute(height))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(width), heightDimension: .fractionalHeight(1))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -137,7 +136,6 @@ final class PhotoDetailCollectionViewController: UIViewController {
             var visibleItems = visibleItems
             visibleItems.removeAll { $0.frame.minX < offset.x - $0.frame.width }
             if visibleItems.count == 1 {
-                print(visibleItems.count)
                 viewModel?.detailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
             }
         }

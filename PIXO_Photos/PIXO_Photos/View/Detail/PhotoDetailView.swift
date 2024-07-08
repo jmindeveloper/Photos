@@ -12,19 +12,21 @@ struct PhotoDetailView: View {
     @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ZStack(alignment: .top) {
-            PhotoDetailViewControllerRepresentableView()
-                .environmentObject(viewModel)
-            
-            HStack {
-                // TODO: - 네비게이션
+        TabView {
+            ZStack(alignment: .top) {
+                PhotoDetailViewControllerRepresentableView()
+                    .environmentObject(viewModel)
                 
-                Spacer()
-                
-                // TODO: - bottomToolbar
+                navigationBar()
             }
-            
-            navigationBar()
+            .toolbar {
+                ToolbarItemGroup(placement: .bottomBar) {
+                    bottomToolbarItems()
+                }
+            }
+            .onAppear {
+                UITabBar.hideTabBar(animated: false)
+            }
         }
     }
     
@@ -84,5 +86,42 @@ struct PhotoDetailView: View {
         }
         .frame(width: 40, height: 40)
         .contentShape(Rectangle())
+    }
+    
+    @ViewBuilder
+    private func bottomToolbarItems() -> some View {
+        HStack {
+            Button {
+                //                viewModel.getSelectedAssetsImage { images in
+                //                    present(view: ActivityView(activityItmes: images))
+                //                }
+            } label: {
+                Image(systemName: "square.and.arrow.up")
+            }
+            
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                Image(systemName: "heart")
+            }
+            
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                Image(systemName: "info.circle")
+            }
+            
+            Spacer()
+            
+            Button {
+                
+            } label: {
+                Image(systemName: "trash")
+            }
+        }
     }
 }

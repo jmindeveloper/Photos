@@ -10,8 +10,8 @@ import UIKit
 import Combine
 import Photos
 
-final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol {
-    private let library = PhotoLibrary()
+final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelProtocol, AlbumGridViewModelProtocol {
+    let library: PhotoLibrary
     private var recentsCollection: PHAssetCollection {
         if let collection = library.collections[.smartAlbum]?.first {
             return collection
@@ -26,6 +26,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     @Published var videoCount: Int = 0
     @Published var dateRangeString: String = ""
     @Published var selectMode: Bool = false
+    @Published var userAlbum: [Album] = []
     
     var visibleAssetsDate: [Date] = [] {
         didSet {
@@ -33,11 +34,38 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         }
     }
     
-    override init() {
+    init(library: PhotoLibrary) {
+        self.library = library
         super.init()
         let fetchAssetResult = library.getAssets(with: recentsCollection)
         assets = fetchAssetResult.assets
         fetchResult = fetchAssetResult.fetchResult
+        videoCount = assets.filter { $0.mediaType == .video }.count
+        imageCount = assets.count - videoCount
+        assetWithFrame = assets.map { ($0, .zero) }
+        PHPhotoLibrary.shared().register(self)
+        
+        self.userAlbum = library.collections[.album]?.map { collection in
+            let asset = library.getAssets(with: collection)
+            return Album(
+                id: collection.localIdentifier,
+                title: collection.localizedTitle ?? "",
+                assets: asset.assets,
+                assetCount: asset.assets.count,
+                fetchResult: asset.fetchResult
+            )
+        } ?? []
+        
+        userAlbum.sort {
+            $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
+        }
+    }
+    
+    init(library: PhotoLibrary, album: Album) {
+        self.library = library
+        self.fetchResult = album.fetchResult
+        super.init()
+        self.assets = album.assets
         videoCount = assets.filter { $0.mediaType == .video }.count
         imageCount = assets.count - videoCount
         assetWithFrame = assets.map { ($0, .zero) }

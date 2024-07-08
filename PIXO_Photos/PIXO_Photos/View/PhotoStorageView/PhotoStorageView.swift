@@ -9,18 +9,16 @@ import SwiftUI
 import Photos
 
 struct PhotoStorageView: View {
-    @ObservedObject var viewModel = PhotoStorageViewModel()
+    @EnvironmentObject var viewModel: PhotoStorageViewModel
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
     @State var isEnableDragToSelect: Bool = false
-    @State var scrollViewFrame: CGRect = .zero
     
     var body: some View {
         ZStack(alignment: .top) {
             ScrollViewReader { proxy in
-                ScrollOffsetView { offset in
-                } content: {
+                ScrollView {
                     Color.clear
                         .frame(height: 100)
                     
@@ -49,15 +47,6 @@ struct PhotoStorageView: View {
                 }
                 .scrollDisabled(isEnableDragToSelect)
                 .coordinateSpace(name: "CARDCELLFRAME")
-                .overlay {
-                    GeometryReader { geometry -> Color in
-                        let frame = geometry.frame(in: .global)
-                        DispatchQueue.main.async {
-                            self.scrollViewFrame = frame
-                        }
-                        return Color.clear
-                    }
-                }
                 .onAppear {
                     scrollAsset = viewModel.assets.last
                     proxy.scrollTo(scrollAsset?.localIdentifier)
@@ -77,7 +66,6 @@ struct PhotoStorageView: View {
                         .onChanged { gesture in
                             if !viewModel.selectMode { return }
                             if !isEnableDragToSelect { isEnableDragToSelect = true; return }
-                            guard self.scrollViewFrame.contains(gesture.location) else { return }
                             viewModel.dragingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
                         }
                         .onEnded { _ in

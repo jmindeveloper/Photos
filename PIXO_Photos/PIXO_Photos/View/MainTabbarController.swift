@@ -9,19 +9,15 @@ import UIKit
 import SwiftUI
 
 final class MainTabbarController: UITabBarController {
+    let library = PhotoLibrary()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTabbar()
     }
     
-    private func setTabbarControllerItem(view: some View, title: String, image: UIImage, isNavigation: Bool) -> UIViewController {
-        let viewController: UIViewController
-        if isNavigation {
-            viewController = UINavigationController(rootViewController: UIHostingController(rootView: view))
-        } else {
-            viewController = UIHostingController(rootView: view)
-        }
+    private func setTabbarControllerItem(view: some View, title: String, image: UIImage) -> UIViewController {
+        let viewController: UIViewController = UIHostingController(rootView: view)
         
         viewController.tabBarItem.title = title
         viewController.tabBarItem.image = image
@@ -30,17 +26,18 @@ final class MainTabbarController: UITabBarController {
     }
     
     private func configureTabbar() {
+        let photoStorageViewModel = PhotoStorageViewModel(library: library)
+        let albumViewModel = AlbumViewModel(library: library)
+        
         let photoVC = setTabbarControllerItem(
-            view: PhotoStorageView(),
+            view: PhotoStorageView().environmentObject(photoStorageViewModel),
             title: "보관함",
-            image: UIImage(systemName: "photo.stack") ?? UIImage(),
-            isNavigation: false
+            image: UIImage(systemName: "photo.stack") ?? UIImage()
         )
         let albumVC = setTabbarControllerItem(
-            view: AlbumView(),
+            view: AlbumView().environmentObject(albumViewModel),
             title: "앨범",
-            image: UIImage(systemName: "square.stack.fill") ?? UIImage(),
-            isNavigation: false
+            image: UIImage(systemName: "square.stack.fill") ?? UIImage()
         )
         
         setViewControllers([photoVC, albumVC], animated: true)

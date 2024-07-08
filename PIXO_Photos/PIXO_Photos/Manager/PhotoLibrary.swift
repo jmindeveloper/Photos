@@ -241,4 +241,49 @@ final class PhotoLibrary {
             }
         }
     }
+    
+    func createAlbum(withName name: String, completion: @escaping (PHAssetCollection) -> Void) {
+        var placeholder: PHObjectPlaceholder?
+        
+        PHPhotoLibrary.shared().performChanges({
+            let createAlbumRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: name)
+            placeholder = createAlbumRequest.placeholderForCreatedAssetCollection
+        }, completionHandler: { success, error in
+            DispatchQueue.main.async { [weak self] in
+                if success {
+                    guard let placeholder = placeholder else {
+                        fatalError("앨범 생성 실패")
+                    }
+                    let fetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [placeholder.localIdentifier], options: nil)
+                    guard let collection = fetchResult.firstObject else {
+                        fatalError("앨범 생성 실패")
+                    }
+                    self?.collections[.album, default: []].append(collection)
+                    completion(collection)
+                } else {
+                    fatalError("앨범 생성 실패")
+                }
+            }
+        })
+    }
+    
+    // 앨범에 에셋 추가
+    func addAssetsToAlbum(_ assets: [PHAsset], to albumName: String, completion: (() -> Void)? = nil) {
+        guard let collection = collections[.album]?.filter({ $0.localizedTitle == albumName }).first else {
+            fatalError("앨범을 찾지 못했습니다")
+        }
+        
+        PHPhotoLibrary.shared().performChanges({
+            guard let albumChangeRequest = PHAssetCollectionChangeRequest(for: collection) else {
+                return
+            }
+            albumChangeRequest.addAssets(assets as NSFastEnumeration)
+        }, completionHandler: { success, error in
+            if success {
+                completion?()
+            } else {
+                fatalError("에셋 추가 실패: \(error?.localizedDescription ?? "")")
+            }
+        })
+    }
 }

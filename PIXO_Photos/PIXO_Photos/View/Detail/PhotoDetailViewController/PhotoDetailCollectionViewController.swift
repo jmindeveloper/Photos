@@ -120,6 +120,16 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     animated: false
                 )
             }.store(in: &subscriptions)
+        
+        videoTimeLineView.seekPublisher
+            .sink { [weak self] time in
+                guard let self = self else {
+                    return
+                }
+                if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+                    cell.player?.seek(to: time, completionHandler: { _ in })
+                }
+            }.store(in: &subscriptions)
     }
     
     func setThumbnailViewOpacity(_ isHidden: Bool) {

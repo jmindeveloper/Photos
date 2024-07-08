@@ -7,9 +7,11 @@
 
 import UIKit
 import AVFoundation
+import Combine
 
 final class VideoTimeLineView: UIView {
     
+    // MARK: - ViewProperteis
     private let baseStackView: UIStackView = {
         let view = UIStackView()
         view.backgroundColor = .systemBackground
@@ -37,17 +39,23 @@ final class VideoTimeLineView: UIView {
         return slider
     }()
     
+    // MARK: - Properties
+    let seekPublisher = PassthroughSubject<CMTime, Never>()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setSubViews()
+        connectTarget()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - setSubViews
     private func setSubViews() {
-        [baseStackView, timeLinePositionView].forEach {
+        [baseStackView, timeLinePositionView, 
+         timeLineSlider].forEach {
             addSubview($0)
         }
         
@@ -64,6 +72,19 @@ final class VideoTimeLineView: UIView {
             $0.width.equalTo(1)
             $0.leading.equalToSuperview()
         }
+        
+        timeLineSlider.snp.makeConstraints {
+            $0.edges.equalTo(baseStackView)
+        }
+    }
+    
+    // MARK: - Method
+    private func connectTarget() {
+        timeLineSlider.addTarget(self, action: #selector(timeLineSliderAction(_:)), for: .valueChanged)
+    }
+    
+    @objc private func timeLineSliderAction(_ sender: UISlider) {
+        seekPublisher.send(CMTime(seconds: Double(self.timeLineSlider.value), preferredTimescale: Int32(NSEC_PER_SEC)))
     }
     
     func setTimeLineView(asset: AVAsset, completion: @escaping (() -> Void)) {
@@ -78,14 +99,17 @@ final class VideoTimeLineView: UIView {
             }
             completion()
         }
+        timeLineSlider.maximumValue = Float(CMTimeGetSeconds(AVPlayerItem(asset: asset).duration))
     }
     
     func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {
         let totalTimeSecondsFloat = CMTimeGetSeconds(totalTime)
         
-        let offset = CGFloat(totalTimeSecondsFloat / currentTime)
-        let playPosition = (baseStackView.bounds.width) / offset
+        let offset = CGFloat(currentTime / totalTimeSecondsFloat)
+        let playPosition = (baseStackView.bounds.width) * offset
         
         timeLinePositionView.frame.origin.x = playPosition
+        timeLineSlider.value = Float(currentTime)
     }
+    
 }

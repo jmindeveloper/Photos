@@ -101,6 +101,19 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
                     userAlbum[index].assetCount += assets.count
                 }
             }.store(in: &subscriptions)
+        
+        library.changeFavoriteAssetsPublisher
+            .sink { [weak self] assets in
+                guard let self = self else {
+                    return
+                }
+                for asset in assets {
+                    if let index = self.assets.firstIndex(of: asset) {
+                        self.assets[index] = asset
+                    }
+                }
+                objectWillChange.send()
+            }.store(in: &subscriptions)
     }
     
     func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {
@@ -117,13 +130,13 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     }
     
     func setFavoriteSelectedAssets() {
-        library.favoriteAssets(with: Array(selectedAssets)) { [weak self] in
+        library.favoriteAssets(with: Array(selectedAssets)) { [weak self] assets in
             self?.selectedAssets.removeAll()
         }
     }
     
     func duplicateSelectedAssets() {
-        library.duplicateAssets(Array(selectedAssets)) { [weak self] in
+        library.duplicateAssets(Array(selectedAssets)) { [weak self] _ in
             self?.selectedAssets.removeAll()
         }
     }
@@ -137,6 +150,11 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     func addAssetsToAlbum(albumName: String) {
         library.addAssetsToAlbum(Array(selectedAssets), to: albumName) { [weak self] in
             guard let self = self else { return }
+            let albumIndex = userAlbum.firstIndex { $0.title == albumName }
+            if let albumIndex = albumIndex {
+                userAlbum[albumIndex].assets.append(contentsOf: Array(selectedAssets))
+                userAlbum[albumIndex].assetCount += 1
+            }
             selectMode = false
             selectedAssets.removeAll()
         }

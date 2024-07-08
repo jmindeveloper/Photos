@@ -16,6 +16,7 @@ final class PhotoLibrary {
     var collections: [PHAssetCollectionType: [PHAssetCollection]] = [:]
     var currentCollection: PHAssetCollection
     let addAssetsToAlbumPublisher = PassthroughSubject<(PHAssetCollection, [PHAsset]), Never>()
+    let changeFavoriteAssetsPublisher = PassthroughSubject<[PHAsset], Never>()
     
     init() {
         self.currentCollection = PHAssetCollection()
@@ -191,7 +192,7 @@ final class PhotoLibrary {
         }
     }
     
-    func favoriteAssets(with assets: [PHAsset], completion: (() -> Void)? = nil) {
+    func favoriteAssets(with assets: [PHAsset], completion: (([PHAsset]) -> Void)? = nil) {
         PHPhotoLibrary.shared().performChanges {
             assets.forEach { asset in
                 let request = PHAssetChangeRequest(for: asset)
@@ -199,8 +200,15 @@ final class PhotoLibrary {
             }
         } completionHandler: { success, error in
             if success {
+                let assetIDs = assets.map { $0.localIdentifier }
+                let fetchResult = PHAsset.fetchAssets(withLocalIdentifiers: assetIDs, options: nil)
+                var updatedAssets: [PHAsset] = []
+                fetchResult.enumerateObjects { (asset, _, _) in
+                    updatedAssets.append(asset)
+                }
                 DispatchQueue.main.async {
-                    completion?()
+                    completion?(updatedAssets)
+                    self.changeFavoriteAssetsPublisher.send(updatedAssets)
                 }
             } else if !success || error != nil {
                 fatalError()
@@ -221,7 +229,7 @@ final class PhotoLibrary {
         }
     }
     
-    func duplicateAssets(_ assets: [PHAsset], completion: (() -> Void)? = nil) {
+    func duplicateAssets(_ assets: [PHAsset], completion: (([PHAsset]) -> Void)? = nil) {
         let group = DispatchGroup()
         var newAssets: [PHAsset] = []
         
@@ -236,7 +244,7 @@ final class PhotoLibrary {
         }
         
         group.notify(queue: .main) {
-            completion?()
+            completion?(newAssets)
         }
     }
     

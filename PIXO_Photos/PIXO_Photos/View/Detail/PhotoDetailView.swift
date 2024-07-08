@@ -10,6 +10,7 @@ import SwiftUI
 struct PhotoDetailView: View {
     @EnvironmentObject var viewModel: PhotoDetailViewModel
     @Environment(\.presentationMode) var presentationMode
+    @State var isPresentAlbumGridView: Bool = false
     
     var body: some View {
         TabView {
@@ -89,7 +90,23 @@ struct PhotoDetailView: View {
     @ViewBuilder
     private func navigationBarMenuButton() -> some View {
         Menu {
+            Button {
+                viewModel.duplicateCurrentAssets()
+            } label: {
+                Label("복제", systemImage: "plus.square.on.square")
+            }
             
+            Button {
+                viewModel.copyCurrentImageToClipboard()
+            } label: {
+                Label("복사", systemImage: "doc.on.doc")
+            }
+            
+            Button {
+                isPresentAlbumGridView = true
+            } label: {
+                Label("앨범에 추가", systemImage: "rectangle.stack.badge.plus")
+            }
         } label: {
             Image(systemName: "ellipsis.circle")
                 .resizable()
@@ -99,6 +116,18 @@ struct PhotoDetailView: View {
         }
         .frame(width: 40, height: 40)
         .contentShape(Rectangle())
+        .sheet(isPresented: $isPresentAlbumGridView) {
+            NavigationView {
+                UserAlbumGridView<PhotoDetailViewModel>(isNavigate: false) { album in
+                    print(album.title)
+                    viewModel.addAssetsToAlbum(albumName: album.title)
+                    isPresentAlbumGridView = false
+                }
+                .navigationTitle("앨범에 추가")
+                .navigationBarTitleDisplayMode(.inline)
+                .environmentObject(viewModel)
+            }
+        }
     }
     
     @ViewBuilder
@@ -115,9 +144,9 @@ struct PhotoDetailView: View {
             Spacer()
             
             Button {
-                
+                viewModel.setFavoriteCurrentAsset()
             } label: {
-                Image(systemName: "heart")
+                Image(systemName: viewModel.currentAsset.isFavorite ? "heart.fill" : "heart")
             }
             
             Spacer()

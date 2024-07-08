@@ -10,7 +10,7 @@ import Combine
 import UIKit
 import Photos
 
-final class PhotoDetailViewModel: ObservableObject {
+final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
     @Published var assets: [PHAsset] = [] {
         didSet {
             isAssetsCahnge = true
@@ -23,7 +23,7 @@ final class PhotoDetailViewModel: ObservableObject {
     }
     @Published var currentAsset: PHAsset
     var isAssetsCahnge: Bool = false
-    private var library: PhotoLibrary
+    let library: PhotoLibrary
     
     @Published var hiddenToolBar: Bool = false
     
@@ -39,6 +39,7 @@ final class PhotoDetailViewModel: ObservableObject {
             thumbnailScrollToItemBlock = true
         }
     }
+    @Published var userAlbum: [Album] = []
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -57,6 +58,21 @@ final class PhotoDetailViewModel: ObservableObject {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.detailScrollToItemPublisher.send(currentItemIndex)
             self?.thumbnailScrollToItemPublisher.send(currentItemIndex)
+        }
+        
+        self.userAlbum = library.collections[.album]?.map { collection in
+            let asset = library.getAssets(with: collection)
+            return Album(
+                id: collection.localIdentifier,
+                title: collection.localizedTitle ?? "",
+                assets: asset.assets,
+                assetCount: asset.assets.count,
+                fetchResult: asset.fetchResult
+            )
+        } ?? []
+        
+        userAlbum.sort {
+            $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
         }
     }
     
@@ -78,6 +94,15 @@ final class PhotoDetailViewModel: ObservableObject {
                     self?.detailScrollToItemPublisher.send(index)
                 }
             }.store(in: &subscriptions)
+        
+        library.changeFavoriteAssetsPublisher
+            .sink { [weak self] assets in
+                guard let self = self else {
+                    return
+                }
+                self.assets[currentItemIndex] = assets[0]
+                self.currentAsset = assets[0]
+            }.store(in: &subscriptions)
     }
     
     func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) {
@@ -94,8 +119,29 @@ final class PhotoDetailViewModel: ObservableObject {
     }
     
     func setFavoriteCurrentAsset() {
-        library.favoriteAssets(with: [currentAsset]) { [weak self] in
-            
+        library.favoriteAssets(with: [currentAsset])
+    }
+    
+    func duplicateCurrentAssets() {
+        library.duplicateAssets([currentAsset]) { [weak self] assets in
+            self?.assets.append(contentsOf: assets)
+        }
+    }
+    
+    func copyCurrentImageToClipboard() {
+        library.requestImages(with: [currentAsset]) { images in
+            UIPasteboard.general.images = images
+        }
+    }
+    
+    func addAssetsToAlbum(albumName: String) {
+        library.addAssetsToAlbum([currentAsset], to: albumName) { [weak self] in
+            guard let self = self else { return }
+            let albumIndex = userAlbum.firstIndex { $0.title == albumName }
+            if let albumIndex = albumIndex {
+                userAlbum[albumIndex].assets.append(currentAsset)
+                userAlbum[albumIndex].assetCount += 1
+            }
         }
     }
 }

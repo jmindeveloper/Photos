@@ -17,6 +17,7 @@ final class PhotoDetailViewModel: ObservableObject {
     }
     var currentItemIndex: Int
     var isAssetsCahnge: Bool = false
+    @Published var hiddenToolBar: Bool = false
     
     @Published var detailCollectionViewShowCellIndex: Int = 0 {
         didSet {

@@ -44,7 +44,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return collectionView
     }()
     
-    private let selectImageBoxView: UIView = {
+    let selectImageBoxView: UIView = {
         let view = UIView()
         view.layer.borderColor = UIColor.label.cgColor
         view.layer.borderWidth = 2
@@ -111,6 +111,11 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     animated: false
                 )
             }.store(in: &subscriptions)
+    }
+    
+    func setThumbnailViewOpacity(_ isHidden: Bool) {
+        thumbnailCollectionView.alpha = isHidden ? 0 : 1
+        selectImageBoxView.alpha = isHidden ? 0 : 1
     }
     
     func setViewModel(viewModel: PhotoDetailViewModel) {

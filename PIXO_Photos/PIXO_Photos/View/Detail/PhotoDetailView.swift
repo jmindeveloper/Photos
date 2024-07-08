@@ -16,8 +16,18 @@ struct PhotoDetailView: View {
             ZStack(alignment: .top) {
                 PhotoDetailViewControllerRepresentableView()
                     .environmentObject(viewModel)
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.1)) {
+                            viewModel.hiddenToolBar.toggle()
+                        }
+                    }
                 
-                navigationBar()
+                VStack {
+                    navigationBar()
+                        .opacity(viewModel.hiddenToolBar ? 0 : 1)
+                    
+                    Spacer()
+                }
             }
             .toolbar {
                 ToolbarItemGroup(placement: .bottomBar) {
@@ -26,6 +36,9 @@ struct PhotoDetailView: View {
             }
             .onAppear {
                 UITabBar.hideTabBar(animated: false)
+            }
+            .onDisappear {
+                UITabBar.showTabBar(animated: false)
             }
         }
     }

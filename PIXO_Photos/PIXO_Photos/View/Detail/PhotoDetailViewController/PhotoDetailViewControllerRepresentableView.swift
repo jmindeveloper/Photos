@@ -31,6 +31,10 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
             uiViewController.detailCollectionView.reloadData()
             viewModel.isAssetsCahnge = false
         }
+        
+        UIView.animate(withDuration: 0.2) {
+            uiViewController.setThumbnailViewOpacity(viewModel.hiddenToolBar)
+        }
     }
     
     class Coordinator: NSObject, UICollectionViewDataSource {

@@ -11,11 +11,19 @@ import SnapKit
 final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - ViewProperties
-    private lazy var collectionView: UICollectionView = {
+    lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: horizontalSwipeLayout())
         collectionView.backgroundColor = .black
-//        collectionView.delegate = self
         collectionView.alwaysBounceVertical = false
+        
+        collectionView.register(
+            ImageCollectionViewCell.self,
+            forCellWithReuseIdentifier: ImageCollectionViewCell.identifier
+        )
+        collectionView.register(
+            VideoCollectionViewCell.self,
+            forCellWithReuseIdentifier: VideoCollectionViewCell.identifier
+        )
         
         return collectionView
     }()

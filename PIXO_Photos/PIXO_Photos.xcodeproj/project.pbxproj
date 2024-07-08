@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0E0D63FF2C3BA34100583079 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */; };
+		0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D64002C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift */; };
 		0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */; };
 		0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E1482C3BA17600B04BB0 /* SnapKit */; };
 		0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
+		0E0D64002C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewControllerRepresentableView.swift; sourceTree = "<group>"; };
 		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			children = (
 				0E14E14B2C3BA24700B04BB0 /* View */,
 				0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */,
+				0E0D64002C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift */,
 			);
 			path = PhotoDetailViewController;
 			sourceTree = "<group>";
@@ -314,6 +317,7 @@
 				0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */,
 				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
+				0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E6AF6142C3B87C60001263F /* UserAlbumGridView.swift in Sources */,

@@ -14,7 +14,6 @@ protocol AlbumGridViewModelProtocol: ObservableObject {
 
 struct UserAlbumGridView<VM: AlbumGridViewModelProtocol>: View {
     @EnvironmentObject var viewModel: VM
-    @State var albums: [Album]
     @State var columnCount: Int = 2
     @State var spacingWidth: CGFloat = 20
     
@@ -31,7 +30,7 @@ struct UserAlbumGridView<VM: AlbumGridViewModelProtocol>: View {
             )
             
             LazyVGrid(columns: gridItem, spacing: spacingWidth) {
-                ForEach(albums, id: \.self) { album in
+                ForEach(viewModel.userAlbum, id: \.self) { album in
                     if isNavigate {
                         NavigationLink {
                             let viewModel = PhotoStorageViewModel(

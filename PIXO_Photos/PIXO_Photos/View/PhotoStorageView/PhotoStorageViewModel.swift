@@ -28,6 +28,8 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     @Published var selectMode: Bool = false
     @Published var userAlbum: [Album] = []
     
+    private var subscriptions = Set<AnyCancellable>()
+    
     var visibleAssetsDate: [Date] = [] {
         didSet {
             dateRangeString = getDateRange(date1: visibleAssetsDate.min() ?? Date(), date2: visibleAssetsDate.max() ?? Date())
@@ -59,6 +61,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         userAlbum.sort {
             $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
         }
+        binding()
     }
     
     init(library: PhotoLibrary, album: Album) {
@@ -70,6 +73,19 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
         imageCount = assets.count - videoCount
         assetWithFrame = assets.map { ($0, .zero) }
         PHPhotoLibrary.shared().register(self)
+        binding()
+    }
+    
+    private func binding() {
+        library.addAssetsToAlbumPublisher
+            .sink { [weak self] (collection, assets) in
+                guard let self = self else { return }
+                let index = userAlbum.firstIndex { $0.id == collection.localIdentifier }
+                if let index = index {
+                    userAlbum[index].assets.append(contentsOf: assets)
+                    userAlbum[index].assetCount += assets.count
+                }
+            }.store(in: &subscriptions)
     }
     
     func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {
@@ -100,6 +116,14 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoGridViewModelPro
     func copySelectedImageToClipboard() {
         library.requestImages(with: Array(selectedAssets)) { images in
             UIPasteboard.general.images = images
+        }
+    }
+    
+    func addAssetsToAlbum(albumName: String) {
+        library.addAssetsToAlbum(Array(selectedAssets), to: albumName) { [weak self] in
+            guard let self = self else { return }
+            selectMode = false
+            selectedAssets.removeAll()
         }
     }
     

@@ -7,6 +7,7 @@
 
 import UIKit
 import Photos
+import Combine
 
 typealias FetchAssetResult = (assets: [PHAsset], fetchResult: PHFetchResult<PHAsset>)
 
@@ -14,6 +15,7 @@ final class PhotoLibrary {
     
     var collections: [PHAssetCollectionType: [PHAssetCollection]] = [:]
     var currentCollection: PHAssetCollection
+    let addAssetsToAlbumPublisher = PassthroughSubject<(PHAssetCollection, [PHAsset]), Never>()
     
     init() {
         self.currentCollection = PHAssetCollection()
@@ -280,9 +282,12 @@ final class PhotoLibrary {
             albumChangeRequest.addAssets(assets as NSFastEnumeration)
         }, completionHandler: { success, error in
             if success {
-                completion?()
+                DispatchQueue.main.async { [weak self] in
+                    self?.addAssetsToAlbumPublisher.send((collection, assets))
+                    completion?()
+                }
             } else {
-                fatalError("에셋 추가 실패: \(error?.localizedDescription ?? "")")
+                fatalError("에셋 추가 실패")
             }
         })
     }

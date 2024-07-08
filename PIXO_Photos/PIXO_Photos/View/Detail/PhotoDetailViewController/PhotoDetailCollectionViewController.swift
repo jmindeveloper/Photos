@@ -100,6 +100,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     at: .centeredHorizontally,
                     animated: false
                 )
+                stopVideoCellVideo()
             }.store(in: &subscriptions)
         
         viewModel?.thumbnailScrollToItemPublisher
@@ -110,6 +111,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     at: .left,
                     animated: false
                 )
+                stopVideoCellVideo()
             }.store(in: &subscriptions)
     }
     
@@ -120,6 +122,12 @@ final class PhotoDetailCollectionViewController: UIViewController {
     
     func setViewModel(viewModel: PhotoDetailViewModel) {
         self.viewModel = viewModel
+    }
+    
+    func stopVideoCellVideo() {
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.beforeItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            cell.stopVideo()
+        }
     }
     
     // MARK: - CollectionViewLayout

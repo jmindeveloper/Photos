@@ -159,6 +159,19 @@ final class PhotoLibrary {
         }
     }
     
+    static func getVideoAsset(with asset: PHAsset, completion: @escaping ((AVAsset) -> Void)) {
+        if asset.mediaType == .video {
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            
+            PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: options) { asset, _, _ in
+                if let asset = asset {
+                    completion(asset)
+                }
+            }
+        }
+    }
+    
     func requedtVideoURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         if asset.mediaType == .video {
             let options = PHVideoRequestOptions()

@@ -49,7 +49,8 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         playVideoDate = nil
     }
     
-    func playVideo() {
+    func startVideo() {
+        stopVideo()
         if let videoAsset = videoAsset {
             isPlayVideo = true
             playVideoDate = Date()
@@ -66,6 +67,14 @@ final class VideoCollectionViewCell: UICollectionViewCell {
                     self?.stopVideo()
                 }.store(in: &subscriptions)
         }
+    }
+    
+    func pauseVideo() {
+        player?.pause()
+    }
+    
+    func playVideo() {
+        player?.play()
     }
     
     func stopVideo() {

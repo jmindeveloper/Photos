@@ -36,6 +36,64 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         UIView.animate(withDuration: 0.2) {
             uiViewController.setThumbnailViewOpacity(viewModel.hiddenToolBar)
         }
+        
+        if viewModel.currentAsset.mediaType != .video {
+            stopVideo(vc: uiViewController, index: viewModel.beforeItemIndex)
+        } else {
+            startVideo(vc: uiViewController)
+        }
+    }
+    
+    func startVideo(vc: PhotoDetailCollectionViewController) {
+        if viewModel.currentAsset.mediaType != .video {
+            return
+        }
+        guard let cell = vc.detailCollectionView.cellForItem(
+            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
+        ) as? VideoCollectionViewCell else {
+            return
+        }
+        
+        cell.startVideo()
+    }
+    
+    func playVideo(vc: PhotoDetailCollectionViewController) {
+        if viewModel.currentAsset.mediaType != .video {
+            return
+        }
+        guard let cell = vc.detailCollectionView.cellForItem(
+            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
+        ) as? VideoCollectionViewCell else {
+            return
+        }
+        
+        cell.playVideo()
+    }
+    
+    func pauseVideo(vc: PhotoDetailCollectionViewController) {
+        if viewModel.currentAsset.mediaType != .video {
+            return
+        }
+        guard let cell = vc.detailCollectionView.cellForItem(
+            at: IndexPath(item: viewModel.currentItemIndex, section: 0)
+        ) as? VideoCollectionViewCell else {
+            return
+        }
+        
+        cell.pauseVideo()
+    }
+    
+    func stopVideo(vc: PhotoDetailCollectionViewController, index: Int) {
+        if viewModel.currentAsset.mediaType != .video {
+            return
+        }
+        guard let cell = vc.detailCollectionView.cellForItem(
+            at: IndexPath(item: index, section: 0)
+        ) as? VideoCollectionViewCell else {
+            return
+        }
+        
+        cell.stopVideo()
     }
     
     class Coordinator: NSObject, UICollectionViewDataSource {
@@ -78,6 +136,10 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
                     
                     PhotoLibrary.requestImage(with: asset) { image, _ in
                         cell.setImage(image: image)
+                    }
+                    
+                    PhotoLibrary.getVideoAsset(with: asset) { asset in
+                        cell.setVideoAsset(asset: asset)
                     }
                     
                     return cell

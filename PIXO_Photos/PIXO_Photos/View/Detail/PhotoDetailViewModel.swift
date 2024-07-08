@@ -16,8 +16,12 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
             isAssetsCahnge = true
         }
     }
+    var beforeItemIndex: Int = 0
     var currentItemIndex: Int {
         didSet {
+            if currentItemIndex != oldValue {
+                beforeItemIndex = oldValue
+            }
             self.currentAsset = assets[currentItemIndex]
         }
     }

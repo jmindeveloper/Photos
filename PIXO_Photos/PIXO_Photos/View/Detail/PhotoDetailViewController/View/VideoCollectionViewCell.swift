@@ -27,7 +27,7 @@ final class VideoCollectionViewCell: UICollectionViewCell {
     }()
         
     var videoAsset: AVAsset?
-    private var player: AVPlayer?
+    var player: AVPlayer?
     private var playerLayer = AVPlayerLayer()
     private var subscriptions = Set<AnyCancellable>()
     

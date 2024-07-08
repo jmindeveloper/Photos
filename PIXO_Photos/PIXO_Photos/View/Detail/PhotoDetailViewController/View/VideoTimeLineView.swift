@@ -21,6 +21,22 @@ final class VideoTimeLineView: UIView {
         return view
     }()
     
+    private let timeLinePositionView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .label
+        
+        return view
+    }()
+    
+    private let timeLineSlider: UISlider = {
+        let slider = UISlider()
+        slider.minimumTrackTintColor = .clear
+        slider.maximumTrackTintColor = .clear
+        slider.thumbTintColor = .clear
+        
+        return slider
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setSubViews()
@@ -31,7 +47,7 @@ final class VideoTimeLineView: UIView {
     }
     
     private func setSubViews() {
-        [baseStackView].forEach {
+        [baseStackView, timeLinePositionView].forEach {
             addSubview($0)
         }
         
@@ -41,6 +57,12 @@ final class VideoTimeLineView: UIView {
     private func setConstraints() {
         baseStackView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+        
+        timeLinePositionView.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.width.equalTo(1)
+            $0.leading.equalToSuperview()
         }
     }
     
@@ -56,5 +78,14 @@ final class VideoTimeLineView: UIView {
             }
             completion()
         }
+    }
+    
+    func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {
+        let totalTimeSecondsFloat = CMTimeGetSeconds(totalTime)
+        
+        let offset = CGFloat(totalTimeSecondsFloat / currentTime)
+        let playPosition = (baseStackView.bounds.width) / offset
+        
+        timeLinePositionView.frame.origin.x = playPosition
     }
 }

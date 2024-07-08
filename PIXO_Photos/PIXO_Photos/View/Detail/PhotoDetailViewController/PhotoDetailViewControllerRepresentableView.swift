@@ -80,6 +80,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
             return
         }
         
+        vc.observeVideoCellVideo()
         cell.playVideo()
     }
     

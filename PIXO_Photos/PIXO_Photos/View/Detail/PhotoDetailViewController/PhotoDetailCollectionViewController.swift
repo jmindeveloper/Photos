@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import SnapKit
 import SDWebImage
+import AVFoundation
 
 final class PhotoDetailCollectionViewController: UIViewController {
     
@@ -108,7 +109,6 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     at: .centeredHorizontally,
                     animated: false
                 )
-                stopVideoCellVideo()
             }.store(in: &subscriptions)
         
         viewModel?.thumbnailScrollToItemPublisher
@@ -119,7 +119,6 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     at: .left,
                     animated: false
                 )
-                stopVideoCellVideo()
             }.store(in: &subscriptions)
     }
     
@@ -133,9 +132,20 @@ final class PhotoDetailCollectionViewController: UIViewController {
         self.viewModel = viewModel
     }
     
-    func stopVideoCellVideo() {
-        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.beforeItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
-            cell.stopVideo()
+    func observeVideoCellVideo() {
+        if viewModel?.currentAsset.mediaType != .video {
+            return
+        }
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            let interval = CMTimeMake(value: 1, timescale: 60)
+            let _ = cell.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main, using: { [weak self] time in
+                self?.videoTimeLineView.setTimeLinePosition(currentTime: cell.player?.currentItem?.currentTime().seconds ?? 0, totalTime: cell.player?.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+            })
+            
+            NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: cell.player?.currentItem)
+                .sink { [weak self] _ in
+                    self?.viewModel?.isPlayVideo = false
+                }.store(in: &subscriptions)
         }
     }
     

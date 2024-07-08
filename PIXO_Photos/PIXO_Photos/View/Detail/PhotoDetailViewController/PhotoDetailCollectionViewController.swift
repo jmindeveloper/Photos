@@ -29,6 +29,13 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return collectionView
     }()
     
+    // MARK: - Properties
+    private lazy var currentShowCellIndex: Int = 0 {
+        didSet {
+            print("currentIndex", currentShowCellIndex)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setSubViews()
@@ -62,6 +69,11 @@ final class PhotoDetailCollectionViewController: UIViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
                 
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
+            guard let self = self else { return }
+            currentShowCellIndex = visibleItems.last?.indexPath.item ?? 0
+        }
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
 }

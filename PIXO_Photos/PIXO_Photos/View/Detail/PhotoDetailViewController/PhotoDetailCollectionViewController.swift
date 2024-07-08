@@ -92,17 +92,22 @@ final class PhotoDetailCollectionViewController: UIViewController {
     
     // MARK: - Method
     private func binding() {
-        viewModel?.collectionViewScrollToItemPublisher
+        viewModel?.detailScrollToItemPublisher
+            .sink { [weak self] index in
+                guard let self = self else { return }
+                detailCollectionView.scrollToItem(
+                    at: IndexPath(item: index, section: 0),
+                    at: .centeredHorizontally,
+                    animated: false
+                )
+            }.store(in: &subscriptions)
+        
+        viewModel?.thumbnailScrollToItemPublisher
             .sink { [weak self] index in
                 guard let self = self else { return }
                 thumbnailCollectionView.scrollToItem(
                     at: IndexPath(item: index, section: 0),
                     at: .left,
-                    animated: false
-                )
-                detailCollectionView.scrollToItem(
-                    at: IndexPath(item: index, section: 0),
-                    at: .centeredHorizontally,
                     animated: false
                 )
             }.store(in: &subscriptions)
@@ -126,10 +131,14 @@ final class PhotoDetailCollectionViewController: UIViewController {
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
         
-        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, offset, _ in
             guard let self = self else { return }
-            if let index = visibleItems.last?.indexPath.item {
-                self.viewModel?.detailCollectionViewShowCellIndex = index
+            // 이미지 넘기는 도중에는 작동하지 않도록
+            var visibleItems = visibleItems
+            visibleItems.removeAll { $0.frame.minX < offset.x - $0.frame.width }
+            if visibleItems.count == 1 {
+                print(visibleItems.count)
+                viewModel?.detailCollectionViewShowCellIndex = visibleItems.last?.indexPath.item ?? 0
             }
         }
         
@@ -151,14 +160,15 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         section.contentInsets = .init(top: .zero, leading: .zero, bottom: .zero, trailing: inset)
         
-        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, _, _ in
+        section.visibleItemsInvalidationHandler = { [weak self] visibleItems, offset, _ in
             guard let self = self else { return }
             // MARK: - visibleItem Error
             // visibleItem에 0..<item.count 만큼의 range가 포함돼서 나옴
-            // item 의 개수 이상이면 그 이후의 item을 first로 판단
-            let index = visibleItems.count > 9 ? 9 : visibleItems.first?.indexPath.item ?? .zero
-            let visibleIndex = visibleItems[index].indexPath.item
-            self.viewModel?.thumbnailCollectionViewShowCellIndex = visibleIndex
+            // scrollOffset이랑 비교해서 작은값들은 remove
+            var visibleItems = visibleItems
+            visibleItems.removeAll { $0.frame.minX < offset.x }
+            
+            viewModel?.thumbnailCollectionViewShowCellIndex = visibleItems.first?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)

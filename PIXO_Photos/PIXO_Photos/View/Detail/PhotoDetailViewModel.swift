@@ -16,14 +16,36 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
             isAssetsCahnge = true
         }
     }
-    var currentItemIndex: Int {
+    @Published var beforeItemIndex: Int = 0 {
         didSet {
-            self.currentAsset = assets[currentItemIndex]
+            if currentItemIndex == oldValue {
+                beforeItemIndex = oldValue
+            }
         }
     }
-    @Published var currentAsset: PHAsset
+    var currentItemIndex: Int {
+        didSet {
+            if oldValue != beforeItemIndex {
+                beforeItemIndex = oldValue
+            }
+            self.currentAsset = assets[currentItemIndex]
+            print("asdf", "before: ", beforeItemIndex, "current: ", currentItemIndex)
+        }
+    }
+    @Published var currentAsset: PHAsset {
+        didSet {
+            if currentAsset.mediaType == .video {
+                isPlayVideo = true
+            }
+        }
+    }
+    var isVideo: Bool {
+        currentAsset.mediaType == .video
+    }
     var isAssetsCahnge: Bool = false
     let library: PhotoLibrary
+    
+    @Published var isPlayVideo: Bool = false
     
     @Published var hiddenToolBar: Bool = false
     

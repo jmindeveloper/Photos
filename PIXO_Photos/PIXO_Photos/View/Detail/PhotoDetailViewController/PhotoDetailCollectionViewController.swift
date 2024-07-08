@@ -9,6 +9,7 @@ import UIKit
 import Combine
 import SnapKit
 import SDWebImage
+import AVFoundation
 
 final class PhotoDetailCollectionViewController: UIViewController {
     
@@ -52,6 +53,8 @@ final class PhotoDetailCollectionViewController: UIViewController {
         return view
     }()
     
+    let videoTimeLineView = VideoTimeLineView()
+    
     // MARK: - Properties
     private var viewModel: PhotoDetailViewModel?
     private var subscriptions = Set<AnyCancellable>()
@@ -62,12 +65,21 @@ final class PhotoDetailCollectionViewController: UIViewController {
         binding()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            cell.stopVideo()
+        }
+    }
+    
     // MARK: - setSubViews
     private func setSubViews() {
         view.backgroundColor = .black
         view.addSubview(detailCollectionView)
         view.addSubview(thumbnailCollectionView)
         view.addSubview(selectImageBoxView)
+        view.addSubview(videoTimeLineView)
+        videoTimeLineView.isHidden = true
         
         setConstraints()
     }
@@ -87,6 +99,10 @@ final class PhotoDetailCollectionViewController: UIViewController {
             $0.centerY.verticalEdges.equalTo(thumbnailCollectionView)
             $0.width.equalTo(Constant.SCREEN_WIDTH / 9)
             $0.leading.equalToSuperview()
+        }
+        
+        videoTimeLineView.snp.makeConstraints {
+            $0.edges.equalTo(thumbnailCollectionView)
         }
     }
     
@@ -111,15 +127,43 @@ final class PhotoDetailCollectionViewController: UIViewController {
                     animated: false
                 )
             }.store(in: &subscriptions)
+        
+        videoTimeLineView.seekPublisher
+            .sink { [weak self] time in
+                guard let self = self else {
+                    return
+                }
+                if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+                    cell.player?.seek(to: time, completionHandler: { _ in })
+                }
+            }.store(in: &subscriptions)
     }
     
     func setThumbnailViewOpacity(_ isHidden: Bool) {
         thumbnailCollectionView.alpha = isHidden ? 0 : 1
         selectImageBoxView.alpha = isHidden ? 0 : 1
+        videoTimeLineView.alpha = isHidden ? 0 : 1
     }
     
     func setViewModel(viewModel: PhotoDetailViewModel) {
         self.viewModel = viewModel
+    }
+    
+    func observeVideoCellVideo() {
+        if viewModel?.currentAsset.mediaType != .video {
+            return
+        }
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            let interval = CMTimeMake(value: 1, timescale: 60)
+            let _ = cell.player?.addPeriodicTimeObserver(forInterval: interval, queue: .main, using: { [weak self] time in
+                self?.videoTimeLineView.setTimeLinePosition(currentTime: cell.player?.currentItem?.currentTime().seconds ?? 0, totalTime: cell.player?.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1))
+            })
+            
+            NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: cell.player?.currentItem)
+                .sink { [weak self] _ in
+                    self?.viewModel?.isPlayVideo = false
+                }.store(in: &subscriptions)
+        }
     }
     
     // MARK: - CollectionViewLayout

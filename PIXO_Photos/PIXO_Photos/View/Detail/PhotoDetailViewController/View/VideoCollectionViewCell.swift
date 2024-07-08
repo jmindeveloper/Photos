@@ -27,7 +27,7 @@ final class VideoCollectionViewCell: UICollectionViewCell {
     }()
         
     var videoAsset: AVAsset?
-    private var player: AVPlayer?
+    var player: AVPlayer?
     private var playerLayer = AVPlayerLayer()
     private var subscriptions = Set<AnyCancellable>()
     
@@ -40,19 +40,19 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var isPlayVideo = false
-    private var playVideoDate: Date?
+    private var isStartVideo = false
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        isPlayVideo = false
-        playVideoDate = nil
+        stopVideo()
+        isStartVideo = false
     }
     
-    func playVideo() {
+    func startVideo() {
+        if isStartVideo { return }
+        stopVideo()
         if let videoAsset = videoAsset {
-            isPlayVideo = true
-            playVideoDate = Date()
+            isStartVideo = true
             videoView.isHidden = false
             let item = AVPlayerItem(asset: videoAsset)
             player = AVPlayer(playerItem: item)
@@ -68,14 +68,22 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    func pauseVideo() {
+        player?.pause()
+    }
+    
+    func playVideo() {
+        if !isStartVideo {
+            startVideo()
+        } else {
+            player?.play()
+        }
+    }
+    
     func stopVideo() {
         player?.pause()
+        isStartVideo = false
         videoView.isHidden = true
-        if isPlayVideo {
-            let asset = videoAsset as? AVURLAsset
-            let urlString = asset?.url.absoluteString
-            let fileName = urlString?.components(separatedBy: "%2F").last?.components(separatedBy: "?").first
-        }
     }
     
     private func setSubViews() {

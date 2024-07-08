@@ -22,12 +22,6 @@ final class PhotoLibrary {
         self.currentCollection = PHAssetCollection()
         self.collections = getAllAssetCollections()
         self.currentCollection = collections[.smartAlbum]?.first ?? PHAssetCollection()
-        
-        collections.forEach { _, v in
-            v.forEach {
-                print("collectionName --> ", $0.localizedTitle)
-            }
-        }
     }
     
     func getAllAssetCollections() -> [PHAssetCollectionType: [PHAssetCollection]] {
@@ -154,6 +148,19 @@ final class PhotoLibrary {
                     DispatchQueue.main.async {
                         completion(data)
                     }
+                }
+            }
+        }
+    }
+    
+    static func getVideoAsset(with asset: PHAsset, completion: @escaping ((AVAsset) -> Void)) {
+        if asset.mediaType == .video {
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            
+            PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: options) { asset, _, _ in
+                if let asset = asset {
+                    completion(asset)
                 }
             }
         }

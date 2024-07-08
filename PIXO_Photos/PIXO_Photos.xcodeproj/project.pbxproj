@@ -13,6 +13,7 @@
 		0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E1482C3BA17600B04BB0 /* SnapKit */; };
 		0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */; };
 		0E14E1502C3BA2BC00B04BB0 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E14F2C3BA2BC00B04BB0 /* SDWebImage */; };
+		0E4FB4792C3BF3C100DD7D79 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */; };
 		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
 		0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E82C3A3A09004C29CE /* AlbumView.swift */; };
 		0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */; };
@@ -46,6 +47,7 @@
 		0E0D64002C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewControllerRepresentableView.swift; sourceTree = "<group>"; };
 		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
 		0E64E2E82C3A3A09004C29CE /* AlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumView.swift; sourceTree = "<group>"; };
 		0E64E2EA2C3A3A10004C29CE /* PhotoStorageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoStorageView.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
 				0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */,
 				0ECBB1052C3AC8C600482E71 /* ActivityView.swift */,
+				0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
 				0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
+				0E4FB4792C3BF3C100DD7D79 /* LazyView.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E6AF6142C3B87C60001263F /* UserAlbumGridView.swift in Sources */,
 				0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */,

@@ -130,7 +130,7 @@ final class PhotoLibrary {
         }
     }
     
-    func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         
@@ -138,6 +138,21 @@ final class PhotoLibrary {
             if let input = input, let url = input.fullSizeImageURL {
                 DispatchQueue.main.async {
                     completion(url)
+                }
+            }
+        }
+    }
+    
+    static func getData(with asset: PHAsset, completion: @escaping ((Data) -> Void)) {
+        let option = PHImageRequestOptions()
+        option.isNetworkAccessAllowed = true
+        
+        PHCachingImageManager.default().requestImageDataAndOrientation(for: asset, options: option) { data, _, _, _ in
+            DispatchQueue.main.async {
+                if let data = data {
+                    DispatchQueue.main.async {
+                        completion(data)
+                    }
                 }
             }
         }

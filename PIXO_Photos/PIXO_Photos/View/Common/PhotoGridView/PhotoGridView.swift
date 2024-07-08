@@ -72,6 +72,8 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                         if viewModel.selectMode {
                             print("select", index)
                             viewModel.toggleSelectPhoto(index: index)
+                        } else {
+                            present(view: PhotoDetailViewControllerRepresentableView(assets: viewModel.assets, currentItemIndex: index), modalStyle: .fullScreen)
                         }
                     }
             }

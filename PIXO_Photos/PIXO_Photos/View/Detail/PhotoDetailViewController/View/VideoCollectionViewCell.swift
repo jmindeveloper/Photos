@@ -44,6 +44,7 @@ final class VideoCollectionViewCell: UICollectionViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        stopVideo()
         isStartVideo = false
     }
     

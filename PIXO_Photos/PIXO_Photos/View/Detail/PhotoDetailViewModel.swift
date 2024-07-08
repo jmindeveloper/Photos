@@ -16,13 +16,20 @@ final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
             isAssetsCahnge = true
         }
     }
-    var beforeItemIndex: Int = 0
+    @Published var beforeItemIndex: Int = 0 {
+        didSet {
+            if currentItemIndex == oldValue {
+                beforeItemIndex = oldValue
+            }
+        }
+    }
     var currentItemIndex: Int {
         didSet {
-            if currentItemIndex != oldValue {
+            if oldValue != beforeItemIndex {
                 beforeItemIndex = oldValue
             }
             self.currentAsset = assets[currentItemIndex]
+            print("asdf", "before: ", beforeItemIndex, "current: ", currentItemIndex)
         }
     }
     @Published var currentAsset: PHAsset {

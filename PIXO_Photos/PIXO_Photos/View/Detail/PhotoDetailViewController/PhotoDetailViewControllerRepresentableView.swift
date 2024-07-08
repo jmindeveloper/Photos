@@ -19,8 +19,10 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
     
     func makeUIViewController(context: Context) -> PhotoDetailCollectionViewController {
         viewController.detailCollectionView.dataSource = context.coordinator
+        viewController.detailCollectionView.delegate = context.coordinator
         viewController.thumbnailCollectionView.dataSource = context.coordinator
         viewController.setViewModel(viewModel: viewModel)
+        context.coordinator.viewController = viewController
         
         return viewController
     }
@@ -37,9 +39,7 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
             uiViewController.setThumbnailViewOpacity(viewModel.hiddenToolBar)
         }
         
-        if viewModel.currentAsset.mediaType != .video {
-            stopVideo(vc: uiViewController, index: viewModel.beforeItemIndex)
-        } else {
+        if viewModel.currentAsset.mediaType == .video {
             startVideo(vc: uiViewController)
             if viewModel.isPlayVideo {
                 playVideo(vc: uiViewController)
@@ -97,23 +97,10 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
         cell.pauseVideo()
     }
     
-    func stopVideo(vc: PhotoDetailCollectionViewController, index: Int) {
-        guard let cell = vc.detailCollectionView.cellForItem(
-            at: IndexPath(item: index, section: 0)
-        ) as? VideoCollectionViewCell else {
-            return
-        }
-        
-        vc.videoTimeLineView.isHidden = true
-        vc.selectImageBoxView.isHidden = false
-        vc.thumbnailCollectionView.isHidden = false
-        
-        cell.stopVideo()
-    }
-    
-    class Coordinator: NSObject, UICollectionViewDataSource {
+    class Coordinator: NSObject, UICollectionViewDataSource, UICollectionViewDelegate {
         var assets: [PHAsset] = []
         var parent: PhotoDetailViewControllerRepresentableView
+        var viewController: PhotoDetailCollectionViewController?
         
         init(_ parent: PhotoDetailViewControllerRepresentableView) {
             self.parent = parent
@@ -175,6 +162,14 @@ struct PhotoDetailViewControllerRepresentableView: UIViewControllerRepresentable
                 
                 return cell
             }
+        }
+        
+        func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+            let cell = cell as? VideoCollectionViewCell
+            cell?.stopVideo()
+            viewController?.videoTimeLineView.isHidden = true
+            viewController?.selectImageBoxView.isHidden = false
+            viewController?.thumbnailCollectionView.isHidden = false
         }
     }
 }

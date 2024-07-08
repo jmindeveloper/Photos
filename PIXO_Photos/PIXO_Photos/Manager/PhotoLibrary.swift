@@ -22,12 +22,6 @@ final class PhotoLibrary {
         self.currentCollection = PHAssetCollection()
         self.collections = getAllAssetCollections()
         self.currentCollection = collections[.smartAlbum]?.first ?? PHAssetCollection()
-        
-        collections.forEach { _, v in
-            v.forEach {
-                print("collectionName --> ", $0.localizedTitle)
-            }
-        }
     }
     
     func getAllAssetCollections() -> [PHAssetCollectionType: [PHAssetCollection]] {

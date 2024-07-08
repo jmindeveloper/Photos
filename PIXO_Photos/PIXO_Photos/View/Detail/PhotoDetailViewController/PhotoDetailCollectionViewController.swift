@@ -65,6 +65,13 @@ final class PhotoDetailCollectionViewController: UIViewController {
         binding()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        if let cell = detailCollectionView.cellForItem(at: IndexPath(item: viewModel?.currentItemIndex ?? 0, section: 0)) as? VideoCollectionViewCell {
+            cell.stopVideo()
+        }
+    }
+    
     // MARK: - setSubViews
     private func setSubViews() {
         view.backgroundColor = .black

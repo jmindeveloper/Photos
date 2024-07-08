@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E0D63FF2C3BA34100583079 /* VideoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */; };
 		0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */; };
 		0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E1482C3BA17600B04BB0 /* SnapKit */; };
 		0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCollectionViewCell.swift; sourceTree = "<group>"; };
 		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */,
+				0E0D63FE2C3BA34100583079 /* VideoCollectionViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 			files = (
 				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
 				0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */,
+				0E0D63FF2C3BA34100583079 /* VideoCollectionViewCell.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */,

@@ -73,6 +73,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
             
             Button {
                 isPresentEditView = true
+                viewModel.isPlayVideo = false
             } label: {
                 Text("편집")
                     .font(.bold(fontSize: .body2))
@@ -87,9 +88,15 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
                 .blur(radius: 0.8)
         )
         .fullScreenCover(isPresented: $isPresentEditView) {
-            LazyView(
-                PhotoEditView().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
-            )
+            if viewModel.currentAsset.mediaType == .image {
+                LazyView(
+                    PhotoEditView().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
+                )
+            } else {
+                LazyView(
+                    VideoEditView().environmentObject(VideoEditViewModel(asset: viewModel.currentAsset))
+                )
+            }
         }
     }
     

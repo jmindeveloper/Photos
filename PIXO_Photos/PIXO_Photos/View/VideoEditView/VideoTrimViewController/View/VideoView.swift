@@ -58,6 +58,10 @@ final class VideoView: UIView {
         player?.pause()
     }
     
+    func seek(time: CMTime) {
+        player?.seek(to: time, completionHandler: { _ in })
+    }
+    
     private func observeVideo() {
         let interval = CMTimeMake(value: 1, timescale: 60)
         player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in

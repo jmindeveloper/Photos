@@ -69,7 +69,7 @@ final class VideoTimeLineView: UIView {
         
         timeLinePositionView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
-            $0.width.equalTo(1)
+            $0.width.equalTo(2)
             $0.leading.equalToSuperview()
         }
         

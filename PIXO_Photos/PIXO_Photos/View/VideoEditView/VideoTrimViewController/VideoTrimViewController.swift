@@ -20,7 +20,6 @@ final class VideoTrimViewController: UIViewController {
     
     private lazy var videoTrimTimeLineView: VideoTrimTimeLineView = {
         let view = VideoTrimTimeLineView()
-        view.backgroundColor = .yellow
         
         return view
     }()
@@ -57,7 +56,7 @@ final class VideoTrimViewController: UIViewController {
         videoTrimTimeLineView.snp.makeConstraints {
             $0.top.equalTo(videoView.snp.bottom).offset(30)
             $0.horizontalEdges.equalToSuperview().inset(16)
-            $0.height.equalTo(50)
+            $0.height.equalTo(60)
             $0.bottom.equalToSuperview().offset(-30)
         }
     }
@@ -74,6 +73,11 @@ final class VideoTrimViewController: UIViewController {
         videoView.videoIntervalPublisher
             .sink { [weak self] current, total in
                 self?.videoTrimTimeLineView.setTimeLinePosition(currentTime: current, totalTime: total)
+            }.store(in: &subscriptions)
+        
+        videoTrimTimeLineView.seekPublisher
+            .sink { [weak self] time in
+                self?.videoView.seek(time: time)
             }.store(in: &subscriptions)
     }
     

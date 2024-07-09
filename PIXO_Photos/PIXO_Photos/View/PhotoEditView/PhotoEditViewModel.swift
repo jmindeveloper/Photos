@@ -7,6 +7,7 @@
 
 import Foundation
 import Photos
+import Combine
 
 final class PhotoEditViewModel: ObservableObject {
     enum EditMode: CaseIterable {
@@ -37,7 +38,7 @@ final class PhotoEditViewModel: ObservableObject {
         }
     }
     
-    enum AdjustEffect: CaseIterable {
+    enum AdjustEffect: String, CaseIterable {
         // Exposure (노출)
         case Exposure
         // Saturation (채도)
@@ -200,10 +201,33 @@ final class PhotoEditViewModel: ObservableObject {
     @Published var currentAdjustMax: Float = AdjustEffect.Exposure.maxValue
     @Published var currentAdjustEffectValue: Float = 0
     
+    @Published var backwardHistory: [[String: Float]] = []
+    @Published var forwardHistory: [[String: Float]] = []
+    
     var context = CIContext()
+    private var subscriptions = Set<AnyCancellable>()
     
     init(editAsset: PHAsset) {
         self.editAsset = editAsset
+        saveHistory()
+        
+        binding()
+    }
+    
+    private func binding() {
+        $saturation
+            .merge(with: $hue)
+            .merge(with: $exposure)
+            .merge(with: $brightness)
+            .merge(with: $contrast)
+            .merge(with: $highlights)
+            .merge(with: $shadows)
+            .merge(with: $temperature)
+            .merge(with: $sharpness)
+            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.saveHistory()
+            }.store(in: &subscriptions)
     }
     
     func changeAdjustEffectValue(_ value: Float) {
@@ -227,5 +251,26 @@ final class PhotoEditViewModel: ObservableObject {
         case .Sharpness:
             sharpness = value
         }
+    }
+    
+    func saveHistory() {
+        var history: [String: Float] = [:]
+        
+        history["saturation"] = saturation
+        history["hue"] = hue
+        history["exposure"] = exposure
+        history["brightness"] = brightness
+        history["contrast"] = contrast
+        history["highlights"] = highlights
+        history["shadows"] = shadows
+        history["temperature"] = temperature
+        history["sharpness"] = sharpness
+        history[currentFilter.rawValue] = 1
+        
+        if history == backwardHistory.last {
+            return
+        }
+        
+        backwardHistory.append(history)
     }
 }

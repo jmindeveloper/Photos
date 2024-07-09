@@ -13,6 +13,7 @@ struct VideoTrimViewControllerRepresentableView: UIViewControllerRepresentable {
     
     func makeUIViewController(context: Context) -> VideoTrimViewController {
         viewController.setViewModel(viewModel: viewModel)
+        viewModel.getVideoAsset()
         
         return viewController
     }

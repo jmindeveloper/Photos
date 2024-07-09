@@ -57,6 +57,7 @@
 		0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
 		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
+		0EEF48222C3DA18D00B4C1E4 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF48212C3DA18D00B4C1E4 /* Filter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,6 +111,7 @@
 		0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditViewModel.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
+		0EEF48212C3DA18D00B4C1E4 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -310,6 +312,7 @@
 			isa = PBXGroup;
 			children = (
 				0ED84E102C3C5D8000946B61 /* Album.swift */,
+				0EEF48212C3DA18D00B4C1E4 /* Filter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -411,6 +414,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EEF48222C3DA18D00B4C1E4 /* Filter.swift in Sources */,
 				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
 				0E369F2C2C3D43450061FA0A /* Color+.swift in Sources */,
 				0EC2F36C2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift in Sources */,

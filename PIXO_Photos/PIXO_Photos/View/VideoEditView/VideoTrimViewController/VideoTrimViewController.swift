@@ -31,7 +31,6 @@ final class VideoTrimViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setSubViews()
-        binding()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -106,5 +105,6 @@ final class VideoTrimViewController: UIViewController {
     
     func setViewModel(viewModel: VideoEditViewModel) {
         self.viewModel = viewModel
+        binding()
     }
 }

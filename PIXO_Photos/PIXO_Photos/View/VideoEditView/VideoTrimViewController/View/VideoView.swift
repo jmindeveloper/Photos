@@ -34,6 +34,7 @@ final class VideoView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        playerLayer?.frame = bounds
     }
     
     func setAsset(asset: AVAsset) {

@@ -10,26 +10,79 @@ import SwiftUI
 struct VideoEditView: View {
     @EnvironmentObject private var viewModel: VideoEditViewModel
     @Environment(\.presentationMode) var presentationMode
+    @State var uiImage: UIImage?
     
     var body: some View {
         VStack {
             
             saveCancelView()
             
-            toolBar()
-                .padding(.top, 5)
+            if viewModel.editMode != .Trim {
+                toolBar()
+                    .padding(.top, 5)
+            }
             
             Spacer()
             
-            VideoTrimViewControllerRepresentableView()
-                .environmentObject(viewModel)
+            if viewModel.editMode == .Trim {
+                VideoTrimViewControllerRepresentableView()
+                    .environmentObject(viewModel)
+            } else {
+                if let image = uiImage {
+                    ZStack(alignment: .bottom) {
+                        FilterImage(
+                            inputImage: image,
+                            context: viewModel.context,
+                            saturation: viewModel.saturation,
+                            hue: viewModel.hue,
+                            exposure: viewModel.exposure,
+                            brightness: viewModel.brightness,
+                            contrast: viewModel.contrast,
+                            highlights: viewModel.highlights,
+                            shadows: viewModel.shadows,
+                            temperature: viewModel.temperature,
+                            sharpness: viewModel.sharpness,
+                            filterName: viewModel.currentFilter.rawValue
+                        )
+                        
+                        Text(viewModel.editMode == .Adjust ? viewModel.currentAdjustEffect.title : viewModel.currentFilter.rawValue)
+                            .padding(4)
+                            .background {
+                                RoundedRectangle(cornerRadius: 4).fill(.gray)
+                            }
+                            .padding(.bottom, 10)
+                    }
+                }
+            }
             
             Spacer()
+            
+            switch viewModel.editMode {
+            case .Adjust:
+                selectEffectView()
+                
+                ScrollSlider(
+                    currentValue: $viewModel.currentAdjustEffectValue,
+                    min: $viewModel.currentAdjustMin,
+                    max: $viewModel.currentAdjustMax,
+                    updateSlider: $viewModel.updateSlider
+                ) { value in
+                    viewModel.changeAdjustEffectValue(value)
+                }
+                .padding(.horizontal, 20)
+            case .Filter:
+                selectFilterView()
+            case .Trim:
+                EmptyView()
+            }
             
             selectEditModeView()
                 .padding(.top, 3)
         }
         .onAppear {
+            PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
+                uiImage = image
+            }
         }
     }
     
@@ -37,16 +90,16 @@ struct VideoEditView: View {
     private func saveCancelView() -> some View {
         HStack {
             Button {
-//                if viewModel.backwardHistoryEmpty {
+                if viewModel.backwardHistoryEmpty {
                     presentationMode.wrappedValue.dismiss()
-//                } else {
-//                    AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
-//                        .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
-//                            presentationMode.wrappedValue.dismiss()
-//                        }
-//                        .addAction(actionTitle: "취소", style: .cancel)
-//                        .present()
-//                }
+                } else {
+                    AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
+                        .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
+                            presentationMode.wrappedValue.dismiss()
+                        }
+                        .addAction(actionTitle: "취소", style: .cancel)
+                        .present()
+                }
             } label: {
                 Text("취소")
                     .foregroundColor(.black)
@@ -71,9 +124,9 @@ struct VideoEditView: View {
                         RoundedRectangle(cornerRadius: 10000)
                             .fill(Color.yellow)
                     )
-//                    .opacity(viewModel.backwardHistoryEmpty ? 0.8 : 1)
+                    .opacity(viewModel.backwardHistoryEmpty ? 0.8 : 1)
             }
-//            .disabled(viewModel.backwardHistoryEmpty)
+            .disabled(viewModel.backwardHistoryEmpty)
         }
         .padding(.horizontal, 35)
     }
@@ -83,31 +136,31 @@ struct VideoEditView: View {
         ZStack {
             HStack {
                 Button {
-//                    viewModel.backward()
+                    viewModel.backward()
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-//                        .foregroundColor(viewModel.backwardHistoryEmpty ? .gray : .label)
+                        .foregroundColor(viewModel.backwardHistoryEmpty ? .gray : .label)
                 }
-//                .disabled(viewModel.backwardHistoryEmpty)
+                .disabled(viewModel.backwardHistoryEmpty)
                 .padding(.trailing, 4)
                 
                 Button {
-//                    viewModel.forward()
+                    viewModel.forward()
                 } label: {
                     Image(systemName: "arrowshape.turn.up.forward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-//                        .foregroundColor(viewModel.forwardHistoryEmpty ? .gray : .label)
+                        .foregroundColor(viewModel.forwardHistoryEmpty ? .gray : .label)
                 }
-//                .disabled(viewModel.forwardHistoryEmpty)
+                .disabled(viewModel.forwardHistoryEmpty)
                 
                 Spacer()
             }
             
-//            Text(viewModel.editMode.title)
-//                .foregroundColor(.gray)
+            Text(viewModel.editMode.title)
+                .foregroundColor(.gray)
         }
         .padding(.horizontal)
         .frame(height: 35)
@@ -119,7 +172,7 @@ struct VideoEditView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 30) {
                     Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 45)
-                    ForEach(PhotoEditViewModel.AdjustEffect.allCases, id: \.self) { effect in
+                    ForEach(AdjustEffect.allCases, id: \.self) { effect in
                         Image(systemName: effect.imageName)
                             .resizable()
                             .frame(width: 17, height: 17)
@@ -131,17 +184,17 @@ struct VideoEditView: View {
                             )
                             .contentShape(Circle())
                             .onTapGesture {
-//                                viewModel.currentAdjustEffect = effect
+                                viewModel.currentAdjustEffect = effect
                             }
                             .id(effect.title)
                     }
                     Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 45)
                 }
-//                .onChange(of: viewModel.currentAdjustEffect) {
-//                    withAnimation {
-//                        proxy.scrollTo(viewModel.currentAdjustEffect.title, anchor: .center)
-//                    }
-//                }
+                .onChange(of: viewModel.currentAdjustEffect) {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentAdjustEffect.title, anchor: .center)
+                    }
+                }
             }
             .frame(height: 55)
         }
@@ -152,23 +205,72 @@ struct VideoEditView: View {
         HStack(spacing: 30) {
             Spacer()
             
-            ForEach(PhotoEditViewModel.EditMode.allCases, id: \.self) { mode in
+            ForEach(VideoEditViewModel.EditMode.allCases, id: \.self) { mode in
                 Button {
-//                    viewModel.editMode = mode
+                    viewModel.editMode = mode
                 } label: {
                     VStack {
                         Image(systemName: mode.imageName)
                             .resizable()
                             .frame(width: 20, height: 20)
-//                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
+                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
                         
                         Text(mode.title)
-//                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
+                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
                     }
                 }
             }
             
             Spacer()
+        }
+    }
+    
+    private func selectFilterView() -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 10) {
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
+                    ForEach(Filter.allCases, id: \.self) { filter in
+                        if let image = uiImage {
+                            VStack {
+                                FilterImage(
+                                    inputImage: image,
+                                    contentMode: .fill,
+                                    context: viewModel.context,
+                                    saturation: viewModel.saturation,
+                                    hue: viewModel.hue,
+                                    exposure: viewModel.exposure,
+                                    brightness: viewModel.brightness,
+                                    contrast: viewModel.contrast,
+                                    highlights: viewModel.highlights,
+                                    shadows: viewModel.shadows,
+                                    temperature: viewModel.temperature,
+                                    sharpness: viewModel.sharpness,
+                                    filterName: filter.rawValue
+                                )
+                                .frame(width: 60, height: 60)
+                            }
+                            .id(filter.rawValue)
+                            .onTapGesture {
+                                viewModel.currentFilter = filter
+                            }
+                            .clipShape(Rectangle())
+                        }
+                    }
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
+                }
+                .onAppear {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentFilter.rawValue, anchor: .center)
+                    }
+                }
+                .onChange(of: viewModel.currentFilter) {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentFilter.rawValue, anchor: .center)
+                    }
+                }
+            }
+            .frame(height: 60)
         }
     }
 }

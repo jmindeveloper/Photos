@@ -170,7 +170,7 @@ struct PhotoEditView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 30) {
                     Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 45)
-                    ForEach(PhotoEditViewModel.AdjustEffect.allCases, id: \.self) { effect in
+                    ForEach(AdjustEffect.allCases, id: \.self) { effect in
                         Image(systemName: effect.imageName)
                             .resizable()
                             .frame(width: 17, height: 17)
@@ -228,7 +228,7 @@ struct PhotoEditView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 10) {
                     Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
-                    ForEach(PhotoEditViewModel.Filter.allCases, id: \.self) { filter in
+                    ForEach(Filter.allCases, id: \.self) { filter in
                         if let image = uiImage {
                             VStack {
                                 FilterImage(

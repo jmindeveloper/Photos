@@ -94,7 +94,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
                 )
             } else {
                 LazyView(
-                    VideoEditView().environmentObject(VideoEditViewModel(asset: viewModel.currentAsset))
+                    VideoEditView().environmentObject(VideoEditViewModel(editAsset: viewModel.currentAsset))
                 )
             }
         }

@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct PhotoEditView: View {
+    @EnvironmentObject var viewModel: PhotoEditViewModel
+    @State var uiImage: UIImage?
+    
     var body: some View {
         VStack {
             
@@ -18,9 +21,11 @@ struct PhotoEditView: View {
             
             Spacer()
             
-            Image(systemName: "heart")
-                .resizable()
-                .scaledToFit()
+            if let image = uiImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+            }
             
             Spacer()
             
@@ -29,8 +34,13 @@ struct PhotoEditView: View {
             ScrollSlider()
                 .padding(.horizontal, 20)
             
-            selectEditTypeView()
+            selectEditModeView()
                 .padding(.top, 3)
+        }
+        .onAppear {
+            PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
+                uiImage = image
+            }
         }
     }
     
@@ -124,49 +134,23 @@ struct PhotoEditView: View {
     }
     
     @ViewBuilder
-    private func selectEditTypeView() -> some View {
+    private func selectEditModeView() -> some View {
         HStack(spacing: 30) {
             Spacer()
             
-            Button {
-                
-            } label: {
-                VStack {
-                    Image(systemName: "slider.horizontal.3")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.gray)
-                    
-                    Text("필터")
-                        .foregroundStyle(.gray)
-                }
-            }
-            
-            Button {
-                
-            } label: {
-                VStack {
-                    Image(systemName: "camera.filters")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.gray)
-                    
-                    Text("조절")
-                        .foregroundStyle(.gray)
-                }
-            }
-            
-            Button {
-                
-            } label: {
-                VStack {
-                    Image(systemName: "crop.rotate")
-                        .resizable()
-                        .frame(width: 20, height: 20)
-                        .foregroundColor(.gray)
-                    
-                    Text("자르기")
-                        .foregroundStyle(.gray)
+            ForEach(PhotoEditViewModel.EditMode.allCases, id: \.self) { mode in
+                Button {
+                    viewModel.editMode = mode
+                } label: {
+                    VStack {
+                        Image(systemName: mode.imageName)
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                            .foregroundColor(.gray)
+                        
+                        Text(mode.title)
+                            .foregroundStyle(.gray)
+                    }
                 }
             }
             

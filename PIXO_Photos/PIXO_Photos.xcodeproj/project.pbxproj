@@ -46,6 +46,7 @@
 		0ED84E172C3CF0A900946B61 /* ScrollSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */; };
 		0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */; };
 		0ED84E1C2C3CF38F00946B61 /* PhotoEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1B2C3CF38F00946B61 /* PhotoEditView.swift */; };
+		0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
 		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
 /* End PBXBuildFile section */
@@ -90,6 +91,7 @@
 		0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSlider.swift; sourceTree = "<group>"; };
 		0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHorizontalCenterOffsetView.swift; sourceTree = "<group>"; };
 		0ED84E1B2C3CF38F00946B61 /* PhotoEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditView.swift; sourceTree = "<group>"; };
+		0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditViewModel.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -278,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				0ED84E1B2C3CF38F00946B61 /* PhotoEditView.swift */,
+				0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */,
 			);
 			path = PhotoEditView;
 			sourceTree = "<group>";
@@ -371,6 +374,7 @@
 				0E4FB47B2C3BF4E800DD7D79 /* PhotoDetailView.swift in Sources */,
 				0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */,
 				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
+				0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */,
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
 				0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,

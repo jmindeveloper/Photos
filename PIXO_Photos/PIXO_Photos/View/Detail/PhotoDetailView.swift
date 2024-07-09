@@ -11,6 +11,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
     @EnvironmentObject var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var isPresentAlbumGridView: Bool = false
+    @State var isPresentEditView: Bool = false
     
     var body: some View {
         TabView {
@@ -71,7 +72,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
             Spacer()
             
             Button {
-                
+                isPresentEditView = true
             } label: {
                 Text("편집")
                     .font(.bold(fontSize: .body2))
@@ -85,6 +86,11 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
             LinearGradient(gradient: Gradient(colors: [Color.black, Color.clear]), startPoint: .top, endPoint: .bottom)
                 .blur(radius: 0.8)
         )
+        .fullScreenCover(isPresented: $isPresentEditView) {
+            LazyView(
+                PhotoEditView().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
+            )
+        }
     }
     
     @ViewBuilder

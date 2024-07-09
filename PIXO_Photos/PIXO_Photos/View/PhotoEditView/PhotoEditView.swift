@@ -116,16 +116,20 @@ struct PhotoEditView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 30) {
                 Color.clear.frame(width: 20)
-                ForEach(effects, id: \.self) { effect in
-                    Image(systemName: effect.image)
+                ForEach(PhotoEditViewModel.AdjustEffect.allCases, id: \.self) { effect in
+                    Image(systemName: effect.imageName)
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 17, height: 17)
                         .foregroundColor(Color(uiColor: .label))
-                        .padding(10)
+                        .padding(13)
                         .clipShape(Circle())
                         .overlay(
                             Circle().stroke().foregroundColor(.gray)
                         )
+                        .contentShape(Circle())
+                        .onTapGesture {
+                            viewModel.currentAdjustEffect = effect
+                        }
                 }
                 Color.clear.frame(width: 20)
             }
@@ -158,24 +162,3 @@ struct PhotoEditView: View {
         }
     }
 }
-
-@available(iOS 17.0, *)
-#Preview {
-    PhotoEditView()
-}
-
-
-struct Effect: Identifiable, Hashable {
-    var id = UUID().uuidString
-    var title: String = ""
-    var image: String = ""
-}
-
-var effects = [
-    Effect(title: "밝기", image: "heart"),
-    Effect(title: "노출", image: "heart"),
-    Effect(title: "채도", image: "heart"),
-    Effect(title: "휘도", image: "heart"),
-    Effect(title: "대비", image: "heart"),
-    Effect(title: "선명도", image: "heart"),
-]

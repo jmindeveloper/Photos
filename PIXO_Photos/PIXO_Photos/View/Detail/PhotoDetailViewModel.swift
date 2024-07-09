@@ -151,7 +151,6 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
             if let index = index {
                 currentItemIndex = index - 1
             }
-            assets.removeAll { $0 == self.currentAsset }
         }
     }
     
@@ -195,7 +194,13 @@ extension PhotoDetailViewModel: PHPhotoLibraryChangeObserver {
         }
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            let beforeAssets = assets
             assets = asset
+            
+            if beforeAssets.count > asset.count {
+                detailScrollToItemPublisher.send(currentItemIndex)
+                thumbnailScrollToItemPublisher.send(currentItemIndex)
+            }
         }
     }
 }

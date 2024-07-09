@@ -35,7 +35,6 @@
 		0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */; };
 		0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB82C3A965E00BA93D1 /* UIView+.swift */; };
 		0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA42C3A72D2009F8F22 /* Font+.swift */; };
-		0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */; };
 		0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E95E3DF2C3AA40D00F65754 /* View+.swift */; };
 		0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */; };
 		0E9B8FFB2C3B0783004E2A7A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */; };
@@ -44,6 +43,8 @@
 		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
 		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
 		0ED84E112C3C5D8000946B61 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E102C3C5D8000946B61 /* Album.swift */; };
+		0ED84E172C3CF0A900946B61 /* ScrollSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */; };
+		0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
 		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
 /* End PBXBuildFile section */
@@ -77,7 +78,6 @@
 		0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabbar+.swift"; sourceTree = "<group>"; };
 		0E84BBB82C3A965E00BA93D1 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		0E907BA42C3A72D2009F8F22 /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
-		0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollOffsetView.swift; sourceTree = "<group>"; };
 		0E95E3DF2C3AA40D00F65754 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
@@ -86,6 +86,8 @@
 		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		0ED84E102C3C5D8000946B61 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSlider.swift; sourceTree = "<group>"; };
+		0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHorizontalCenterOffsetView.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -206,8 +208,8 @@
 		0E64E2F52C3A4DAE004C29CE /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				0ED84E152C3CF09F00946B61 /* ScrollSlider */,
 				0E64E2F82C3A4DC9004C29CE /* PhotoGridView */,
-				0E907BA62C3A773F009F8F22 /* ScrollOffsetView.swift */,
 				0ECBB1052C3AC8C600482E71 /* ActivityView.swift */,
 				0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */,
 			);
@@ -258,6 +260,15 @@
 				0ED84E102C3C5D8000946B61 /* Album.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		0ED84E152C3CF09F00946B61 /* ScrollSlider */ = {
+			isa = PBXGroup;
+			children = (
+				0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */,
+				0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */,
+			);
+			path = ScrollSlider;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -348,7 +359,6 @@
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
 				0E4FB47B2C3BF4E800DD7D79 /* PhotoDetailView.swift in Sources */,
 				0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */,
-				0E907BA72C3A773F009F8F22 /* ScrollOffsetView.swift in Sources */,
 				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
 				0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */,
@@ -364,11 +374,13 @@
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E9ED6C52C3BCF2E000BE981 /* PhotoDetailViewModel.swift in Sources */,
 				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,
+				0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */,
 				0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */,
 				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */,
 				0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */,
+				0ED84E172C3CF0A900946B61 /* ScrollSlider.swift in Sources */,
 				0E64E2FC2C3A5430004C29CE /* Constant.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
 				0E64E2EB2C3A3A10004C29CE /* PhotoStorageView.swift in Sources */,

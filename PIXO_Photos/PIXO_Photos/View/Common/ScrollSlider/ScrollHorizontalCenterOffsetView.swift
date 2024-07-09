@@ -1,31 +1,39 @@
 //
-//  ScrollOffsetView.swift
+//  ScrollHorizontalCenterOffsetView.swift
 //  PIXO_Photos
 //
-//  Created by J_Min on 7/7/24.
+//  Created by J_Min on 7/9/24.
 //
 
 import SwiftUI
 
-struct ScrollOffsetView<Content: View>: View {
+struct ScrollHorizontalCenterOffsetView<Content: View>: View {
     let onOffsetChange: (CGFloat) -> Void
     let content: () -> Content
+    let axes: Axis.Set
+    
+    @State var viewSize: CGSize = .zero
     
     init(
+        _ axes: Axis.Set = .vertical,
         onOffsetChange: @escaping (CGFloat) -> Void,
         @ViewBuilder content: @escaping () -> Content
     ) {
+        self.axes = axes
         self.onOffsetChange = onOffsetChange
         self.content = content
     }
     
     var body: some View {
-        ScrollView {
+        ScrollView(axes, showsIndicators: false) {
             offsetReader
             content()
                 .padding(.top, -8)
         }
-        .coordinateSpace(name: "frameLayer")
+        .readSize(onChange: { size in
+            viewSize = size
+        })
+        .coordinateSpace(name: "SCOLLVIEWFRAME")
         .onPreferenceChange(OffsetPreferenceKey.self, perform: onOffsetChange)
     }
     
@@ -34,10 +42,18 @@ struct ScrollOffsetView<Content: View>: View {
             Color.clear
                 .preference(
                     key: OffsetPreferenceKey.self,
-                    value: proxy.frame(in: .named("frameLayer")).minY
+                    value: calculateOffset(proxy: proxy)
                 )
         }
         .frame(height: 0)
+    }
+    
+    func calculateOffset(proxy: GeometryProxy) -> CGFloat {
+        let viewWidth = viewSize.width
+        let width = proxy.frame(in: .named("SCOLLVIEWFRAME")).width
+        let minX = proxy.frame(in: .named("SCOLLVIEWFRAME")).minX
+        
+        return abs(minX) / (width - viewWidth)
     }
 }
 
@@ -45,4 +61,3 @@ private struct OffsetPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = .zero
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {}
 }
-

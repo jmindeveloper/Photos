@@ -67,7 +67,6 @@ final class VideoTrimViewController: UIViewController {
             .sink { [weak self] asset in
                 self?.videoView.setAsset(asset: asset)
                 self?.videoTrimTimeLineView.setTimeLineView(asset: asset)
-                self?.videoView.start()
             }.store(in: &subscriptions)
         
         videoView.videoIntervalPublisher
@@ -75,9 +74,33 @@ final class VideoTrimViewController: UIViewController {
                 self?.videoTrimTimeLineView.setTimeLinePosition(currentTime: current, totalTime: total)
             }.store(in: &subscriptions)
         
+        videoView.finishVideoPublisher
+            .sink { [weak self] in
+                self?.videoTrimTimeLineView.finishVideo()
+            }.store(in: &subscriptions)
+        
         videoTrimTimeLineView.seekPublisher
             .sink { [weak self] time in
                 self?.videoView.seek(time: time)
+            }.store(in: &subscriptions)
+        
+        videoTrimTimeLineView.playPausePublisher
+            .sink { [weak self] isPlay in
+                if isPlay {
+                    self?.videoView.start()
+                } else {
+                    self?.videoView.stop()
+                }
+            }.store(in: &subscriptions)
+        
+        videoTrimTimeLineView.startOffsetPublisher
+            .sink { [weak self] offset in
+                self?.videoView.setStartTime(offset: offset)
+            }.store(in: &subscriptions)
+        
+        videoTrimTimeLineView.endOffsetPublisher
+            .sink { [weak self] offset in
+                self?.videoView.setEndTime(offset: offset)
             }.store(in: &subscriptions)
     }
     

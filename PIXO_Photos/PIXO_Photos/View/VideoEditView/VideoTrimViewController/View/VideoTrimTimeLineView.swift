@@ -81,16 +81,15 @@ final class VideoTrimTimeLineView: UIView {
     // MARK: - Properties
     private var subscriptions = Set<AnyCancellable>()
     let seekPublisher = PassthroughSubject<CMTime, Never>()
+    let playPausePublisher = CurrentValueSubject<Bool, Never>(false)
+    let startOffsetPublisher = PassthroughSubject<CGFloat, Never>()
+    let endOffsetPublisher = PassthroughSubject<CGFloat, Never>()
     
     // MARK: - setSubViews
     private func setSubViews() {
         [baseView, playPauseButton, trimPositionView, timeLineView,
          startPositionView, endPositionView].forEach {
             addSubview($0)
-        }
-        
-        [].forEach {
-            baseView.addSubview($0)
         }
         
         setConstraints()
@@ -146,9 +145,20 @@ final class VideoTrimTimeLineView: UIView {
         
         let endPositionGesture = UIPanGestureRecognizer(target: self, action: #selector(endPositionPanGesture(_:)))
         endPositionView.addGestureRecognizer(endPositionGesture)
+        
+        playPauseButton.addTarget(self, action: #selector(playPauseButtonAction(_:)), for: .touchUpInside)
+    }
+    
+    @objc private func playPauseButtonAction(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        playPausePublisher.send(sender.isSelected)
     }
     
     @objc private func startPositionPanGesture(_ sender: UIPanGestureRecognizer) {
+        if playPausePublisher.value {
+            playPauseButtonAction(playPauseButton)
+        }
+        
         let translation = sender.translation(in: startPositionView)
         
         let moveX = translation.x
@@ -161,10 +171,23 @@ final class VideoTrimTimeLineView: UIView {
         
         startPositionOffset?.constant += moveX
         
+        var startOffset = (startPositionView.frame.maxX - 81) / timeLineView.bounds.width
+        if startOffset < 0 {
+            startOffset = 0
+        } else if startOffset > 1 {
+            startOffset = 1
+        }
+        
+        startOffsetPublisher.send(startOffset)
+        
         sender.setTranslation(CGPoint.zero, in: startPositionView)
     }
     
     @objc private func endPositionPanGesture(_ sender: UIPanGestureRecognizer) {
+        if playPausePublisher.value {
+            playPauseButtonAction(playPauseButton)
+        }
+        
         let translation = sender.translation(in: endPositionView)
         
         let moveX = translation.x
@@ -177,6 +200,15 @@ final class VideoTrimTimeLineView: UIView {
         
         endPositionOffset?.constant += moveX
         
+        var endOffset = (endPositionView.frame.minX - 81) / baseView.bounds.width
+        if endOffset < 0 {
+            endOffset = 0
+        } else if endOffset > 1 {
+            endOffset = 1
+        }
+        
+        endOffsetPublisher.send(endOffset)
+        
         sender.setTranslation(CGPoint.zero, in: endPositionView)
     }
     
@@ -187,5 +219,9 @@ final class VideoTrimTimeLineView: UIView {
     
     func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {
         timeLineView.setTimeLinePosition(currentTime: currentTime, totalTime: totalTime)
+    }
+    
+    func finishVideo() {
+        playPauseButton.isSelected = false
     }
 }

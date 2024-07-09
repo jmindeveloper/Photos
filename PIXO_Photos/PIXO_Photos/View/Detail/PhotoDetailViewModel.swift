@@ -24,7 +24,7 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) 
 }
 
-final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewModelProtocol {
+final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumGridViewModelProtocol {
     @Published var assets: [PHAsset] = [] {
         didSet {
             isAssetsChange = true
@@ -53,6 +53,7 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
     }
     @Published var userAlbum: [Album] = []
     
+    private var fetchResult: PHFetchResult<PHAsset> = PHFetchResult()
     var isAssetsChange: Bool = false
     let library: PhotoLibrary
     var isVideo: Bool {
@@ -60,6 +61,13 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
     }
     var currentItemIndex: Int {
         didSet {
+            if currentItemIndex >= assets.count {
+                currentItemIndex = assets.count - 1
+            }
+            if currentItemIndex < 0 {
+                currentItemIndex = 0
+            }
+            
             self.currentAsset = assets[currentItemIndex]
         }
     }
@@ -70,11 +78,13 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
     let detailScrollToItemPublisher = PassthroughSubject<Int, Never>()
     let thumbnailScrollToItemPublisher = PassthroughSubject<Int, Never>()
     
-    init(assets: [PHAsset], library: PhotoLibrary, currentItemIndex: Int) {
+    init(assets: [PHAsset], library: PhotoLibrary, fetchResult: PHFetchResult<PHAsset>, currentItemIndex: Int) {
         self.assets = assets
         self.library = library
         self.currentAsset = assets[currentItemIndex]
         self.currentItemIndex = currentItemIndex
+        self.fetchResult = fetchResult
+        super.init()
         binding()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.detailScrollToItemPublisher.send(currentItemIndex)
@@ -95,6 +105,8 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
         userAlbum.sort {
             $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
         }
+        
+        PHPhotoLibrary.shared().register(self)
     }
     
     // MARK: - Method
@@ -133,8 +145,12 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
     }
     
     func deleteCurrentAsset() {
+        let index = assets.firstIndex(of: currentAsset)
         library.deleteAssets(with: [currentAsset]) { [weak self] in
             guard let self = self else { return }
+            if let index = index {
+                currentItemIndex = index - 1
+            }
             assets.removeAll { $0 == self.currentAsset }
         }
     }
@@ -163,6 +179,23 @@ final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewMod
                 userAlbum[albumIndex].assets.append(currentAsset)
                 userAlbum[albumIndex].assetCount += 1
             }
+        }
+    }
+}
+
+extension PhotoDetailViewModel: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard let change = changeInstance.changeDetails(for: fetchResult)?.fetchResultAfterChanges else {
+            return
+        }
+        fetchResult = change
+        var asset = [PHAsset]()
+        for i in 0..<change.count {
+            asset.append(change[i])
+        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            assets = asset
         }
     }
 }

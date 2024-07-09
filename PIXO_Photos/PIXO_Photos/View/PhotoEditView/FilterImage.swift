@@ -13,7 +13,7 @@ struct FilterImage: View {
     var inputImage: UIImage
     var contentMode: ContentMode = .fit
     var context = CIContext()
-
+    
     // Saturation (채도)
     var saturation: Float
     // Hue (색조)
@@ -34,7 +34,7 @@ struct FilterImage: View {
     var sharpness: Float
     // 사진 앱 필터 이름
     var filterName: String
-
+    
     var body: some View {
         if let cgimg = applyFilters(to: inputImage) {
             return Image(decorative: cgimg, scale: 1.0)
@@ -46,7 +46,7 @@ struct FilterImage: View {
                 .aspectRatio(contentMode: contentMode)
         }
     }
-
+    
     func applyFilters(to image: UIImage) -> CGImage? {
         guard let ciImage = CIImage(image: image) else { return nil }
         
@@ -140,5 +140,10 @@ struct FilterImage: View {
         }
         
         return filter
+    }
+    
+    func uiImage() -> UIImage? {
+        guard let cgImage = applyFilters(to: inputImage) else { return nil }
+        return UIImage(cgImage: cgImage)
     }
 }

@@ -5,7 +5,7 @@
 //  Created by J_Min on 7/9/24.
 //
 
-import Foundation
+import UIKit
 import Photos
 import Combine
 
@@ -13,7 +13,7 @@ final class PhotoEditViewModel: ObservableObject {
     enum EditMode: CaseIterable {
         case Adjust
         case Filter
-        case Crop
+//        case Crop
         
         var imageName: String {
             switch self {
@@ -21,8 +21,8 @@ final class PhotoEditViewModel: ObservableObject {
                 return "camera.filters"
             case .Adjust:
                 return "slider.horizontal.3"
-            case .Crop:
-                return "crop.rotate"
+//            case .Crop:
+//                return "crop.rotate"
             }
         }
         
@@ -32,8 +32,8 @@ final class PhotoEditViewModel: ObservableObject {
                 return "필터"
             case .Adjust:
                 return "조절"
-            case .Crop:
-                return "자르기"
+//            case .Crop:
+//                return "자르기"
             }
         }
     }
@@ -390,5 +390,17 @@ final class PhotoEditViewModel: ObservableObject {
             currentAdjustEffectValue = sharpness
         }
         updateSlider = true
+    }
+    
+    func saveImage(image: UIImage, completion: @escaping (() -> Void)) {
+        PHPhotoLibrary.shared().performChanges({
+            PHAssetChangeRequest.creationRequestForAsset(from: image)
+        }) { success, _ in
+            if success {
+                completion()
+            } else {
+                fatalError("이미지 저장 실패")
+            }
+        }
     }
 }

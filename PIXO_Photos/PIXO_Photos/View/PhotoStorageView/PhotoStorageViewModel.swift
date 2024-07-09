@@ -19,6 +19,7 @@ protocol PhotoStorageViewModelProtocol: ObservableObject {
     var selectedAssets: Set<PHAsset> { get set }
     var selectedAssetsTitle: String { get }
     var visibleAssetsDate: [Date] { get set }
+    var fetchResult: PHFetchResult<PHAsset>{ get set }
     
     func duplicateSelectedAssets()
     func setFavoriteSelectedAssets()
@@ -40,7 +41,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
             fatalError("Recents collection을 찾지 못했습니다.")
         }
     }
-    private var fetchResult: PHFetchResult<PHAsset> = .init()
+    var fetchResult: PHFetchResult<PHAsset> = .init()
     
     @Published var assets: [PHAsset] = []
     @Published var imageCount: Int = 0

@@ -150,8 +150,13 @@ final class PhotoEditViewModel: ObservableObject {
         }
     }
     
+    enum Filter: String, CaseIterable {
+        case Original, Mono, Tonal, Noir, Fade, Chrome, Process, Transfer, Instant
+    }
+    
     @Published var editMode: EditMode = .Adjust
     @Published var editAsset: PHAsset
+    @Published var currentFilter: Filter = .Original
     @Published var currentAdjustEffect: AdjustEffect = .Exposure {
         didSet {
             currentAdjustMin = currentAdjustEffect.minValue
@@ -194,6 +199,8 @@ final class PhotoEditViewModel: ObservableObject {
     @Published var currentAdjustMin: Float = AdjustEffect.Exposure.minValue
     @Published var currentAdjustMax: Float = AdjustEffect.Exposure.maxValue
     @Published var currentAdjustEffectValue: Float = 0
+    
+    var context = CIContext()
     
     init(editAsset: PHAsset) {
         self.editAsset = editAsset

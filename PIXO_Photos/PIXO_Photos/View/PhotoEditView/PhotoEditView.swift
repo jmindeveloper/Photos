@@ -10,6 +10,7 @@ import SwiftUI
 struct PhotoEditView: View {
     @EnvironmentObject var viewModel: PhotoEditViewModel
     @State var uiImage: UIImage?
+    var context = CIContext()
     
     var body: some View {
         VStack {
@@ -25,6 +26,7 @@ struct PhotoEditView: View {
                 ZStack(alignment: .bottom) {
                     FilterImage(
                         inputImage: image,
+                        context: viewModel.context,
                         saturation: viewModel.saturation,
                         hue: viewModel.hue,
                         exposure: viewModel.exposure,
@@ -33,30 +35,40 @@ struct PhotoEditView: View {
                         highlights: viewModel.highlights,
                         shadows: viewModel.shadows,
                         temperature: viewModel.temperature,
-                        sharpness: viewModel.sharpness
+                        sharpness: viewModel.sharpness,
+                        filterName: viewModel.currentFilter.rawValue
                     )
                     
-                    Text(viewModel.currentAdjustEffect.title)
-                        .padding(4)
-                        .background {
-                            RoundedRectangle(cornerRadius: 4).fill(.gray)
-                        }
-                        .padding(.bottom, 10)
+                    if viewModel.editMode != .Crop {
+                        Text(viewModel.editMode == .Adjust ? viewModel.currentAdjustEffect.title : viewModel.currentFilter.rawValue)
+                            .padding(4)
+                            .background {
+                                RoundedRectangle(cornerRadius: 4).fill(.gray)
+                            }
+                            .padding(.bottom, 10)
+                    }
                 }
             }
             
             Spacer()
             
-            selectEffectView()
-            
-            ScrollSlider(
-                currentValue: $viewModel.currentAdjustEffectValue,
-                min: $viewModel.currentAdjustMin,
-                max: $viewModel.currentAdjustMax
-            ) { value in
-                viewModel.changeAdjustEffectValue(value)
+            switch viewModel.editMode {
+            case .Adjust:
+                selectEffectView()
+                
+                ScrollSlider(
+                    currentValue: $viewModel.currentAdjustEffectValue,
+                    min: $viewModel.currentAdjustMin,
+                    max: $viewModel.currentAdjustMax
+                ) { value in
+                    viewModel.changeAdjustEffectValue(value)
+                }
+                .padding(.horizontal, 20)
+            case .Filter:
+                selectFilterView()
+            case .Crop:
+                EmptyView()
             }
-            .padding(.horizontal, 20)
             
             selectEditModeView()
                 .padding(.top, 3)
@@ -184,15 +196,59 @@ struct PhotoEditView: View {
                         Image(systemName: mode.imageName)
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.gray)
+                            .foregroundColor(viewModel.editMode == mode ? .white : .gray)
                         
                         Text(mode.title)
-                            .foregroundStyle(.gray)
+                            .foregroundColor(viewModel.editMode == mode ? .white : .gray)
                     }
                 }
             }
             
             Spacer()
+        }
+    }
+    
+    private func selectFilterView() -> some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 10) {
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
+                    ForEach(PhotoEditViewModel.Filter.allCases, id: \.self) { filter in
+                        if let image = uiImage {
+                            VStack {
+                                FilterImage(
+                                    inputImage: image,
+                                    contentMode: .fill,
+                                    context: viewModel.context,
+                                    saturation: viewModel.saturation,
+                                    hue: viewModel.hue,
+                                    exposure: viewModel.exposure,
+                                    brightness: viewModel.brightness,
+                                    contrast: viewModel.contrast,
+                                    highlights: viewModel.highlights,
+                                    shadows: viewModel.shadows,
+                                    temperature: viewModel.temperature,
+                                    sharpness: viewModel.sharpness,
+                                    filterName: filter.rawValue
+                                )
+                                .frame(width: 60, height: 60)
+                            }
+                            .id(filter.rawValue)
+                            .onTapGesture {
+                                viewModel.currentFilter = filter
+                            }
+                            .clipShape(Rectangle())
+                        }
+                    }
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
+                }
+                .onChange(of: viewModel.currentFilter) {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentFilter.rawValue, anchor: .center)
+                    }
+                }
+            }
+            .frame(height: 60)
         }
     }
 }

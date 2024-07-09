@@ -8,11 +8,11 @@
 import SwiftUI
 
 extension View {
-    func readFrame(name: String, onChange: @escaping (CGRect) -> Void) -> some View {
+    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
         background(
-            GeometryReader { proxy in
+            GeometryReader { geometryProxy in
                 Color.clear
-                    .preference(key: SizePreferenceKey.self, value: proxy.frame(in: .named(name)))
+                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
             }
         )
         .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
@@ -26,7 +26,6 @@ extension View {
 }
 
 struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect = .zero
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
+    static var defaultValue: CGSize = .zero
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
 }
-

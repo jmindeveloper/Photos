@@ -10,7 +10,21 @@ import Combine
 import UIKit
 import Photos
 
-final class PhotoDetailViewModel: AlbumGridViewModelProtocol {
+protocol PhotoDetailViewModelProtocol: ObservableObject {
+    var hiddenToolBar: Bool { get set }
+    var currentAsset: PHAsset { get set }
+    var isVideo: Bool { get }
+    var isPlayVideo: Bool { get set }
+    
+    func duplicateCurrentAssets()
+    func copyCurrentImageToClipboard()
+    func addAssetsToAlbum(albumName: String)
+    func setFavoriteCurrentAsset()
+    func deleteCurrentAsset()
+    func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) 
+}
+
+final class PhotoDetailViewModel: PhotoDetailViewModelProtocol, AlbumGridViewModelProtocol {
     @Published var assets: [PHAsset] = [] {
         didSet {
             isAssetsChange = true

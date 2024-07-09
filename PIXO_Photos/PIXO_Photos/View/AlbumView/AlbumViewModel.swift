@@ -9,15 +9,15 @@ import Foundation
 import Combine
 import Photos
 
-struct Album: Identifiable, Hashable {
-    var id: String
-    let title: String
-    var assets: [PHAsset]
-    var assetCount: Int
-    let fetchResult: PHFetchResult<PHAsset>
+protocol AlbumViewModelProtocol: ObservableObject {
+    var userAlbum: [Album] { get set }
+    var smartAlbum: [Album] { get set }
+    var library: PhotoLibrary { get }
+    
+    func createAlbum(title: String)
 }
 
-final class AlbumViewModel: AlbumGridViewModelProtocol {
+final class AlbumViewModel: AlbumViewModelProtocol, AlbumGridViewModelProtocol {
     let library: PhotoLibrary
     
     @Published var smartAlbum: [Album]
@@ -70,7 +70,7 @@ final class AlbumViewModel: AlbumGridViewModelProtocol {
             }.store(in: &subscriptions)
     }
     
-    func creatAlbum(title: String) {
+    func createAlbum(title: String) {
         library.createAlbum(withName: title) { [weak self] collection in
             guard let self = self else {
                 return

@@ -30,12 +30,12 @@ final class MainTabbarController: UITabBarController {
         let albumViewModel = AlbumViewModel(library: library)
         
         let photoVC = setTabbarControllerItem(
-            view: PhotoStorageView().environmentObject(photoStorageViewModel),
+            view: PhotoStorageView<PhotoStorageViewModel>().environmentObject(photoStorageViewModel),
             title: "보관함",
             image: UIImage(systemName: "photo.stack") ?? UIImage()
         )
         let albumVC = setTabbarControllerItem(
-            view: AlbumView().environmentObject(albumViewModel),
+            view: AlbumView<AlbumViewModel>().environmentObject(albumViewModel),
             title: "앨범",
             image: UIImage(systemName: "square.stack.fill") ?? UIImage()
         )

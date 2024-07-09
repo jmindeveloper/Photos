@@ -22,7 +22,7 @@ class AssetDragSelectManager: NSObject {
         assetWithFrame[index].frame = rect
     }
     
-    func dragingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint) {
+    func draggingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint) {
         guard let startIndex = itemIndexFromPoint(startLocation),
               let endIndex = itemIndexFromPoint(currentLocation) else {
             return
@@ -57,7 +57,7 @@ class AssetDragSelectManager: NSObject {
         }
     }
     
-    func finishDragingAssetSelect() {
+    func finishDraggingAssetSelect() {
         dragStartIndex = nil
         isDragStart = false
         isInsert = false

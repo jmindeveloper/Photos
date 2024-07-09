@@ -8,8 +8,8 @@
 import SwiftUI
 import Photos
 
-struct PhotoStorageView: View {
-    @EnvironmentObject var viewModel: PhotoStorageViewModel
+struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
+    @EnvironmentObject var viewModel: VM
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
@@ -28,16 +28,9 @@ struct PhotoStorageView: View {
                         columnItemCount: $columnItemCount,
                         cellContentMode: $cellContentMode
                     ) { asset in
-                        if let date = asset.creationDate {
-                            scrollAsset = asset
-                            viewModel.visibleAssetsDate.append(date)
-                        }
+                        handleAssetAppear(asset: asset)
                     } cellOnDisappearAction: { asset in
-                        if let date = asset.creationDate {
-                            viewModel.visibleAssetsDate.removeAll {
-                                $0 == date
-                            }
-                        }
+                        handleAssetDisAppear(asset: asset)
                     }
                     .environmentObject(viewModel)
                     
@@ -66,19 +59,7 @@ struct PhotoStorageView: View {
                         UITabBar.showTabBar(animated: false)
                     }
                 }
-                .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
-                        .onChanged { gesture in
-                            if !viewModel.selectMode { return }
-                            if !isEnableDragToSelect { isEnableDragToSelect = true; return }
-                            viewModel.dragingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
-                        }
-                        .onEnded { _ in
-                            if !viewModel.selectMode { return }
-                            isEnableDragToSelect = false
-                            viewModel.finishDragingAssetSelect()
-                        }
-                )
+                .gesture(dragSelectionGesture())
             }
             
             navigationBar()
@@ -86,36 +67,13 @@ struct PhotoStorageView: View {
         .toolbar {
             if viewModel.selectMode {
                 ToolbarItemGroup(placement: .bottomBar) {
-                    HStack {
-                        Button {
-                            viewModel.getSelectedAssetsImage { images in
-                                present(view: ActivityView(activityItmes: images))
-                            }
-                        } label: {
-                            Image(systemName: "square.and.arrow.up")
-                        }
-                        
-                        Button { } label: { Image(systemName: "square.and.arrow.up") }.opacity(0)
-                        
-                        let title = viewModel.selectedAssets.isEmpty ? "항목 선택" : "\(viewModel.selectedAssets.count)개의 항목 선택됨"
-                        Text(title)
-                            .font(.bold(fontSize: .body1))
-                            .frame(maxWidth: .infinity, alignment: .center)
-                        
-                        Button {
-                            viewModel.deleteSelectedAssets()
-                        } label: {
-                            Image(systemName: "trash")
-                        }
-                        
-                        imageSelectMenuButton()
-                    }
-                    .disabled(viewModel.selectedAssets.isEmpty)
+                    bottomToolbarItems()
                 }
             }
         }
     }
     
+    // MARK: - SubViews
     @ViewBuilder
     private func navigationBar() -> some View {
         HStack(alignment: .top) {
@@ -168,11 +126,7 @@ struct PhotoStorageView: View {
             }
             
             Button {
-                if cellContentMode == .fit {
-                    cellContentMode = .fill
-                } else {
-                    cellContentMode = .fit
-                }
+                cellContentMode.toggle()
             } label: {
                 Label(cellContentMode == .fill ? "영상비 격자" : "정방형 사진 격자", systemImage: "aspectratio")
             }
@@ -226,13 +180,74 @@ struct PhotoStorageView: View {
         .sheet(isPresented: $isPresentAlbumGridView) {
             NavigationView {
                 UserAlbumGridView<PhotoStorageViewModel>(isNavigate: false) { album in
-                    print(album.title)
                     viewModel.addAssetsToAlbum(albumName: album.title)
                     isPresentAlbumGridView = false
                 }
                 .navigationTitle("앨범에 추가")
                 .navigationBarTitleDisplayMode(.inline)
                 .environmentObject(viewModel)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func bottomToolbarItems() -> some View {
+        HStack {
+            Button {
+                viewModel.getSelectedAssetsImage { images in
+                    present(view: ActivityView(activityItmes: images))
+                }
+            } label: {
+                Image(systemName: "square.and.arrow.up")
+            }
+            
+            Button { } label: { Image(systemName: "square.and.arrow.up") }.opacity(0)
+            
+            Text(viewModel.selectedAssetsTitle)
+                .font(.bold(fontSize: .body1))
+                .frame(maxWidth: .infinity, alignment: .center)
+            
+            Button {
+                viewModel.deleteSelectedAssets()
+            } label: {
+                Image(systemName: "trash")
+            }
+            
+            imageSelectMenuButton()
+        }
+        .disabled(viewModel.selectedAssets.isEmpty)
+    }
+    
+    // MARK: - Gesture
+    private func dragSelectionGesture() -> some Gesture {
+            DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
+                .onChanged { gesture in
+                    guard viewModel.selectMode else { return }
+                    if !isEnableDragToSelect {
+                        isEnableDragToSelect = true
+                        return
+                    }
+                    viewModel.draggingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
+                }
+                .onEnded { _ in
+                    guard viewModel.selectMode else { return }
+                    isEnableDragToSelect = false
+                    viewModel.finishDraggingAssetSelect()
+                }
+        }
+    
+    // MARK: - Method
+    private func handleAssetAppear(asset: PHAsset) {
+        if let date = asset.creationDate {
+            scrollAsset = asset
+            viewModel.visibleAssetsDate.append(date)
+        }
+    }
+    
+    private func handleAssetDisAppear(asset: PHAsset) {
+        if let date = asset.creationDate {
+            viewModel.visibleAssetsDate.removeAll {
+                $0 == date
             }
         }
     }

@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct PhotoDetailView: View {
-    @EnvironmentObject var viewModel: PhotoDetailViewModel
+struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
+    @EnvironmentObject var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var isPresentAlbumGridView: Bool = false
     
     var body: some View {
         TabView {
             ZStack(alignment: .top) {
-                PhotoDetailViewControllerRepresentableView()
+                PhotoDetailViewControllerRepresentableView<PhotoDetailViewModel>()
                     .environmentObject(viewModel)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.1)) {

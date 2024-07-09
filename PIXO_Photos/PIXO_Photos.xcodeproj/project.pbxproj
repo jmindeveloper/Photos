@@ -13,6 +13,8 @@
 		0E14E1492C3BA17600B04BB0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E1482C3BA17600B04BB0 /* SnapKit */; };
 		0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */; };
 		0E14E1502C3BA2BC00B04BB0 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14E14F2C3BA2BC00B04BB0 /* SDWebImage */; };
+		0E341D7C2C3C54BF00E2CFE6 /* ContentMode+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341D7B2C3C54BF00E2CFE6 /* ContentMode+.swift */; };
+		0E341D7E2C3C5ADF00E2CFE6 /* AlbumCoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E341D7D2C3C5ADF00E2CFE6 /* AlbumCoverView.swift */; };
 		0E4FB4792C3BF3C100DD7D79 /* LazyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */; };
 		0E4FB47B2C3BF4E800DD7D79 /* PhotoDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E4FB47A2C3BF4E800DD7D79 /* PhotoDetailView.swift */; };
 		0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */; };
@@ -41,6 +43,7 @@
 		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
 		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
 		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
+		0ED84E112C3C5D8000946B61 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E102C3C5D8000946B61 /* Album.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
 		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
 /* End PBXBuildFile section */
@@ -50,6 +53,8 @@
 		0E0D64002C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewControllerRepresentableView.swift; sourceTree = "<group>"; };
 		0E14E1452C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailCollectionViewController.swift; sourceTree = "<group>"; };
 		0E14E14C2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		0E341D7B2C3C54BF00E2CFE6 /* ContentMode+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentMode+.swift"; sourceTree = "<group>"; };
+		0E341D7D2C3C5ADF00E2CFE6 /* AlbumCoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumCoverView.swift; sourceTree = "<group>"; };
 		0E4FB4782C3BF3C100DD7D79 /* LazyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazyView.swift; sourceTree = "<group>"; };
 		0E4FB47A2C3BF4E800DD7D79 /* PhotoDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailView.swift; sourceTree = "<group>"; };
 		0E64E2E32C3A39C6004C29CE /* MainTabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabbarController.swift; sourceTree = "<group>"; };
@@ -80,6 +85,7 @@
 		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
 		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		0ED84E102C3C5D8000946B61 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,6 +160,7 @@
 				0E64E2E82C3A3A09004C29CE /* AlbumView.swift */,
 				0E6AF6132C3B87C60001263F /* UserAlbumGridView.swift */,
 				0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */,
+				0E341D7D2C3C5ADF00E2CFE6 /* AlbumCoverView.swift */,
 			);
 			path = AlbumView;
 			sourceTree = "<group>";
@@ -179,6 +186,7 @@
 				0E95E3DF2C3AA40D00F65754 /* View+.swift */,
 				0ECBB1032C3AC5A000482E71 /* UIImage+.swift */,
 				0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */,
+				0E341D7B2C3C54BF00E2CFE6 /* ContentMode+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -234,6 +242,7 @@
 		0E84319D2C3A18CC0047157C /* PIXO_Photos */ = {
 			isa = PBXGroup;
 			children = (
+				0ED84E0F2C3C5D7600946B61 /* Model */,
 				0E64E2F02C3A487D004C29CE /* Application */,
 				0E64E2EF2C3A4879004C29CE /* Extension */,
 				0E64E2EC2C3A4849004C29CE /* Manager */,
@@ -241,6 +250,14 @@
 				0E8431AC2C3A18CD0047157C /* Info.plist */,
 			);
 			path = PIXO_Photos;
+			sourceTree = "<group>";
+		};
+		0ED84E0F2C3C5D7600946B61 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0ED84E102C3C5D8000946B61 /* Album.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -337,8 +354,11 @@
 				0E0D64012C3BA68F00583079 /* PhotoDetailViewControllerRepresentableView.swift in Sources */,
 				0E64E2EE2C3A4871004C29CE /* AlertManager.swift in Sources */,
 				0E4FB4792C3BF3C100DD7D79 /* LazyView.swift in Sources */,
+				0E341D7E2C3C5ADF00E2CFE6 /* AlbumCoverView.swift in Sources */,
 				0E64E2F72C3A4DC1004C29CE /* PhotoGridView.swift in Sources */,
 				0E6AF6142C3B87C60001263F /* UserAlbumGridView.swift in Sources */,
+				0ED84E112C3C5D8000946B61 /* Album.swift in Sources */,
+				0E341D7C2C3C54BF00E2CFE6 /* ContentMode+.swift in Sources */,
 				0E14E1462C3BA0F700B04BB0 /* PhotoDetailCollectionViewController.swift in Sources */,
 				0E9B8FFB2C3B0783004E2A7A /* UINavigationController+.swift in Sources */,
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,

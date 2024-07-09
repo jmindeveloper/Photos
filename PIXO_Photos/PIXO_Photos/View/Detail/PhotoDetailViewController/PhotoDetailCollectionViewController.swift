@@ -210,7 +210,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / cellColumnCount / 2)
+        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / cellColumnCount)
         
         section.contentInsets = .init(top: .zero, leading: .zero, bottom: .zero, trailing: inset)
         

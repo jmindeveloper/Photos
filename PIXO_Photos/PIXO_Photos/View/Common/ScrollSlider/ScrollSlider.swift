@@ -12,6 +12,7 @@ struct ScrollSlider: View {
     @State private var scrollViewSize: CGSize = .zero
     @State var tickCount: Int = 101
     @State var scrollDisabled: Bool = false
+    @Binding var updateSlider: Bool
     
     @Binding var min: Float
     @Binding var max: Float
@@ -19,11 +20,12 @@ struct ScrollSlider: View {
     
     var valueChangeAction: ((Float) -> Void)
     
-    init(currentValue: Binding<Float>, min: Binding<Float>, max: Binding<Float>, valueChangeAction: @escaping ((Float) -> Void)) {
+    init(currentValue: Binding<Float>, min: Binding<Float>, max: Binding<Float>, updateSlider: Binding<Bool>, valueChangeAction: @escaping ((Float) -> Void)) {
         self._currentValue = currentValue
         self._min = min
         self._max = max
         self.valueChangeAction = valueChangeAction
+        self._updateSlider = updateSlider
     }
     
     var body: some View {
@@ -62,24 +64,36 @@ struct ScrollSlider: View {
                     calculateinitIndex(min: min, max: max, current: currentValue)
                     scrollViewProxy.scrollTo(initIndex, anchor: .center)
                     scrollDisabled = false
+                    updateSlider = false
                 }
                 .onChange(of: initIndex) { initValue in
                     scrollDisabled = true
                     calculateinitIndex(min: min, max: max, current: currentValue)
                     scrollViewProxy.scrollTo(initIndex, anchor: .center)
                     scrollDisabled = false
+                    updateSlider = false
                 }
                 .onChange(of: min) { _ in
                     scrollDisabled = true
                     calculateinitIndex(min: min, max: max, current: currentValue)
                     scrollViewProxy.scrollTo(initIndex, anchor: .center)
                     scrollDisabled = false
+                    updateSlider = false
                 }
                 .onChange(of: max) { _ in
                     scrollDisabled = true
                     calculateinitIndex(min: min, max: max, current: currentValue)
                     scrollViewProxy.scrollTo(initIndex, anchor: .center)
                     scrollDisabled = false
+                    updateSlider = false
+                }
+                .onChange(of: updateSlider) { _ in
+                    if !updateSlider { return }
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
                 }
             }
             

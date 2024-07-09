@@ -59,7 +59,8 @@ struct PhotoEditView: View {
                 ScrollSlider(
                     currentValue: $viewModel.currentAdjustEffectValue,
                     min: $viewModel.currentAdjustMin,
-                    max: $viewModel.currentAdjustMax
+                    max: $viewModel.currentAdjustMax,
+                    updateSlider: $viewModel.updateSlider
                 ) { value in
                     viewModel.changeAdjustEffectValue(value)
                 }
@@ -126,7 +127,7 @@ struct PhotoEditView: View {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-                        .foregroundColor(viewModel.backwardHistoryEmpty ? .gray : .white)
+                        .foregroundColor(viewModel.backwardHistoryEmpty ? .gray : .label)
                 }
                 .disabled(viewModel.backwardHistoryEmpty)
                 .padding(.trailing, 4)
@@ -137,14 +138,14 @@ struct PhotoEditView: View {
                     Image(systemName: "arrowshape.turn.up.forward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-                        .foregroundColor(viewModel.forwardHistoryEmpty ? .gray : .white)
+                        .foregroundColor(viewModel.forwardHistoryEmpty ? .gray : .label)
                 }
                 .disabled(viewModel.forwardHistoryEmpty)
                 
                 Spacer()
             }
             
-            Text("조절")
+            Text(viewModel.editMode.title)
                 .foregroundColor(.gray)
         }
         .padding(.horizontal)
@@ -198,10 +199,10 @@ struct PhotoEditView: View {
                         Image(systemName: mode.imageName)
                             .resizable()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(viewModel.editMode == mode ? .white : .gray)
+                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
                         
                         Text(mode.title)
-                            .foregroundColor(viewModel.editMode == mode ? .white : .gray)
+                            .foregroundColor(viewModel.editMode == mode ? .label : .gray)
                     }
                 }
             }

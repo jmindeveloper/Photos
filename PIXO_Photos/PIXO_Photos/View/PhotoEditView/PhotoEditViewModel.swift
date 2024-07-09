@@ -210,28 +210,7 @@ final class PhotoEditViewModel: ObservableObject {
         didSet {
             currentAdjustMin = currentAdjustEffect.minValue
             currentAdjustMax = currentAdjustEffect.maxValue
-            switch currentAdjustEffect {
-            case .Exposure:
-                currentAdjustEffectValue = exposure
-            case .Saturation:
-                currentAdjustEffectValue = saturation
-            case .Hue:
-                currentAdjustEffectValue = hue
-            case .Brightness:
-                currentAdjustEffectValue = brightness
-            case .Contrast:
-                currentAdjustEffectValue = contrast
-            case .Highlights:
-                currentAdjustEffectValue = highlights
-            case .Shadows:
-                currentAdjustEffectValue = shadows
-            case .Temperature:
-                currentAdjustEffectValue = temperature
-            case .Sharpness:
-                currentAdjustEffectValue = sharpness
-            }
-            
-            print("currentValue --> ", currentAdjustEffectValue)
+            setCurrentAdjustEffectValue()
         }
     }
     
@@ -251,6 +230,8 @@ final class PhotoEditViewModel: ObservableObject {
     
     @Published var backwardHistory: [[String: Float]] = []
     @Published var forwardHistory: [[String: Float]] = []
+    
+    @Published var updateSlider: Bool = false
     
     var backwardHistoryEmpty: Bool {
         backwardHistory.count <= 1
@@ -283,7 +264,7 @@ final class PhotoEditViewModel: ObservableObject {
             .merge(with: $temperature)
             .merge(with: $sharpness)
             .combineLatest($currentFilter)
-            .debounce(for: 0.1, scheduler: DispatchQueue.main)
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self = self else {
                     return
@@ -359,6 +340,8 @@ final class PhotoEditViewModel: ObservableObject {
             temperature = history["temperature"] ?? 0
             sharpness = history["sharpness"] ?? 0
             currentFilter = Filter.intToValue(Int(history["filter"] ?? 0))
+            
+            setCurrentAdjustEffectValue()
         }
     }
     
@@ -381,5 +364,31 @@ final class PhotoEditViewModel: ObservableObject {
         temperature = history["temperature"] ?? 0
         sharpness = history["sharpness"] ?? 0
         currentFilter = Filter.intToValue(Int(history["filter"] ?? 0))
+        
+        setCurrentAdjustEffectValue()
+    }
+    
+    func setCurrentAdjustEffectValue() {
+        switch currentAdjustEffect {
+        case .Exposure:
+            currentAdjustEffectValue = exposure
+        case .Saturation:
+            currentAdjustEffectValue = saturation
+        case .Hue:
+            currentAdjustEffectValue = hue
+        case .Brightness:
+            currentAdjustEffectValue = brightness
+        case .Contrast:
+            currentAdjustEffectValue = contrast
+        case .Highlights:
+            currentAdjustEffectValue = highlights
+        case .Shadows:
+            currentAdjustEffectValue = shadows
+        case .Temperature:
+            currentAdjustEffectValue = temperature
+        case .Sharpness:
+            currentAdjustEffectValue = sharpness
+        }
+        updateSlider = true
     }
 }

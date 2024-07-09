@@ -11,6 +11,7 @@ import AVFoundation
 
 final class VideoTrimViewController: UIViewController {
     
+    // MARK: - setSubViews
     private lazy var videoView: VideoView = {
         let view = VideoView()
         
@@ -24,6 +25,7 @@ final class VideoTrimViewController: UIViewController {
         return view
     }()
     
+    // MARK: - Properties
     private var viewModel: VideoEditViewModel?
     private var subscriptions = Set<AnyCancellable>()
     
@@ -38,6 +40,7 @@ final class VideoTrimViewController: UIViewController {
         videoView.stop()
     }
     
+    // MARK: - setSubViews
     private func setSubViews() {
         [videoView, videoTrimTimeLineView].forEach {
             view.addSubview($0)
@@ -59,11 +62,18 @@ final class VideoTrimViewController: UIViewController {
         }
     }
     
+    // MARK: - Method
     private func binding() {
         viewModel?.videoAssetPublisher
             .sink { [weak self] asset in
                 self?.videoView.setAsset(asset: asset)
+                self?.videoTrimTimeLineView.setTimeLineView(asset: asset)
                 self?.videoView.start()
+            }.store(in: &subscriptions)
+        
+        videoView.videoIntervalPublisher
+            .sink { [weak self] current, total in
+                self?.videoTrimTimeLineView.setTimeLinePosition(currentTime: current, totalTime: total)
             }.store(in: &subscriptions)
     }
     

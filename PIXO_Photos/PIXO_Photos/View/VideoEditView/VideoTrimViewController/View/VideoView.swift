@@ -13,7 +13,8 @@ final class VideoView: UIView {
     private var player: AVPlayer?
     private var playerLayer: AVPlayerLayer?
     
-    private var subscriptions = Set<AnyCancellable>()
+    let videoIntervalPublisher = PassthroughSubject<(Double, CMTime), Never>()
+    var subscriptions = Set<AnyCancellable>()
     
     var item: AVPlayerItem? {
         return player?.currentItem
@@ -39,6 +40,7 @@ final class VideoView: UIView {
         playerLayer?.masksToBounds = false
         playerLayer?.frame = bounds
         
+        observeVideo()
         layer.addSublayer(playerLayer ?? CALayer())
     }
     
@@ -54,5 +56,13 @@ final class VideoView: UIView {
     
     func stop() {
         player?.pause()
+    }
+    
+    private func observeVideo() {
+        let interval = CMTimeMake(value: 1, timescale: 60)
+        player?.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
+            guard let self = self else { return }
+            videoIntervalPublisher.send((time.seconds, player?.currentItem?.duration ?? CMTimeMake(value: 1, timescale: 1)))
+        }
     }
 }

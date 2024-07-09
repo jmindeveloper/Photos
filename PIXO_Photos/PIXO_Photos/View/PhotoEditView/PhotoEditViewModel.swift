@@ -153,6 +153,54 @@ final class PhotoEditViewModel: ObservableObject {
     
     enum Filter: String, CaseIterable {
         case Original, Mono, Tonal, Noir, Fade, Chrome, Process, Transfer, Instant
+        
+        static func intToValue(_ v: Int) -> Filter {
+            switch v {
+            case 0:
+                return .Original
+            case 1:
+                return .Mono
+            case 2:
+                return .Tonal
+            case 3:
+                return .Noir
+            case 4:
+                return .Fade
+            case 5:
+                return .Chrome
+            case 6:
+                return .Process
+            case 7:
+                return .Transfer
+            case 8:
+                return .Instant
+            default:
+                return .Original
+            }
+        }
+        
+        func valueToInt() -> Int {
+            switch self {
+            case .Original:
+                return 0
+            case .Mono:
+                return 1
+            case .Tonal:
+                return 2
+            case .Noir:
+                return 3
+            case .Fade:
+                return 4
+            case .Chrome:
+                return 5
+            case .Process:
+                return 6
+            case .Transfer:
+                return 7
+            case .Instant:
+                return 8
+            }
+        }
     }
     
     @Published var editMode: EditMode = .Adjust
@@ -204,6 +252,16 @@ final class PhotoEditViewModel: ObservableObject {
     @Published var backwardHistory: [[String: Float]] = []
     @Published var forwardHistory: [[String: Float]] = []
     
+    var backwardHistoryEmpty: Bool {
+        backwardHistory.count <= 1
+    }
+    
+    var forwardHistoryEmpty: Bool {
+        forwardHistory.isEmpty
+    }
+    
+    private var isLoadHistory: Bool = false
+    
     var context = CIContext()
     private var subscriptions = Set<AnyCancellable>()
     
@@ -224,9 +282,18 @@ final class PhotoEditViewModel: ObservableObject {
             .merge(with: $shadows)
             .merge(with: $temperature)
             .merge(with: $sharpness)
-            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .combineLatest($currentFilter)
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.saveHistory()
+                guard let self = self else {
+                    return
+                }
+                if isLoadHistory {
+                    isLoadHistory = false
+                    return
+                }
+                saveHistory()
+                forwardHistory.removeAll()
             }.store(in: &subscriptions)
     }
     
@@ -265,12 +332,54 @@ final class PhotoEditViewModel: ObservableObject {
         history["shadows"] = shadows
         history["temperature"] = temperature
         history["sharpness"] = sharpness
-        history[currentFilter.rawValue] = 1
+        history["filter"] = Float(currentFilter.valueToInt())
         
         if history == backwardHistory.last {
             return
         }
         
         backwardHistory.append(history)
+    }
+    
+    func backward() {
+        guard backwardHistory.count >= 2 else {
+            return
+        }
+        isLoadHistory = true
+        forwardHistory.append(backwardHistory.removeLast())
+        
+        if let history = backwardHistory.last {
+            saturation = history["saturation"] ?? 0
+            hue = history["hue"] ?? 0
+            exposure = history["exposure"] ?? 0
+            brightness = history["brightness"] ?? 0
+            contrast = history["contrast"] ?? 0
+            highlights = history["highlights"] ?? 0
+            shadows = history["shadows"] ?? 0
+            temperature = history["temperature"] ?? 0
+            sharpness = history["sharpness"] ?? 0
+            currentFilter = Filter.intToValue(Int(history["filter"] ?? 0))
+        }
+    }
+    
+    func forward() {
+        guard !forwardHistory.isEmpty else {
+            return
+        }
+        
+        isLoadHistory = true
+        let history = forwardHistory.removeFirst()
+        backwardHistory.append(history)
+        
+        saturation = history["saturation"] ?? 0
+        hue = history["hue"] ?? 0
+        exposure = history["exposure"] ?? 0
+        brightness = history["brightness"] ?? 0
+        contrast = history["contrast"] ?? 0
+        highlights = history["highlights"] ?? 0
+        shadows = history["shadows"] ?? 0
+        temperature = history["temperature"] ?? 0
+        sharpness = history["sharpness"] ?? 0
+        currentFilter = Filter.intToValue(Int(history["filter"] ?? 0))
     }
 }

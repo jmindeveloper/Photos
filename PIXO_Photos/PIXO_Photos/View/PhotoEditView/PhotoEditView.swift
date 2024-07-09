@@ -121,23 +121,25 @@ struct PhotoEditView: View {
         ZStack {
             HStack {
                 Button {
-                    print("move before step")
+                    viewModel.backward()
                 } label: {
                     Image(systemName: "arrowshape.turn.up.backward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-                        .foregroundColor(.gray)
+                        .foregroundColor(viewModel.backwardHistoryEmpty ? .gray : .white)
                 }
+                .disabled(viewModel.backwardHistoryEmpty)
                 .padding(.trailing, 4)
                 
                 Button {
-                    print("move forward step")
+                    viewModel.forward()
                 } label: {
                     Image(systemName: "arrowshape.turn.up.forward.circle")
                         .resizable()
                         .frame(width: 35, height: 35)
-                        .foregroundColor(.gray)
+                        .foregroundColor(viewModel.forwardHistoryEmpty ? .gray : .white)
                 }
+                .disabled(viewModel.forwardHistoryEmpty)
                 
                 Spacer()
             }
@@ -241,6 +243,11 @@ struct PhotoEditView: View {
                         }
                     }
                     Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 25)
+                }
+                .onAppear {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentFilter.rawValue, anchor: .center)
+                    }
                 }
                 .onChange(of: viewModel.currentFilter) {
                     withAnimation {

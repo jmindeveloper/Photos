@@ -8,17 +8,33 @@
 import SwiftUI
 
 struct ScrollSlider: View {
-    @State private var currentIndex: Int = 50
+    @State var initIndex: Int = 0
     @State private var scrollViewSize: CGSize = .zero
     @State var tickCount: Int = 101
+    @State var scrollDisabled: Bool = false
+    @Binding var updateSlider: Bool
+    
+    @Binding var min: Float
+    @Binding var max: Float
+    @Binding var currentValue: Float
+    
+    var valueChangeAction: ((Float) -> Void)
+    
+    init(currentValue: Binding<Float>, min: Binding<Float>, max: Binding<Float>, updateSlider: Binding<Bool>, valueChangeAction: @escaping ((Float) -> Void)) {
+        self._currentValue = currentValue
+        self._min = min
+        self._max = max
+        self.valueChangeAction = valueChangeAction
+        self._updateSlider = updateSlider
+    }
     
     var body: some View {
         ZStack(alignment: .center) {
-            // 스크롤 가능한 라인 뷰
             ScrollViewReader { scrollViewProxy in
                 
                 ScrollHorizontalCenterOffsetView(.horizontal) { value in
-                    print(value)
+                    let value = calculateValue(min: min, max: max, percent: Float(value))
+                    valueChangeAction(value)
                 } content: {
                     HStack(spacing: 4) {
                         ForEach(0..<tickCount, id: \.self) { index in
@@ -39,12 +55,45 @@ struct ScrollSlider: View {
                     }
                     .padding(.horizontal, (scrollViewSize.width / 2) - 2)
                 }
-                .frame(width: 200)
                 .readSize(onChange: { size in
                     scrollViewSize = size
                 })
+                .scrollDisabled(scrollDisabled)
                 .onAppear {
-                    scrollViewProxy.scrollTo(currentIndex, anchor: .center)
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
+                }
+                .onChange(of: initIndex) { initValue in
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
+                }
+                .onChange(of: min) { _ in
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
+                }
+                .onChange(of: max) { _ in
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
+                }
+                .onChange(of: updateSlider) { _ in
+                    if !updateSlider { return }
+                    scrollDisabled = true
+                    calculateinitIndex(min: min, max: max, current: currentValue)
+                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
+                    scrollDisabled = false
+                    updateSlider = false
                 }
             }
             
@@ -57,13 +106,16 @@ struct ScrollSlider: View {
         .frame(height: 60)
     }
     
-    private func updateIndex(from offset: CGFloat) {
-        let newIndex = Int((offset / 10).rounded())
-        if newIndex >= 0 && newIndex < 41 {
-            if currentIndex != newIndex {
-                currentIndex = newIndex
-                print("Current Index: \(currentIndex)") // 값 출력
-            }
+    func calculateinitIndex(min: Float, max: Float, current: Float) {
+        let percentage = ((current - min) / (max - min))
+        initIndex = Int(percentage * Float(tickCount))
+        if initIndex >= tickCount {
+            initIndex = tickCount - 1
         }
+    }
+    
+    func calculateValue(min: Float, max: Float, percent: Float) -> Float {
+        let value = min + percent * (max - min)
+        return value
     }
 }

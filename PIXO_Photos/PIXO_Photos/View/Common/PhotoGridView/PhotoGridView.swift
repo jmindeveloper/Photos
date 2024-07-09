@@ -14,6 +14,7 @@ protocol PhotoGridViewModelProtocol: ObservableObject {
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] { get set }
     var selectedAssets: Set<PHAsset> { get set }
     var selectMode: Bool { get set }
+    var fetchResult: PHFetchResult<PHAsset> { get set }
     
     func setAssetFrame(index: Int, rect: CGRect)
     func draggingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint)
@@ -73,7 +74,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                         if viewModel.selectMode {
                             viewModel.toggleSelectPhoto(index: index)
                         } else {
-                            let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, currentItemIndex: index)
+                            let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, fetchResult: viewModel.fetchResult, currentItemIndex: index)
                             present(view: PhotoDetailView<PhotoDetailViewModel>().environmentObject(viewModel), modalStyle: .fullScreen)
                         }
                     }

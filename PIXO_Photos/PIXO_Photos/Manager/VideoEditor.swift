@@ -27,10 +27,11 @@ final class VideoEditor {
                 var currentOffset = 0
                 for _ in 0..<count {
                     let thumnailTime = CMTimeMake(value: Int64(currentOffset), timescale: 1)
-                    let cgThumbImage = try avassetImageGenerator.copyCGImage(at: thumnailTime, actualTime: nil)
-                    let thumbImage = UIImage(cgImage: cgThumbImage)
-                    images.append(thumbImage)
-                    currentOffset += Int(offset)
+                    if let cgThumbImage = try? avassetImageGenerator.copyCGImage(at: thumnailTime, actualTime: nil) {
+                        let thumbImage = UIImage(cgImage: cgThumbImage)
+                        images.append(thumbImage)
+                        currentOffset += Int(offset)
+                    }
                 }
                 
                 DispatchQueue.main.async {

@@ -39,7 +39,6 @@ struct ScrollSlider: View {
                     }
                     .padding(.horizontal, (scrollViewSize.width / 2) - 2)
                 }
-                .frame(width: 200)
                 .readSize(onChange: { size in
                     scrollViewSize = size
                 })

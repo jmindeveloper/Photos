@@ -36,9 +36,11 @@ struct FilterImage: View {
         if let cgimg = applyFilters(to: inputImage) {
             return Image(decorative: cgimg, scale: 1.0)
                 .resizable()
+                .scaledToFit()
         } else {
             return Image(uiImage: inputImage)
                 .resizable()
+                .scaledToFit()
         }
     }
 

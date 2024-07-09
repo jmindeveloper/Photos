@@ -22,23 +22,49 @@ struct PhotoEditView: View {
             Spacer()
             
             if let image = uiImage {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
+                ZStack(alignment: .bottom) {
+                    FilterImage(
+                        inputImage: image,
+                        saturation: viewModel.saturation,
+                        hue: viewModel.hue,
+                        exposure: viewModel.exposure,
+                        brightness: viewModel.brightness,
+                        contrast: viewModel.contrast,
+                        highlights: viewModel.highlights,
+                        shadows: viewModel.shadows,
+                        temperature: viewModel.temperature,
+                        sharpness: viewModel.sharpness
+                    )
+                    
+                    Text(viewModel.currentAdjustEffect.title)
+                        .padding(4)
+                        .background {
+                            RoundedRectangle(cornerRadius: 4).fill(.gray)
+                        }
+                        .padding(.bottom, 10)
+                }
             }
             
             Spacer()
             
             selectEffectView()
             
-            ScrollSlider()
-                .padding(.horizontal, 20)
+            ScrollSlider(
+                currentValue: $viewModel.currentAdjustEffectValue,
+                min: $viewModel.currentAdjustMin,
+                max: $viewModel.currentAdjustMax
+            ) { value in
+                viewModel.changeAdjustEffectValue(value)
+            }
+            .padding(.horizontal, 20)
             
             selectEditModeView()
                 .padding(.top, 3)
         }
         .onAppear {
-            PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
+            PhotoLibrary.requestImageURL(with: viewModel.editAsset) { url in
+                let data = try? Data(contentsOf: url)
+                let image = UIImage(data: data ?? Data())
                 uiImage = image
             }
         }
@@ -113,28 +139,36 @@ struct PhotoEditView: View {
     
     @ViewBuilder
     private func selectEffectView() -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 30) {
-                Color.clear.frame(width: 20)
-                ForEach(PhotoEditViewModel.AdjustEffect.allCases, id: \.self) { effect in
-                    Image(systemName: effect.imageName)
-                        .resizable()
-                        .frame(width: 17, height: 17)
-                        .foregroundColor(Color(uiColor: .label))
-                        .padding(13)
-                        .clipShape(Circle())
-                        .overlay(
-                            Circle().stroke().foregroundColor(.gray)
-                        )
-                        .contentShape(Circle())
-                        .onTapGesture {
-                            viewModel.currentAdjustEffect = effect
-                        }
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack(spacing: 30) {
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 45)
+                    ForEach(PhotoEditViewModel.AdjustEffect.allCases, id: \.self) { effect in
+                        Image(systemName: effect.imageName)
+                            .resizable()
+                            .frame(width: 17, height: 17)
+                            .foregroundColor(Color(uiColor: .label))
+                            .padding(13)
+                            .clipShape(Circle())
+                            .overlay(
+                                Circle().stroke().foregroundColor(.gray)
+                            )
+                            .contentShape(Circle())
+                            .onTapGesture {
+                                viewModel.currentAdjustEffect = effect
+                            }
+                            .id(effect.title)
+                    }
+                    Color.clear.frame(width: Constant.SCREEN_WIDTH / 2 - 45)
                 }
-                Color.clear.frame(width: 20)
+                .onChange(of: viewModel.currentAdjustEffect) {
+                    withAnimation {
+                        proxy.scrollTo(viewModel.currentAdjustEffect.title, anchor: .center)
+                    }
+                }
             }
+            .frame(height: 55)
         }
-        .frame(height: 55)
     }
     
     @ViewBuilder

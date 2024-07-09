@@ -102,13 +102,123 @@ final class PhotoEditViewModel: ObservableObject {
                 return "선명도"
             }
         }
+        
+        var minValue: Float {
+            switch self {
+            case .Exposure:
+                return -3
+            case .Saturation:
+                return 0
+            case .Hue:
+                return -Float.pi
+            case .Brightness:
+                return -1
+            case .Contrast:
+                return 0.5
+            case .Highlights:
+                return 0
+            case .Shadows:
+                return -1
+            case .Temperature:
+                return 2000
+            case .Sharpness:
+                return -2
+            }
+        }
+        
+        var maxValue: Float {
+            switch self {
+            case .Exposure:
+                return 3
+            case .Saturation:
+                return 2
+            case .Hue:
+                return Float.pi
+            case .Brightness:
+                return 1
+            case .Contrast:
+                return 1.5
+            case .Highlights:
+                return 1
+            case .Shadows:
+                return 1
+            case .Temperature:
+                return 10000
+            case .Sharpness:
+                return 2
+            }
+        }
     }
     
     @Published var editMode: EditMode = .Adjust
     @Published var editAsset: PHAsset
-    @Published var currentAdjustEffect: AdjustEffect = .Exposure
+    @Published var currentAdjustEffect: AdjustEffect = .Exposure {
+        didSet {
+            currentAdjustMin = currentAdjustEffect.minValue
+            currentAdjustMax = currentAdjustEffect.maxValue
+            switch currentAdjustEffect {
+            case .Exposure:
+                currentAdjustEffectValue = exposure
+            case .Saturation:
+                currentAdjustEffectValue = saturation
+            case .Hue:
+                currentAdjustEffectValue = hue
+            case .Brightness:
+                currentAdjustEffectValue = brightness
+            case .Contrast:
+                currentAdjustEffectValue = contrast
+            case .Highlights:
+                currentAdjustEffectValue = highlights
+            case .Shadows:
+                currentAdjustEffectValue = shadows
+            case .Temperature:
+                currentAdjustEffectValue = temperature
+            case .Sharpness:
+                currentAdjustEffectValue = sharpness
+            }
+            
+            print("currentValue --> ", currentAdjustEffectValue)
+        }
+    }
+    
+    @Published var saturation: Float = 1
+    @Published var hue: Float = 0
+    @Published var exposure: Float = 0
+    @Published var brightness: Float = 0
+    @Published var contrast: Float = 1
+    @Published var highlights: Float = 1
+    @Published var shadows: Float = 0
+    @Published var temperature: Float = 6500
+    @Published var sharpness: Float = 0
+    
+    @Published var currentAdjustMin: Float = AdjustEffect.Exposure.minValue
+    @Published var currentAdjustMax: Float = AdjustEffect.Exposure.maxValue
+    @Published var currentAdjustEffectValue: Float = 0
     
     init(editAsset: PHAsset) {
         self.editAsset = editAsset
+    }
+    
+    func changeAdjustEffectValue(_ value: Float) {
+        switch currentAdjustEffect {
+        case .Exposure:
+            exposure = value
+        case .Saturation:
+            saturation = value
+        case .Hue:
+            hue = value
+        case .Brightness:
+            brightness = value
+        case .Contrast:
+            contrast = value
+        case .Highlights:
+            highlights = value
+        case .Shadows:
+            shadows = value
+        case .Temperature:
+            temperature = value
+        case .Sharpness:
+            sharpness = value
+        }
     }
 }

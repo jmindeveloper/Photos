@@ -171,6 +171,10 @@ final class PhotoLibrary {
         
         for asset in assets {
             group.enter()
+            if asset.mediaType != .image {
+                group.leave()
+                continue
+            }
             requestImageURL(with: asset) { url in
                 urls.append(url)
                 group.leave()

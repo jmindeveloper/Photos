@@ -152,8 +152,13 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     
     func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) {
-        library.requestImages(with: [currentAsset]) { images in
-            completion(images)
+        library.requestImageURL(with: currentAsset) { url in
+            guard let data = try? Data(contentsOf: url),
+                  let image = UIImage(data: data) else {
+                return
+            }
+            
+            completion([image])
         }
     }
     

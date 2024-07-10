@@ -208,7 +208,7 @@ final class VideoTrimTimeLineView: UIView {
         
         endPositionOffset?.constant += moveX
         
-        var endOffset = (endPositionView.frame.minX - 81) / baseView.bounds.width
+        var endOffset = (endPositionView.frame.minX - 81) / timeLineView.bounds.width
         if endOffset < 0 {
             endOffset = 0
         } else if endOffset > 1 {

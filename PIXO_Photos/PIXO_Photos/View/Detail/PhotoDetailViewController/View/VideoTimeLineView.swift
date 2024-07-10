@@ -106,12 +106,11 @@ final class VideoTimeLineView: UIView {
     }
     
     func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {
-        let totalTimeSecondsFloat = CMTimeGetSeconds(totalTime)
-        
+        let totalTimeSecondsFloat = totalTime.seconds
         let offset = CGFloat(currentTime / totalTimeSecondsFloat)
         let playPosition = (baseStackView.bounds.width) * offset
         
-        timeLinePositionView.frame.origin.x = playPosition
+        timeLinePositionView.center.x = playPosition
         timeLineSlider.value = Float(currentTime)
     }
     

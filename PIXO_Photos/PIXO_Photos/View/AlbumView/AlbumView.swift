@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct AlbumView<VM: AlbumViewModelProtocol>: View {
     
     @EnvironmentObject var viewModel: VM

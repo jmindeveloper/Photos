@@ -57,7 +57,7 @@ final class VideoView: UIView {
                 player?.seek(to: startTime)
                 stop()
             }.store(in: &subscriptions)
-        
+        player?.seek(to: startTime)
         player?.play()
     }
     
@@ -73,7 +73,6 @@ final class VideoView: UIView {
         let startTime = (player?.currentItem?.duration.seconds ?? 0) * offset
         let time = CMTimeMakeWithSeconds(startTime, preferredTimescale: Int32(NSEC_PER_SEC))
         self.startTime = time
-        
         player?.seek(to: time)
         
         completion(time)
@@ -83,7 +82,6 @@ final class VideoView: UIView {
         let endTime = (player?.currentItem?.duration.seconds ?? 0) * offset
         let time = CMTimeMakeWithSeconds(endTime, preferredTimescale: Int32(NSEC_PER_SEC))
         self.endTime = time
-        
         player?.seek(to: time)
         completion(time)
     }

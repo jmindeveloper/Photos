@@ -76,9 +76,7 @@ struct PhotoEditView<VM: PhotoEditViewModelProtocol>: View {
                 .padding(.top, 3)
         }
         .onAppear {
-            PhotoLibrary.requestImageURL(with: viewModel.editAsset) { url in
-                let data = try? Data(contentsOf: url)
-                let image = UIImage(data: data ?? Data())
+            PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
                 uiImage = image
             }
         }

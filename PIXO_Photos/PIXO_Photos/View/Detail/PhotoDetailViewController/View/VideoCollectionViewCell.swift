@@ -40,7 +40,7 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var isStartVideo = false
+    var isStartVideo = false
     
     override func prepareForReuse() {
         super.prepareForReuse()

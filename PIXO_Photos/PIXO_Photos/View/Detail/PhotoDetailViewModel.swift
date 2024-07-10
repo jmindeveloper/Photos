@@ -61,7 +61,6 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     var currentItemIndex: Int {
         didSet {
-            print(currentItemIndex)
             if currentItemIndex >= assets.count {
                 currentItemIndex = assets.count - 1
             }

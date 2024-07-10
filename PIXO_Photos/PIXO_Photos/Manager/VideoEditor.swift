@@ -13,7 +13,6 @@ final class VideoEditor {
     var context = CIContext()
     
     func getTimeLineImages(asset: AVAsset, count: Int, completion: @escaping (([UIImage]) -> Void)) {
-        print("getTimeLine")
         var count = count
         DispatchQueue.global().async {
             let avassetImageGenerator = AVAssetImageGenerator(asset: asset)
@@ -27,13 +26,13 @@ final class VideoEditor {
                 count = Int(duration)
             }
             
-            var currentOffset = 0
+            var currentOffset: CGFloat = 0
             for _ in 0..<count {
-                let thumnailTime = CMTimeMake(value: Int64(currentOffset), timescale: 1)
+                let thumnailTime = CMTimeMakeWithSeconds(currentOffset, preferredTimescale: Int32(NSEC_PER_SEC))
                 if let cgThumbImage = try? avassetImageGenerator.copyCGImage(at: thumnailTime, actualTime: nil) {
                     let thumbImage = UIImage(cgImage: cgThumbImage)
                     images.append(thumbImage)
-                    currentOffset += Int(offset)
+                    currentOffset += offset
                 }
             }
             

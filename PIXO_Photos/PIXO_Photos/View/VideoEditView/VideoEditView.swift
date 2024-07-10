@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct VideoEditView: View {
-    @EnvironmentObject private var viewModel: VideoEditViewModel
+struct VideoEditView<VM: VideoEditViewModelProtocol>: View {
+    @EnvironmentObject private var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var uiImage: UIImage?
     
@@ -25,7 +25,7 @@ struct VideoEditView: View {
             Spacer()
             
             if viewModel.editMode == .Trim {
-                VideoTrimViewControllerRepresentableView()
+                VideoTrimViewControllerRepresentableView<VideoEditViewModel>()
                     .environmentObject(viewModel)
             } else {
                 if let image = uiImage {

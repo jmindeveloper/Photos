@@ -9,11 +9,45 @@ import UIKit
 import Photos
 import Combine
 
-final class PhotoEditViewModel: ObservableObject {
+protocol PhotoEditViewModelProtocol: ObservableObject {
+    var editMode: PhotoEditViewModel.EditMode { get set }
+    var editAsset: PHAsset { get set }
+    var currentFilter: Filter { get set }
+    var currentAdjustEffect: AdjustEffect { get set }
+    var saturation: Float { get set }
+    var hue: Float { get set }
+    var exposure: Float { get set }
+    var brightness: Float { get set }
+    var contrast: Float { get set }
+    var highlights: Float { get set }
+    var shadows: Float { get set }
+    var temperature: Float { get set }
+    var sharpness: Float { get set }
+    var currentAdjustMin: Float { get set }
+    var currentAdjustMax: Float { get set }
+    var currentAdjustEffectValue: Float { get set }
+    var backwardHistory: [[String: Float]] { get set }
+    var forwardHistory: [[String: Float]] { get set }
+    var updateSlider: Bool { get set }
+    var backwardHistoryEmpty: Bool { get }
+    var forwardHistoryEmpty: Bool { get }
+    var context: CIContext { get set }
+    
+    func changeAdjustEffectValue(_ value: Float)
+    func backward()
+    func forward()
+    func saveImage(image: UIImage, completion: @escaping (() -> Void))
+}
+
+final class PhotoEditViewModel: PhotoEditViewModelProtocol {
     enum EditMode: CaseIterable {
         case Adjust
         case Filter
-//        case Crop
+        case Crop
+        
+        static var allCases: [PhotoEditViewModel.EditMode] {
+            return [.Adjust, .Filter]
+        }
         
         var imageName: String {
             switch self {
@@ -21,8 +55,8 @@ final class PhotoEditViewModel: ObservableObject {
                 return "camera.filters"
             case .Adjust:
                 return "slider.horizontal.3"
-//            case .Crop:
-//                return "crop.rotate"
+            case .Crop:
+                return "crop.rotate"
             }
         }
         
@@ -32,8 +66,8 @@ final class PhotoEditViewModel: ObservableObject {
                 return "필터"
             case .Adjust:
                 return "조절"
-//            case .Crop:
-//                return "자르기"
+            case .Crop:
+                return "자르기"
             }
         }
     }

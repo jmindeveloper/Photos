@@ -10,7 +10,41 @@ import Photos
 import Combine
 import AVFoundation
 
-final class VideoEditViewModel: ObservableObject {
+protocol VideoEditViewModelProtocol: ObservableObject {
+    var editMode: VideoEditViewModel.EditMode { get set }
+    var editAsset: PHAsset { get set }
+    var currentFilter: Filter { get set }
+    var currentAdjustEffect: AdjustEffect { get set }
+    var saturation: Float { get set }
+    var hue: Float { get set }
+    var exposure: Float { get set }
+    var brightness: Float { get set }
+    var contrast: Float { get set }
+    var highlights: Float { get set }
+    var shadows: Float { get set }
+    var temperature: Float { get set }
+    var sharpness: Float { get set }
+    var currentAdjustMin: Float { get set }
+    var currentAdjustMax: Float { get set }
+    var currentAdjustEffectValue: Float { get set }
+    var backwardHistory: [[String: Float]] { get set }
+    var forwardHistory: [[String: Float]] { get set }
+    var updateSlider: Bool { get set }
+    var context: CIContext { get set }
+    var backwardHistoryEmpty: Bool { get }
+    var forwardHistoryEmpty: Bool { get }
+    var videoAssetPublisher: PassthroughSubject<AVAsset, Never> { get }
+    var startTime: CMTime { get set }
+    var endTime: CMTime? { get set }
+    
+    func changeAdjustEffectValue(_ value: Float)
+    func backward()
+    func forward()
+    func saveVideo(completion: @escaping (() -> Void))
+    func getVideoAsset()
+}
+
+final class VideoEditViewModel: VideoEditViewModelProtocol {
     enum EditMode: CaseIterable {
         case Trim
         case Adjust

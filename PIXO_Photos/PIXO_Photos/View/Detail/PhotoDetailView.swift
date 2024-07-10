@@ -90,11 +90,11 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
         .fullScreenCover(isPresented: $isPresentEditView) {
             if viewModel.currentAsset.mediaType == .image {
                 LazyView(
-                    PhotoEditView().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
+                    PhotoEditView<PhotoEditViewModel>().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
                 )
             } else {
                 LazyView(
-                    VideoEditView().environmentObject(VideoEditViewModel(editAsset: viewModel.currentAsset))
+                    VideoEditView<VideoEditViewModel>().environmentObject(VideoEditViewModel(editAsset: viewModel.currentAsset))
                 )
             }
         }

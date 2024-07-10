@@ -55,7 +55,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
     let videoTimeLineView = VideoTimeLineView()
     
     // MARK: - Properties
-    private var viewModel: PhotoDetailViewModel?
+    private var viewModel: (any PhotoDetailViewModelProtocol)?
     private var subscriptions = Set<AnyCancellable>()
     private let cellColumnCount: CGFloat = 9
     
@@ -146,7 +146,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         videoTimeLineView.alpha = alpha
     }
     
-    func setViewModel(viewModel: PhotoDetailViewModel) {
+    func setViewModel(viewModel: any PhotoDetailViewModelProtocol) {
         self.viewModel = viewModel
     }
     

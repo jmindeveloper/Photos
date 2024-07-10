@@ -15,6 +15,12 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     var currentAsset: PHAsset { get set }
     var isVideo: Bool { get }
     var isPlayVideo: Bool { get set }
+    var detailScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
+    var thumbnailScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
+    var currentItemIndex: Int { get set }
+    var detailCollectionViewShowCellIndex: Int { get set }
+    var thumbnailCollectionViewShowCellIndex: Int { get set }
+    var assets: [PHAsset] { get set }
     
     func duplicateCurrentAssets()
     func copyCurrentImageToClipboard()

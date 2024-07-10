@@ -176,8 +176,13 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     
     func copyCurrentImageToClipboard() {
-        library.requestImages(with: [currentAsset]) { images in
-            UIPasteboard.general.images = images
+        library.requestImageURL(with: currentAsset) { url in
+            guard let data = try? Data(contentsOf: url),
+                  let image = UIImage(data: data) else {
+                return
+            }
+            
+            UIPasteboard.general.images = [image]
         }
     }
     

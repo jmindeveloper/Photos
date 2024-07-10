@@ -182,7 +182,15 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
     }
     
     func copySelectedImageToClipboard() {
-        library.requestImages(with: Array(selectedAssets)) { images in
+        library.requestImageURLs(with: Array(selectedAssets)) { urls in
+            let images = urls.compactMap { url -> UIImage? in
+                guard let data = try? Data(contentsOf: url),
+                      let image = UIImage(data: data) else {
+                    return nil
+                }
+                
+                return image
+            }
             UIPasteboard.general.images = images
         }
     }

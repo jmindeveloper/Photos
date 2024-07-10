@@ -65,6 +65,34 @@ final class PhotoLibrary {
     }
     
     // video일경우 duration까지 받아옴
+    func requestImage(with asset: PHAsset?, completion: @escaping ((_ image: UIImage?, _ duration: Int?) -> Void)) {
+        guard let asset = asset else {
+            completion(nil, nil)
+            return
+        }
+        
+        let requestOption = PHImageRequestOptions()
+        requestOption.isSynchronous = false
+        requestOption.resizeMode = .none
+        requestOption.deliveryMode = .highQualityFormat
+        requestOption.isNetworkAccessAllowed = true
+        let size = CGSize(width: 300, height: 300)
+        
+        PHCachingImageManager.default().requestImage(
+            for: asset,
+            targetSize: size,
+            contentMode: .aspectFill,
+            options: requestOption) { image, info in
+                DispatchQueue.main.async {
+                    if asset.mediaType == .video {
+                        completion(image, Int(asset.duration))
+                    } else if asset.mediaType == .image {
+                        completion(image, nil)
+                    }
+                }
+            }
+    }
+    
     static func requestImage(with asset: PHAsset?, completion: @escaping ((_ image: UIImage?, _ duration: Int?) -> Void)) {
         guard let asset = asset else {
             completion(nil, nil)
@@ -124,7 +152,7 @@ final class PhotoLibrary {
         }
     }
     
-    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+    func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
         let options = PHContentEditingInputRequestOptions()
         options.isNetworkAccessAllowed = true
         
@@ -137,15 +165,45 @@ final class PhotoLibrary {
         }
     }
     
-    static func getData(with asset: PHAsset, completion: @escaping ((Data) -> Void)) {
-        let option = PHImageRequestOptions()
-        option.isNetworkAccessAllowed = true
+    func requestImageURLs(with assets: [PHAsset], completion: @escaping ((_ urls: [URL]) -> Void)) {
+        let group = DispatchGroup()
+        var urls: [URL] = []
         
-        PHCachingImageManager.default().requestImageDataAndOrientation(for: asset, options: option) { data, _, _, _ in
-            DispatchQueue.main.async {
-                if let data = data {
+        for asset in assets {
+            group.enter()
+            requestImageURL(with: asset) { url in
+                urls.append(url)
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            completion(urls)
+        }
+    }
+    
+    static func requestImageURL(with asset: PHAsset, completion: @escaping ((_ url: URL) -> Void)) {
+        let options = PHContentEditingInputRequestOptions()
+        options.isNetworkAccessAllowed = true
+        
+        asset.requestContentEditingInput(with: options) { input, info in
+            if let input = input, let url = input.fullSizeImageURL {
+                DispatchQueue.main.async {
+                    completion(url)
+                }
+            }
+        }
+    }
+        
+    func getVideoAsset(with asset: PHAsset, completion: @escaping ((AVAsset) -> Void)) {
+        if asset.mediaType == .video {
+            let options = PHVideoRequestOptions()
+            options.isNetworkAccessAllowed = true
+            
+            PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: options) { asset, _, _ in
+                if let asset = asset {
                     DispatchQueue.main.async {
-                        completion(data)
+                        completion(asset)
                     }
                 }
             }
@@ -243,7 +301,7 @@ final class PhotoLibrary {
                 }
             }
         } else {
-            PhotoLibrary.requestImageURL(with: asset) { [weak self] url in
+            requestImageURL(with: asset) { [weak self] url in
                 self?.saveImageToLibrary(url ) { success, newAsset in
                     completion?(newAsset)
                 }

@@ -29,12 +29,16 @@ struct PhotoCell: View {
         ZStack(alignment: .bottomTrailing) {
             GeometryReader { proxy in
                 if let image = uiImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: contentMode)
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .contentShape(Rectangle())
-                        .clipped()
+                    if asset?.mediaType == .video, let filter = VideoFilterStorage.getFilter(id: asset?.localIdentifier ?? "") {
+                        FilterImage(image: image, contentMode: contentMode, filter: filter)
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: contentMode)
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .contentShape(Rectangle())
+                            .clipped()
+                    }
                 } else {
                     Image(systemName: "photo")
                         .resizable()

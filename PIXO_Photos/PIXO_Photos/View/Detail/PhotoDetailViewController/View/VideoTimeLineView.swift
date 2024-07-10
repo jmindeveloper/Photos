@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import Combine
+import CoreImage
 
 final class VideoTimeLineView: UIView {
     
@@ -41,6 +42,7 @@ final class VideoTimeLineView: UIView {
     
     // MARK: - Properties
     let seekPublisher = PassthroughSubject<CMTime, Never>()
+    private var context: CIContext = CIContext()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -87,15 +89,25 @@ final class VideoTimeLineView: UIView {
         seekPublisher.send(CMTime(seconds: Double(self.timeLineSlider.value), preferredTimescale: Int32(NSEC_PER_SEC)))
     }
     
-    func setTimeLineView(asset: AVAsset, completion: @escaping (() -> Void)) {
+    func setTimeLineView(asset: AVAsset, filter: FilterValue? = nil, completion: @escaping (() -> Void)) {
         VideoEditor().getTimeLineImages(asset: asset, count: 9) { [weak self] images in
-            self?.baseStackView.arrangedSubviews.forEach {
-                self?.baseStackView.removeArrangedSubview($0)
+            guard let self = self else { return }
+            var images = images
+            baseStackView.arrangedSubviews.forEach {
+                self.baseStackView.removeArrangedSubview($0)
                 $0.removeFromSuperview()
             }
+            if let filter = filter {
+                images = images.compactMap {
+                    $0.applyFilter(filter: filter, context: self.context)
+                }.map {
+                    UIImage(cgImage: $0)
+                }
+            }
+            
             images.forEach {
                 let view = UIImageView(image: $0)
-                self?.baseStackView.addArrangedSubview(view)
+                self.baseStackView.addArrangedSubview(view)
             }
             completion()
         }

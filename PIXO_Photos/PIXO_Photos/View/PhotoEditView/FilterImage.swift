@@ -35,9 +35,61 @@ struct FilterImage: View {
     // 사진 앱 필터 이름
     var filterName: String
     
+    init(
+        inputImage: UIImage,
+        contentMode: ContentMode = .fit,
+        context: CIContext = CIContext(),
+        saturation: Float,
+        hue: Float,
+        exposure: Float,
+        brightness: Float,
+        contrast: Float,
+        highlights: Float,
+        shadows: Float,
+        temperature: Float,
+        sharpness: Float,
+        filterName: String
+    ) {
+        self.inputImage = inputImage
+        self.contentMode = contentMode
+        self.context = context
+        self.saturation = saturation
+        self.hue = hue
+        self.exposure = exposure
+        self.brightness = brightness
+        self.contrast = contrast
+        self.highlights = highlights
+        self.shadows = shadows
+        self.temperature = temperature
+        self.sharpness = sharpness
+        self.filterName = filterName
+    }
+    
+    init(
+        image: UIImage,
+        contentMode: ContentMode = .fill,
+        filter: FilterValue
+    ) {
+        self.init(
+            inputImage: image,
+            contentMode: contentMode,
+            saturation: filter["saturation"] ?? 0,
+            hue: filter["hue"] ?? 0,
+            exposure: filter["exposure"] ?? 0,
+            brightness: filter["brightness"] ?? 0,
+            contrast: filter["contrast"] ?? 0,
+            highlights: filter["highlights"] ?? 0,
+            shadows: filter["shadows"] ?? 0,
+            temperature: filter["temperature"] ?? 0,
+            sharpness: filter["sharpness"] ?? 0,
+            filterName: Filter.intToValue(Int(filter["filter"] ?? 0)).rawValue
+        )
+        print(filterName)
+    }
+    
     var body: some View {
-        if let cgimg = applyFilters(to: inputImage) {
-            return Image(decorative: cgimg, scale: 1.0)
+        if let cgImage = inputImage.applyFilter(filter: getFilterValue(), context: context) {
+            return Image(decorative: cgImage, scale: 1.0)
                 .resizable()
                 .aspectRatio(contentMode: contentMode)
         } else {
@@ -47,103 +99,23 @@ struct FilterImage: View {
         }
     }
     
-    func applyFilters(to image: UIImage) -> CGImage? {
-        guard let ciImage = CIImage(image: image) else { return nil }
-        
-        // Apply Color Controls filter
-        let colorControls = CIFilter.colorControls()
-        colorControls.inputImage = ciImage
-        colorControls.saturation = saturation
-        colorControls.brightness = brightness
-        colorControls.contrast = contrast
-        
-        // Apply Hue Adjust filter
-        let hueAdjust = CIFilter.hueAdjust()
-        hueAdjust.inputImage = colorControls.outputImage
-        hueAdjust.angle = hue
-        
-        // Apply Exposure Adjust filter
-        let exposureAdjust = CIFilter.exposureAdjust()
-        exposureAdjust.inputImage = hueAdjust.outputImage
-        exposureAdjust.ev = exposure
-        
-        // Apply Highlight and Shadow Adjust filter
-        let highlightShadowAdjust = CIFilter.highlightShadowAdjust()
-        highlightShadowAdjust.inputImage = exposureAdjust.outputImage
-        highlightShadowAdjust.highlightAmount = highlights
-        highlightShadowAdjust.shadowAmount = shadows
-        
-        // Apply Temperature and Tint filter
-        let temperatureAndTint = CIFilter.temperatureAndTint()
-        temperatureAndTint.inputImage = highlightShadowAdjust.outputImage
-        temperatureAndTint.neutral = CIVector(x: CGFloat(temperature), y: 0)
-        
-        // Apply Sharpen Luminance filter
-        let sharpenLuminance = CIFilter.sharpenLuminance()
-        sharpenLuminance.inputImage = temperatureAndTint.outputImage
-        sharpenLuminance.sharpness = sharpness
-        
-        // Apply photo app filter if available
-        var finalOutput = sharpenLuminance.outputImage
-        if let photoAppFilter = getPhotoAppFilter(for: filterName, inputImage: finalOutput) {
-            finalOutput = photoAppFilter.outputImage
-        }
-        
-        guard let outputImage = finalOutput else { return nil }
-        
-        if let cgimg = context.createCGImage(outputImage, from: outputImage.extent) {
-            return cgimg
-        } else {
-            return nil
-        }
-    }
-    
-    func getPhotoAppFilter(for filterName: String, inputImage: CIImage?) -> CIFilter? {
-        guard let inputImage = inputImage else { return nil }
-        
-        let filter: CIFilter?
-        switch filterName {
-        case "Mono":
-            let monoFilter = CIFilter.photoEffectMono()
-            monoFilter.inputImage = inputImage
-            filter = monoFilter
-        case "Tonal":
-            let tonalFilter = CIFilter.photoEffectTonal()
-            tonalFilter.inputImage = inputImage
-            filter = tonalFilter
-        case "Noir":
-            let noirFilter = CIFilter.photoEffectNoir()
-            noirFilter.inputImage = inputImage
-            filter = noirFilter
-        case "Fade":
-            let fadeFilter = CIFilter.photoEffectFade()
-            fadeFilter.inputImage = inputImage
-            filter = fadeFilter
-        case "Chrome":
-            let chromeFilter = CIFilter.photoEffectChrome()
-            chromeFilter.inputImage = inputImage
-            filter = chromeFilter
-        case "Process":
-            let processFilter = CIFilter.photoEffectProcess()
-            processFilter.inputImage = inputImage
-            filter = processFilter
-        case "Transfer":
-            let transferFilter = CIFilter.photoEffectTransfer()
-            transferFilter.inputImage = inputImage
-            filter = transferFilter
-        case "Instant":
-            let instantFilter = CIFilter.photoEffectInstant()
-            instantFilter.inputImage = inputImage
-            filter = instantFilter
-        default:
-            filter = nil
-        }
-        
-        return filter
+    func getFilterValue() -> FilterValue {
+        [
+            "saturation": saturation,
+            "hue": hue,
+            "exposure": exposure,
+            "brightness": brightness,
+            "contrast": contrast,
+            "highlights": highlights,
+            "shadows": shadows,
+            "temperature": temperature,
+            "sharpness": sharpness,
+            "filter": Float((Filter(rawValue: filterName) ?? .Original).valueToInt())
+        ]
     }
     
     func uiImage() -> UIImage? {
-        guard let cgImage = applyFilters(to: inputImage) else { return nil }
+        guard let cgImage = inputImage.applyFilter(filter: getFilterValue(), context: context) else { return nil }
         return UIImage(cgImage: cgImage)
     }
 }

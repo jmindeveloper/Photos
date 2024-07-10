@@ -49,13 +49,14 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     private func startVideo(in vc: PhotoDetailCollectionViewController) {
         guard viewModel.currentAsset.mediaType == .video,
               let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell,
-              let asset = cell.videoAsset else { return }
+              let videoAsset = cell.videoAsset else { return }
         
         if cell.isStartVideo {
             return
         }
+        let filter = VideoFilterStorage.getFilter(id: viewModel.currentAsset.localIdentifier)
         
-        vc.videoTimeLineView.setTimeLineView(asset: asset) {
+        vc.videoTimeLineView.setTimeLineView(asset: videoAsset, filter: filter) {
             vc.videoTimeLineView.isHidden = false
             vc.thumbnailCollectionView.isHidden = true
             vc.currentImageBoxView.isHidden = true

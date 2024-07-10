@@ -73,12 +73,7 @@ final class VideoEditor {
     }
     
     private func saveVideoToPhotoLibrary(_ videoURL: URL, completion: @escaping (() -> Void)) {
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: videoURL)
-        }) { success, error in
-            if let error = error {
-                fatalError("video 저장 실패, \(error.localizedDescription)")
-            }
+        PhotoLibrary.saveVideoToLibrary(videoURL) {
             completion()
         }
     }

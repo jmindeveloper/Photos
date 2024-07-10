@@ -172,9 +172,7 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     
     func duplicateCurrentAssets() {
-        library.duplicateAssets([currentAsset]) { [weak self] assets in
-            self?.assets.append(contentsOf: assets)
-        }
+        library.duplicateAssets([currentAsset])
     }
     
     func copyCurrentImageToClipboard() {

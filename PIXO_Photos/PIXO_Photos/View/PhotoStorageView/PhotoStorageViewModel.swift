@@ -20,6 +20,7 @@ protocol PhotoStorageViewModelProtocol: ObservableObject {
     var selectedAssetsTitle: String { get }
     var visibleAssetsDate: [Date] { get set }
     var fetchResult: PHFetchResult<PHAsset>{ get set }
+    var isGetAssets: Bool { get set }
     
     func duplicateSelectedAssets()
     func setFavoriteSelectedAssets()
@@ -49,6 +50,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
     @Published var dateRangeString: String = ""
     @Published var selectMode: Bool = false
     @Published var userAlbum: [Album] = []
+    @Published var isGetAssets: Bool = false
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -65,28 +67,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
     init(library: PhotoLibrary) {
         self.library = library
         super.init()
-        let fetchAssetResult = library.getAssets(with: recentsCollection)
-        assets = fetchAssetResult.assets
-        fetchResult = fetchAssetResult.fetchResult
-        videoCount = assets.filter { $0.mediaType == .video }.count
-        imageCount = assets.count - videoCount
-        assetWithFrame = assets.map { ($0, .zero) }
-        PHPhotoLibrary.shared().register(self)
-        
-        self.userAlbum = library.collections[.album]?.map { collection in
-            let asset = library.getAssets(with: collection)
-            return Album(
-                id: collection.localIdentifier,
-                title: collection.localizedTitle ?? "",
-                assets: asset.assets,
-                assetCount: asset.assets.count,
-                fetchResult: asset.fetchResult
-            )
-        } ?? []
-        
-        userAlbum.sort {
-            $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
-        }
+        setAssets()
         binding()
     }
     
@@ -140,6 +121,39 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
                 }
                 objectWillChange.send()
             }.store(in: &subscriptions)
+        
+        library.getAuthorizedPublisher
+            .debounce(for: 0.1, scheduler: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.setAssets()
+            }.store(in: &subscriptions)
+    }
+    
+    private func setAssets() {
+        let fetchAssetResult = library.getAssets(with: recentsCollection)
+        assets = fetchAssetResult.assets
+        fetchResult = fetchAssetResult.fetchResult
+        videoCount = assets.filter { $0.mediaType == .video }.count
+        imageCount = assets.count - videoCount
+        assetWithFrame = assets.map { ($0, .zero) }
+        PHPhotoLibrary.shared().register(self)
+        
+        self.userAlbum = library.collections[.album]?.map { collection in
+            let asset = library.getAssets(with: collection)
+            return Album(
+                id: collection.localIdentifier,
+                title: collection.localizedTitle ?? "",
+                assets: asset.assets,
+                assetCount: asset.assets.count,
+                fetchResult: asset.fetchResult
+            )
+        } ?? []
+        
+        userAlbum.sort {
+            $0.assets.last?.creationDate ?? Date() < $1.assets.last?.creationDate ?? Date()
+        }
+        
+        isGetAssets = true
     }
     
     func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {

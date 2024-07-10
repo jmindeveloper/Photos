@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct PhotoEditView: View {
-    @EnvironmentObject var viewModel: PhotoEditViewModel
+struct PhotoEditView<VM: PhotoEditViewModelProtocol>: View {
+    @EnvironmentObject var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var uiImage: UIImage?
     var context = CIContext()
@@ -40,14 +40,14 @@ struct PhotoEditView: View {
                         filterName: viewModel.currentFilter.rawValue
                     )
                     
-//                    if viewModel.editMode != .Crop {
+                    if viewModel.editMode != .Crop {
                         Text(viewModel.editMode == .Adjust ? viewModel.currentAdjustEffect.title : viewModel.currentFilter.rawValue)
                             .padding(4)
                             .background {
                                 RoundedRectangle(cornerRadius: 4).fill(.gray)
                             }
                             .padding(.bottom, 10)
-//                    }
+                    }
                 }
             }
             
@@ -68,8 +68,8 @@ struct PhotoEditView: View {
                 .padding(.horizontal, 20)
             case .Filter:
                 selectFilterView()
-//            case .Crop:
-//                EmptyView()
+            case .Crop:
+                EmptyView()
             }
             
             selectEditModeView()

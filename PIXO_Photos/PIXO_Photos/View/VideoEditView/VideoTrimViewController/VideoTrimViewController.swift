@@ -25,7 +25,7 @@ final class VideoTrimViewController: UIViewController {
     }()
     
     // MARK: - Properties
-    private var viewModel: VideoEditViewModel?
+    private var viewModel: (any VideoEditViewModelProtocol)?
     private var subscriptions = Set<AnyCancellable>()
     
     override func viewDidLoad() {
@@ -107,7 +107,7 @@ final class VideoTrimViewController: UIViewController {
             }.store(in: &subscriptions)
     }
     
-    func setViewModel(viewModel: VideoEditViewModel) {
+    func setViewModel(viewModel: any VideoEditViewModelProtocol) {
         self.viewModel = viewModel
         binding()
     }

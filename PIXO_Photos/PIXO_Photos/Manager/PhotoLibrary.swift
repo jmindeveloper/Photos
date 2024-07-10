@@ -14,14 +14,13 @@ typealias FetchAssetResult = (assets: [PHAsset], fetchResult: PHFetchResult<PHAs
 final class PhotoLibrary {
     
     var collections: [PHAssetCollectionType: [PHAssetCollection]] = [:]
-    var currentCollection: PHAssetCollection
     let addAssetsToAlbumPublisher = PassthroughSubject<(PHAssetCollection, [PHAsset]), Never>()
     let changeFavoriteAssetsPublisher = PassthroughSubject<[PHAsset], Never>()
+    let getAuthorizedPublisher = PassthroughSubject<Void, Never>()
     
     init() {
-        self.currentCollection = PHAssetCollection()
         self.collections = getAllAssetCollections()
-        self.currentCollection = collections[.smartAlbum]?.first ?? PHAssetCollection()
+        self.checkAccessAuthority()
     }
     
     func getAllAssetCollections() -> [PHAssetCollectionType: [PHAssetCollection]] {
@@ -322,5 +321,44 @@ final class PhotoLibrary {
                 fatalError("에셋 추가 실패")
             }
         })
+    }
+    
+    private func checkAccessAuthority() {
+        func presentAuthorityAlert() {
+            DispatchQueue.main.async {
+                AlertManager(message: "앱을 사용하기 위해서는 사진 권한이 필요합니다")
+                    .addAction(actionTitle: "설정이동", style: .default) { _ in
+                        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                        if UIApplication.shared.canOpenURL(url) {
+                            UIApplication.shared.open(url)
+                        }
+                    }
+                    .addAction(actionTitle: "취소", style: .cancel)
+                    .present()
+            }
+        }
+        
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        
+        switch photoAuthorizationStatus {
+        case .authorized:
+            print("권한획득")
+        case .notDetermined:
+            PHPhotoLibrary.requestAuthorization { [weak self] status in
+                switch status {
+                case .authorized:
+                    DispatchQueue.main.async {
+                        guard let self = self else { return }
+                        self.collections = self.getAllAssetCollections()
+                        self.getAuthorizedPublisher.send()
+                    }
+                default:
+                    presentAuthorityAlert()
+                }
+            }
+        case .denied, .limited:
+            presentAuthorityAlert()
+        default: return
+        }
     }
 }

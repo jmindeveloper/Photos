@@ -29,12 +29,19 @@ struct PhotoCell: View {
         ZStack(alignment: .bottomTrailing) {
             GeometryReader { proxy in
                 if let image = uiImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .aspectRatio(contentMode: contentMode)
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .contentShape(Rectangle())
-                        .clipped()
+                    if asset?.mediaType == .video, let filter = VideoFilterStorage.getFilter(id: asset?.localIdentifier ?? "") {
+                        FilterImage(image: image, contentMode: contentMode, filter: filter)
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .contentShape(Rectangle())
+                            .clipped()
+                    } else {
+                        Image(uiImage: image)
+                            .resizable()
+                            .aspectRatio(contentMode: contentMode)
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .contentShape(Rectangle())
+                            .clipped()
+                    }
                 } else {
                     Image(systemName: "photo")
                         .resizable()
@@ -53,7 +60,6 @@ struct PhotoCell: View {
             }
             
             if let duration = duration {
-                // TODO: - seconds to min:sec 로 변경
                 Text(duration.toMinSec())
                     .foregroundColor(.white)
                     .font(.system(size: 14))

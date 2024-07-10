@@ -46,6 +46,7 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         stopVideo()
         isStartVideo = false
+        videoAsset = nil
     }
     
     func startVideo() {

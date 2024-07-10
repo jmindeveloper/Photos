@@ -82,16 +82,8 @@ final class VideoEditViewModel: ObservableObject {
         }
     }
     
-    var startTime: CMTime = CMTimeMake(value: 0, timescale: 1) {
-        didSet {
-            print("change start")
-        }
-    }
-    var endTime: CMTime?  {
-        didSet {
-            print("change end")
-        }
-    }
+    var startTime: CMTime = CMTimeMake(value: 0, timescale: 1)
+    var endTime: CMTime?
     
     var context = CIContext()
     

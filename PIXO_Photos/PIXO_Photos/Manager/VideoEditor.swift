@@ -20,6 +20,9 @@ final class VideoEditor {
             var images = [UIImage]()
             
             let duration = asset.duration.seconds
+            if duration < 9 {
+                count = Int(duration)
+            }
             var offset = duration / Double(count)
             if offset < 1 {
                 offset = 1

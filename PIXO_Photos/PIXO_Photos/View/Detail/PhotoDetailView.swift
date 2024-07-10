@@ -132,7 +132,6 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
         .sheet(isPresented: $isPresentAlbumGridView) {
             NavigationView {
                 UserAlbumGridView<PhotoDetailViewModel>(isNavigate: false) { album in
-                    print(album.title)
                     viewModel.addAssetsToAlbum(albumName: album.title)
                     isPresentAlbumGridView = false
                 }

@@ -95,7 +95,6 @@ final class VideoTrimViewController: UIViewController {
         videoTrimTimeLineView.startOffsetPublisher
             .sink { [weak self] offset in
                 self?.videoView.setStartTime(offset: offset) { time in
-                    print("start", time.seconds)
                     self?.viewModel?.startTime = time
                 }
             }.store(in: &subscriptions)
@@ -103,7 +102,6 @@ final class VideoTrimViewController: UIViewController {
         videoTrimTimeLineView.endOffsetPublisher
             .sink { [weak self] offset in
                 self?.videoView.setEndTime(offset: offset) { time in
-                    print("end", time.seconds)
                    self?.viewModel?.endTime = time
                }
             }.store(in: &subscriptions)

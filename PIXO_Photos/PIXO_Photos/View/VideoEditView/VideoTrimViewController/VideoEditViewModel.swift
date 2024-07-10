@@ -27,8 +27,8 @@ protocol VideoEditViewModelProtocol: ObservableObject {
     var currentAdjustMin: Float { get set }
     var currentAdjustMax: Float { get set }
     var currentAdjustEffectValue: Float { get set }
-    var backwardHistory: [[String: Float]] { get set }
-    var forwardHistory: [[String: Float]] { get set }
+    var backwardHistory: [FilterValue] { get set }
+    var forwardHistory: [FilterValue] { get set }
     var updateSlider: Bool { get set }
     var context: CIContext { get set }
     var backwardHistoryEmpty: Bool { get }
@@ -49,10 +49,6 @@ final class VideoEditViewModel: VideoEditViewModelProtocol {
         case Trim
         case Adjust
         case Filter
-        
-        static var allCases: [VideoEditViewModel.EditMode] {
-            return [.Trim]
-        }
         
         var imageName: String {
             switch self {
@@ -102,8 +98,8 @@ final class VideoEditViewModel: VideoEditViewModelProtocol {
     @Published var currentAdjustMax: Float = AdjustEffect.Exposure.maxValue
     @Published var currentAdjustEffectValue: Float = 0
     
-    @Published var backwardHistory: [[String: Float]] = []
-    @Published var forwardHistory: [[String: Float]] = []
+    @Published var backwardHistory: [FilterValue] = []
+    @Published var forwardHistory: [FilterValue] = []
     
     @Published var updateSlider: Bool = false
     
@@ -189,7 +185,7 @@ final class VideoEditViewModel: VideoEditViewModelProtocol {
     }
     
     func saveHistory() {
-        var history: [String: Float] = [:]
+        var history: FilterValue = [:]
         
         history["saturation"] = saturation
         history["hue"] = hue
@@ -297,7 +293,12 @@ final class VideoEditViewModel: VideoEditViewModelProtocol {
             return
         }
         
-        videoEditor.exportTrimVideo(asset: asset, startTime: startTime, endTime: endTime) {
+        videoEditor.exportTrimVideo(
+            asset: asset,
+            filter: backwardHistoryEmpty ? nil : backwardHistory.last ?? [:],
+            startTime: startTime,
+            endTime: endTime
+        ) {
             completion()
         }
     }

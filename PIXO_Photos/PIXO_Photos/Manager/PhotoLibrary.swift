@@ -286,9 +286,15 @@ final class PhotoLibrary {
         }
     }
     
-    static func saveVideoToLibrary(_ url: URL, completion: @escaping (() -> Void)) {
+    static func saveVideoToLibrary(_ url: URL, filter: FilterValue? = nil, completion: @escaping (() -> Void)) {
         PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            let requestResult = PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+            if let filter = filter {
+                let placeholder = requestResult?.placeholderForCreatedAsset
+                if let assetId = placeholder?.localIdentifier {
+                    VideoFilterStorage.saveFilter(id: assetId, filter: filter)
+                }
+            }
         }) { success, error in
             if let error = error {
                 fatalError("video 저장 실패, \(error.localizedDescription)")

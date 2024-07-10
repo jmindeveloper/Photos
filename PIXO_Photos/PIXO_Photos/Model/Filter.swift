@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias FilterValue = [String: Float]
+
 enum AdjustEffect: String, CaseIterable {
     // Exposure (노출)
     case Exposure

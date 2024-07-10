@@ -54,9 +54,10 @@ struct PhotoCell: View {
             
             if let duration = duration {
                 // TODO: - seconds to min:sec 로 변경
-                Text("\(duration)")
+                Text(duration.toMinSec())
                     .foregroundColor(.white)
                     .font(.system(size: 14))
+                    .shadow(radius: 1)
                     .padding([.bottom, .trailing], 2)
             }
             

@@ -64,7 +64,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
             
             Spacer()
            
-            Text("6월 25일")
+            Text(viewModel.dateString)
                 .font(.bold(fontSize: .body1))
                 .foregroundColor(.white)
                 .frame(height: 40)

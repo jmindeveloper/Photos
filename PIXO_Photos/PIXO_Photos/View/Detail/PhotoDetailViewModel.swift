@@ -21,6 +21,7 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     var detailCollectionViewShowCellIndex: Int { get set }
     var thumbnailCollectionViewShowCellIndex: Int { get set }
     var assets: [PHAsset] { get set }
+    var dateString: String { get }
     
     func duplicateCurrentAssets()
     func copyCurrentImageToClipboard()
@@ -79,6 +80,9 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
             
             self.currentAsset = assets[currentItemIndex]
         }
+    }
+    var dateString: String {
+        currentAsset.creationDate?.toMd() ?? ""
     }
     var detailScrollToItemBlock: Bool = false
     var thumbnailScrollToItemBlock: Bool = false

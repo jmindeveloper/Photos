@@ -15,6 +15,8 @@ final class VideoTrimTimeLineView: UIView {
     private let baseView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemGray4
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         
         return view
     }()
@@ -24,8 +26,9 @@ final class VideoTrimTimeLineView: UIView {
         button.backgroundColor = .systemGray4
         button.setImage(UIImage(systemName: "play.fill"), for: .normal)
         button.setImage(UIImage(systemName: "pause.fill"), for: .selected)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.white, for: .selected)
+        button.imageView?.tintColor = .white
+        button.layer.cornerRadius = 8
+        button.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
         return button
     }()
@@ -38,6 +41,8 @@ final class VideoTrimTimeLineView: UIView {
         view.backgroundColor = .brown
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
         return view
     }()
@@ -50,6 +55,8 @@ final class VideoTrimTimeLineView: UIView {
         view.backgroundColor = .brown
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 8
+        view.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
         
         return view
     }()
@@ -58,6 +65,7 @@ final class VideoTrimTimeLineView: UIView {
         let view = UIView()
         view.backgroundColor = .brown
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = 8
         
         return view
     }()

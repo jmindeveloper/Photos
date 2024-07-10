@@ -43,6 +43,7 @@
 		0E96689B2C3EA44F007D2239 /* VideoFilterStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E96689A2C3EA44F007D2239 /* VideoFilterStorage.swift */; };
 		0E96689F2C3EC4D3007D2239 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E96689E2C3EC4D3007D2239 /* UIImage+.swift */; };
 		0E9668A12C3EC9CE007D2239 /* FilterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9668A02C3EC9CE007D2239 /* FilterManager.swift */; };
+		0E9668A32C3ECEA4007D2239 /* PhotoEXIFView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9668A22C3ECEA4007D2239 /* PhotoEXIFView.swift */; };
 		0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */; };
 		0E9B8FFB2C3B0783004E2A7A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */; };
 		0E9ED6C52C3BCF2E000BE981 /* PhotoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9ED6C42C3BCF2E000BE981 /* PhotoDetailViewModel.swift */; };
@@ -101,6 +102,7 @@
 		0E96689A2C3EA44F007D2239 /* VideoFilterStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFilterStorage.swift; sourceTree = "<group>"; };
 		0E96689E2C3EC4D3007D2239 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		0E9668A02C3EC9CE007D2239 /* FilterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterManager.swift; sourceTree = "<group>"; };
+		0E9668A22C3ECEA4007D2239 /* PhotoEXIFView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEXIFView.swift; sourceTree = "<group>"; };
 		0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		0E9ED6C42C3BCF2E000BE981 /* PhotoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewModel.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				0E14E14A2C3BA23800B04BB0 /* PhotoDetailViewController */,
 				0E9ED6C42C3BCF2E000BE981 /* PhotoDetailViewModel.swift */,
 				0E4FB47A2C3BF4E800DD7D79 /* PhotoDetailView.swift */,
+				0E9668A22C3ECEA4007D2239 /* PhotoEXIFView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -433,6 +436,7 @@
 				0EC2F36C2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift in Sources */,
 				0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */,
 				0E0D63FF2C3BA34100583079 /* VideoCollectionViewCell.swift in Sources */,
+				0E9668A32C3ECEA4007D2239 /* PhotoEXIFView.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */,

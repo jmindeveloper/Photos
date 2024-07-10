@@ -26,8 +26,8 @@ protocol PhotoEditViewModelProtocol: ObservableObject {
     var currentAdjustMin: Float { get set }
     var currentAdjustMax: Float { get set }
     var currentAdjustEffectValue: Float { get set }
-    var backwardHistory: [[String: Float]] { get set }
-    var forwardHistory: [[String: Float]] { get set }
+    var backwardHistory: [FilterValue] { get set }
+    var forwardHistory: [FilterValue] { get set }
     var updateSlider: Bool { get set }
     var backwardHistoryEmpty: Bool { get }
     var forwardHistoryEmpty: Bool { get }
@@ -97,8 +97,8 @@ final class PhotoEditViewModel: PhotoEditViewModelProtocol {
     @Published var currentAdjustMax: Float = AdjustEffect.Exposure.maxValue
     @Published var currentAdjustEffectValue: Float = 0
     
-    @Published var backwardHistory: [[String: Float]] = []
-    @Published var forwardHistory: [[String: Float]] = []
+    @Published var backwardHistory: [FilterValue] = []
+    @Published var forwardHistory: [FilterValue] = []
     
     @Published var updateSlider: Bool = false
     

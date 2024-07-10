@@ -123,6 +123,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
                 PhotoLibrary.getVideoAsset(with: asset) { asset in
                     cell.setVideoAsset(asset: asset)
                 }
+                cell.assetId = asset.localIdentifier
                 return cell
                 
             default:

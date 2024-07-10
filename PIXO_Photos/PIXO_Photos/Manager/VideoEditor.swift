@@ -45,7 +45,7 @@ final class VideoEditor {
         }
     }
     
-    func exportTrimVideo(asset: AVAsset, startTime: CMTime, endTime: CMTime, completion: @escaping (() -> Void)) {
+    func exportTrimVideo(asset: AVAsset, filter: FilterValue?, startTime: CMTime, endTime: CMTime, completion: @escaping (() -> Void)) {
         let timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         let fileManager = FileManager.default
@@ -64,7 +64,7 @@ final class VideoEditor {
                 if let error = exporter?.error {
                     fatalError("video export 실패, \(error.localizedDescription)")
                 } else {
-                    self?.saveVideoToPhotoLibrary(outputURL) {
+                    self?.saveVideoToPhotoLibrary(outputURL, filter: filter) {
                         completion()
                     }
                 }
@@ -72,181 +72,9 @@ final class VideoEditor {
         }
     }
     
-    private func saveVideoToPhotoLibrary(_ videoURL: URL, completion: @escaping (() -> Void)) {
-        PhotoLibrary.saveVideoToLibrary(videoURL) {
+    private func saveVideoToPhotoLibrary(_ videoURL: URL, filter: FilterValue?, completion: @escaping (() -> Void)) {
+        PhotoLibrary.saveVideoToLibrary(videoURL, filter: filter) {
             completion()
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    //    private func applyFilter(to image: CIImage, filter: Filter) -> CIImage? {
-    //        let filterName: String
-    //        switch filter {
-    //        case .Original:
-    //            return image
-    //        case .Mono:
-    //            filterName = "CIPhotoEffectMono"
-    //        case .Tonal:
-    //            filterName = "CIPhotoEffectTonal"
-    //        case .Noir:
-    //            filterName = "CIPhotoEffectNoir"
-    //        case .Fade:
-    //            filterName = "CIPhotoEffectFade"
-    //        case .Chrome:
-    //            filterName = "CIPhotoEffectChrome"
-    //        case .Process:
-    //            filterName = "CIPhotoEffectProcess"
-    //        case .Transfer:
-    //            filterName = "CIPhotoEffectTransfer"
-    //        case .Instant:
-    //            filterName = "CIPhotoEffectInstant"
-    //        }
-    //
-    //        let filter = CIFilter(name: filterName)
-    //        filter?.setValue(image, forKey: kCIInputImageKey)
-    //        return filter?.outputImage
-    //    }
-    //
-    //    private func applyAdjustEffect(to image: CIImage, effect: AdjustEffect, value: Float) -> CIImage? {
-    //        let filter: CIFilter
-    //        switch effect {
-    //        case .Exposure:
-    //            filter = CIFilter(name: "CIExposureAdjust")!
-    //            filter.setValue(value, forKey: kCIInputEVKey)
-    //        case .Saturation:
-    //            filter = CIFilter(name: "CIColorControls")!
-    //            filter.setValue(value, forKey: kCIInputSaturationKey)
-    //        case .Hue:
-    //            filter = CIFilter(name: "CIHueAdjust")!
-    //            filter.setValue(value, forKey: kCIInputAngleKey)
-    //        case .Brightness:
-    //            filter = CIFilter(name: "CIColorControls")!
-    //            filter.setValue(value, forKey: kCIInputBrightnessKey)
-    //        case .Contrast:
-    //            filter = CIFilter(name: "CIColorControls")!
-    //            filter.setValue(value, forKey: kCIInputContrastKey)
-    //        case .Highlights:
-    //            filter = CIFilter(name: "CIHighlightShadowAdjust")!
-    //            filter.setValue(value, forKey: "inputHighlightAmount")
-    //        case .Shadows:
-    //            filter = CIFilter(name: "CIHighlightShadowAdjust")!
-    //            filter.setValue(value, forKey: "inputShadowAmount")
-    //        case .Temperature:
-    //            filter = CIFilter(name: "CITemperatureAndTint")!
-    //            filter.setValue(CIVector(x: CGFloat(value), y: 0), forKey: "inputNeutral")
-    //        case .Sharpness:
-    //            filter = CIFilter(name: "CISharpenLuminance")!
-    //            filter.setValue(value, forKey: kCIInputSharpnessKey)
-    //        }
-    //
-    //        filter.setValue(image, forKey: kCIInputImageKey)
-    //        return filter.outputImage
-    //    }
-    //
-    //    private func applyEffects(to frame: CIImage, filter: Filter, effects: [(AdjustEffect, Float)]) -> CIImage? {
-    //        var filteredImage = applyFilter(to: frame, filter: filter)
-    //        for (effect, value) in effects {
-    //            if let image = filteredImage {
-    //                filteredImage = applyAdjustEffect(to: image, effect: effect, value: value)
-    //            }
-    //        }
-    //        return filteredImage
-    //    }
-    //
-    //    func exportVideo(asset: AVAsset, filter: Filter, effects: [(AdjustEffect, Float)], completion: @escaping (Bool) -> Void) {
-    //        guard let reader = try? AVAssetReader(asset: asset) else {
-    //            fatalError()
-    //            return
-    //        }
-    //
-    //        guard let videoTrack = asset.tracks(withMediaType: .video).first else {
-    //            fatalError()
-    //            return
-    //        }
-    //
-    //        let readerOutputSettings: [String: Any] = [
-    //            kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB
-    //        ]
-    //        let readerOutput = AVAssetReaderTrackOutput(track: videoTrack, outputSettings: readerOutputSettings)
-    //        reader.add(readerOutput)
-    //
-    //        let outputURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("EditVideo.mov")
-    //
-    //        if FileManager.default.fileExists(atPath: outputURL.path) {
-    //            try? FileManager.default.removeItem(at: outputURL)
-    //        }
-    //
-    //        let writer = try! AVAssetWriter(outputURL: outputURL, fileType: .mp4)
-    //        let writerInputSettings: [String: Any] = [
-    //            AVVideoCodecKey: AVVideoCodecType.h264,
-    //            AVVideoWidthKey: videoTrack.naturalSize.width,
-    //            AVVideoHeightKey: videoTrack.naturalSize.height
-    //        ]
-    //        let writerInput = AVAssetWriterInput(mediaType: .video, outputSettings: writerInputSettings)
-    //        writer.add(writerInput)
-    //
-    //        let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput, sourcePixelBufferAttributes: nil)
-    //
-    //        reader.startReading()
-    //        writer.startWriting()
-    //        writer.startSession(atSourceTime: .zero)
-    //
-    //        let processingQueue = DispatchQueue(label: "videoProcessingQueue")
-    //
-    //        writerInput.requestMediaDataWhenReady(on: processingQueue) {
-    //            while writerInput.isReadyForMoreMediaData {
-    //                if let sampleBuffer = readerOutput.copyNextSampleBuffer(),
-    //                   let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) {
-    //                    let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-    //                    let processedImage = self.applyEffects(to: ciImage, filter: filter, effects: effects)
-    //                    var newPixelBuffer: CVPixelBuffer?
-    //
-    //                    CVPixelBufferCreate(
-    //                        kCFAllocatorDefault,
-    //                        Int(videoTrack.naturalSize.width),
-    //                        Int(videoTrack.naturalSize.height),
-    //                        kCVPixelFormatType_32ARGB,
-    //                        nil,
-    //                        &newPixelBuffer
-    //                    )
-    //
-    //                    if let newPixelBuffer = newPixelBuffer, let processedImage = processedImage {
-    //                        self.context.render(processedImage, to: newPixelBuffer)
-    //                        pixelBufferAdaptor.append(newPixelBuffer, withPresentationTime: CMSampleBufferGetPresentationTimeStamp(sampleBuffer))
-    //                    }
-    //                } else {
-    //                    writerInput.markAsFinished()
-    //                    writer.finishWriting {
-    //                        if writer.status == .completed {
-    //                            self.saveVideoToPhotoLibrary(outputURL) { success in
-    //                                if success {
-    //                                    self.deleteFile(at: outputURL)
-    //                                }
-    //                                completion(success)
-    //                            }
-    //                        } else {
-    //                            fatalError()
-    //                        }
-    //                    }
-    //                    break
-    //                }
-    //            }
-    //        }
-    //    }
-    //
-    //
-    //    private func deleteFile(at url: URL) {
-    //        do {
-    //            try FileManager.default.removeItem(at: url)
-    //            print("File deleted successfully.")
-    //        } catch {
-    //            print("Failed to delete file: \(error)")
-    //        }
-    //    }
 }

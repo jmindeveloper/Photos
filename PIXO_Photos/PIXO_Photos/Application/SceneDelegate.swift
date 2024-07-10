@@ -22,8 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
         
         Constant.KEY_WINDOW = window
-        
-        checkAccessAuthority()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -52,25 +50,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
-    }
-
-
-    private func checkAccessAuthority() {
-        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
-        
-        switch photoAuthorizationStatus {
-        case .notDetermined, .denied, .limited:
-            AlertManager(message: "앱을 사용하기 위해서는 사진 권한이 필요합니다")
-                .addAction(actionTitle: "설정이동", style: .default) { _ in
-                    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
-                    if UIApplication.shared.canOpenURL(url) {
-                        UIApplication.shared.open(url)
-                    }
-                }
-                .addAction(actionTitle: "취소", style: .cancel)
-                .present()
-        default: return
-        }
     }
 }
 

@@ -20,13 +20,24 @@ protocol AlbumViewModelProtocol: ObservableObject {
 final class AlbumViewModel: AlbumViewModelProtocol, AlbumGridViewModelProtocol {
     let library: PhotoLibrary
     
-    @Published var smartAlbum: [Album]
-    @Published var userAlbum: [Album]
+    @Published var smartAlbum: [Album] = []
+    @Published var userAlbum: [Album] = []
     
     private var subscriptions = Set<AnyCancellable>()
     
     init(library: PhotoLibrary) {
         self.library = library
+        setAlbum()
+        binding()
+    }
+    
+    private func setAlbum() {
+        let photoAuthorizationStatus = PHPhotoLibrary.authorizationStatus()
+        
+        guard photoAuthorizationStatus == .authorized else {
+            return
+        }
+        
         self.smartAlbum = library.collections[.smartAlbum]?.map { collection in
             let asset = library.getAssets(with: collection)
             return Album(
@@ -55,7 +66,6 @@ final class AlbumViewModel: AlbumViewModelProtocol, AlbumGridViewModelProtocol {
         
         // 최근항목
         userAlbum.insert(smartAlbum.removeFirst(), at: 0)
-        binding()
     }
     
     private func binding() {
@@ -67,6 +77,11 @@ final class AlbumViewModel: AlbumViewModelProtocol, AlbumGridViewModelProtocol {
                     userAlbum[index].assets.append(contentsOf: assets)
                     userAlbum[index].assetCount += assets.count
                 }
+            }.store(in: &subscriptions)
+        
+        library.getAuthorizedPublisher
+            .sink { [weak self] in
+                self?.setAlbum()
             }.store(in: &subscriptions)
     }
     

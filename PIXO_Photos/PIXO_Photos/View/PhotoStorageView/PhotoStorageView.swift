@@ -49,6 +49,13 @@ struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
                         isAppeared = true
                     }
                 }
+                .onChange(of: viewModel.assets) {
+                    if viewModel.isGetAssets {
+                        scrollAsset = viewModel.assets.last
+                        proxy.scrollTo(scrollAsset?.localIdentifier)
+                        viewModel.isGetAssets = false
+                    }
+                }
                 .onChange(of: columnItemCount) { _ in
                     proxy.scrollTo(scrollAsset?.localIdentifier, anchor: .top)
                 }

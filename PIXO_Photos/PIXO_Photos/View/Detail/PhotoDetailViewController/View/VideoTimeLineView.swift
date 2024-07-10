@@ -99,7 +99,10 @@ final class VideoTimeLineView: UIView {
             }
             completion()
         }
-        timeLineSlider.maximumValue = Float(CMTimeGetSeconds(AVPlayerItem(asset: asset).duration))
+        let time = Float(CMTimeGetSeconds(AVPlayerItem(asset: asset).duration))
+        if time > 0 {
+            timeLineSlider.maximumValue = time
+        }
     }
     
     func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {

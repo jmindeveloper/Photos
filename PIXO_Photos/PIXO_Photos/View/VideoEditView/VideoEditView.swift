@@ -90,16 +90,12 @@ struct VideoEditView: View {
     private func saveCancelView() -> some View {
         HStack {
             Button {
-                if viewModel.backwardHistoryEmpty {
-                    presentationMode.wrappedValue.dismiss()
-                } else {
-                    AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
-                        .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        .addAction(actionTitle: "취소", style: .cancel)
-                        .present()
-                }
+                AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
+                    .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .addAction(actionTitle: "취소", style: .cancel)
+                    .present()
             } label: {
                 Text("취소")
                     .foregroundColor(.black)
@@ -114,7 +110,7 @@ struct VideoEditView: View {
             Spacer()
             
             Button {
-                
+                saveVideo()
             } label: {
                 Text("완료")
                     .foregroundColor(.black)
@@ -124,9 +120,8 @@ struct VideoEditView: View {
                         RoundedRectangle(cornerRadius: 10000)
                             .fill(Color.yellow)
                     )
-                    .opacity(viewModel.backwardHistoryEmpty ? 0.8 : 1)
+                    .opacity(1)
             }
-            .disabled(viewModel.backwardHistoryEmpty)
         }
         .padding(.horizontal, 35)
     }
@@ -271,6 +266,12 @@ struct VideoEditView: View {
                 }
             }
             .frame(height: 60)
+        }
+    }
+    
+    func saveVideo() {
+        viewModel.saveVideo {
+            presentationMode.wrappedValue.dismiss()
         }
     }
 }

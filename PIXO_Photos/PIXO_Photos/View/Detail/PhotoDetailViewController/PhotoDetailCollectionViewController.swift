@@ -210,7 +210,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
-        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / cellColumnCount)
+        let inset = Constant.SCREEN_WIDTH - (Constant.SCREEN_WIDTH / cellColumnCount / 2)
         
         section.contentInsets = .init(top: .zero, leading: .zero, bottom: .zero, trailing: inset)
         
@@ -221,7 +221,11 @@ final class PhotoDetailCollectionViewController: UIViewController {
             // scrollOffset이랑 비교해서 작은값들은 remove
             var visibleItems = visibleItems
             visibleItems.removeAll { $0.frame.minX < offset.x }
-            self.viewModel?.thumbnailCollectionViewShowCellIndex = visibleItems.first?.indexPath.item ?? 0
+            if visibleItems.isEmpty {
+                viewModel?.thumbnailCollectionViewShowCellIndex = (viewModel?.assets.count ?? 1) - 1
+                return
+            }
+            viewModel?.thumbnailCollectionViewShowCellIndex = visibleItems.first?.indexPath.item ?? 0
         }
         
         return UICollectionViewCompositionalLayout(section: section)

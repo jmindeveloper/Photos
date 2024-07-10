@@ -16,6 +16,10 @@ final class VideoEditViewModel: ObservableObject {
         case Adjust
         case Filter
         
+        static var allCases: [VideoEditViewModel.EditMode] {
+            return [.Trim]
+        }
+        
         var imageName: String {
             switch self {
             case .Trim:
@@ -69,6 +73,7 @@ final class VideoEditViewModel: ObservableObject {
     
     @Published var updateSlider: Bool = false
     
+    private let videoEditor = VideoEditor()
     var videoAsset: AVAsset? {
         didSet {
             if let videoAsset = videoAsset {
@@ -76,12 +81,25 @@ final class VideoEditViewModel: ObservableObject {
             }
         }
     }
-    private var isLoadHistory: Bool = false
+    
+    var startTime: CMTime = CMTimeMake(value: 0, timescale: 1) {
+        didSet {
+            print("change start")
+        }
+    }
+    var endTime: CMTime?  {
+        didSet {
+            print("change end")
+        }
+    }
+    
     var context = CIContext()
+    
+    private var isLoadHistory: Bool = false
     var backwardHistoryEmpty: Bool {
         backwardHistory.count <= 1
     }
-    
+
     var forwardHistoryEmpty: Bool {
         forwardHistory.isEmpty
     }
@@ -243,6 +261,40 @@ final class VideoEditViewModel: ObservableObject {
         }
         PhotoLibrary.getVideoAsset(with: editAsset) { [weak self] asset in
             self?.videoAsset = asset
+            self?.endTime = AVPlayerItem(asset: asset).duration
         }
     }
+    
+    func saveVideo(completion: @escaping (() -> Void)) {
+        guard let asset = videoAsset,
+              let endTime = endTime else {
+            return
+        }
+        
+        videoEditor.exportTrimVideo(asset: asset, startTime: startTime, endTime: endTime) {
+            completion()
+        }
+    }
+    
+//    func saveVideo(completion: @escaping (() -> Void)) {
+//        guard let asset = videoAsset else {
+//            return
+//        }
+//        videoEditor.exportVideo(
+//            asset: asset,
+//            filter: currentFilter,
+//            effects: [
+//                (.Saturation, saturation),
+//                (.Hue, hue),
+//                (.Exposure, exposure),
+//                (.Brightness, brightness),
+//                (.Contrast, contrast),
+//                (.Highlights, highlights),
+//                (.Shadows, shadows),
+//                (.Temperature, temperature),
+//                (.Sharpness, sharpness)
+//            ]) { _ in
+//                completion()
+//            }
+//    }
 }

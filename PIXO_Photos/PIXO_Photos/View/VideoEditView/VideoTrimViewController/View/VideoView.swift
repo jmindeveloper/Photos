@@ -69,20 +69,23 @@ final class VideoView: UIView {
         player?.seek(to: time, completionHandler: { _ in })
     }
     
-    func setStartTime(offset: CGFloat) {
+    func setStartTime(offset: CGFloat, completion: @escaping ((CMTime) -> Void)) {
         let startTime = (player?.currentItem?.duration.seconds ?? 0) * offset
         let time = CMTimeMakeWithSeconds(startTime, preferredTimescale: Int32(NSEC_PER_SEC))
         self.startTime = time
         
         player?.seek(to: time)
+        
+        completion(time)
     }
     
-    func setEndTime(offset: CGFloat) {
+    func setEndTime(offset: CGFloat, completion: @escaping ((CMTime) -> Void)) {
         let endTime = (player?.currentItem?.duration.seconds ?? 0) * offset
         let time = CMTimeMakeWithSeconds(endTime, preferredTimescale: Int32(NSEC_PER_SEC))
         self.endTime = time
         
         player?.seek(to: time)
+        completion(time)
     }
     
     private func observeVideo() {

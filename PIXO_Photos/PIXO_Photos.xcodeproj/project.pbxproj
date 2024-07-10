@@ -607,6 +607,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = asdf;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -640,6 +641,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = asdf;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

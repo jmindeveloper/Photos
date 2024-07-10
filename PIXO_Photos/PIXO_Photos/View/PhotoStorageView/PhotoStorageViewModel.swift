@@ -38,7 +38,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
         if let collection = library.collections[.smartAlbum]?.first {
             return collection
         } else {
-            fatalError("Recents collection을 찾지 못했습니다.")
+            return PHAssetCollection()
         }
     }
     var fetchResult: PHFetchResult<PHAsset> = .init()

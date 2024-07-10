@@ -1,44 +1,49 @@
 //
-//  PhotoEditViewModel.swift
+//  VideoEditViewModel.swift
 //  PIXO_Photos
 //
 //  Created by J_Min on 7/9/24.
 //
 
-import UIKit
+import Foundation
 import Photos
 import Combine
+import AVFoundation
 
-final class PhotoEditViewModel: ObservableObject {
+final class VideoEditViewModel: ObservableObject {
     enum EditMode: CaseIterable {
+        case Trim
         case Adjust
         case Filter
-//        case Crop
+        
+        static var allCases: [VideoEditViewModel.EditMode] {
+            return [.Trim]
+        }
         
         var imageName: String {
             switch self {
+            case .Trim:
+                return "video.fill"
             case .Filter:
                 return "camera.filters"
             case .Adjust:
                 return "slider.horizontal.3"
-//            case .Crop:
-//                return "crop.rotate"
             }
         }
         
         var title: String {
             switch self {
+            case .Trim:
+                return "비디오"
             case .Filter:
                 return "필터"
             case .Adjust:
                 return "조절"
-//            case .Crop:
-//                return "자르기"
             }
         }
     }
     
-    @Published var editMode: EditMode = .Adjust
+    @Published var editMode: EditMode = .Trim
     @Published var editAsset: PHAsset
     @Published var currentFilter: Filter = .Original
     @Published var currentAdjustEffect: AdjustEffect = .Exposure {
@@ -68,23 +73,36 @@ final class PhotoEditViewModel: ObservableObject {
     
     @Published var updateSlider: Bool = false
     
+    private let videoEditor = VideoEditor()
+    var videoAsset: AVAsset? {
+        didSet {
+            if let videoAsset = videoAsset {
+                videoAssetPublisher.send(videoAsset)
+            }
+        }
+    }
+    
+    var startTime: CMTime = CMTimeMake(value: 0, timescale: 1)
+    var endTime: CMTime?
+    
+    var context = CIContext()
+    
+    private var isLoadHistory: Bool = false
     var backwardHistoryEmpty: Bool {
         backwardHistory.count <= 1
     }
-    
+
     var forwardHistoryEmpty: Bool {
         forwardHistory.isEmpty
     }
     
-    private var isLoadHistory: Bool = false
-    
-    var context = CIContext()
+    let videoAssetPublisher = PassthroughSubject<AVAsset, Never>()
     private var subscriptions = Set<AnyCancellable>()
     
     init(editAsset: PHAsset) {
         self.editAsset = editAsset
+        getVideoAsset()
         saveHistory()
-        
         binding()
     }
     
@@ -224,18 +242,51 @@ final class PhotoEditViewModel: ObservableObject {
         case .Sharpness:
             currentAdjustEffectValue = sharpness
         }
+        
         updateSlider = true
     }
     
-    func saveImage(image: UIImage, completion: @escaping (() -> Void)) {
-        PHPhotoLibrary.shared().performChanges({
-            PHAssetChangeRequest.creationRequestForAsset(from: image)
-        }) { success, _ in
-            if success {
-                completion()
-            } else {
-                fatalError("이미지 저장 실패")
-            }
+    func getVideoAsset() {
+        if let asset = videoAsset {
+            videoAssetPublisher.send(asset)
+            return
+        }
+        PhotoLibrary.getVideoAsset(with: editAsset) { [weak self] asset in
+            self?.videoAsset = asset
+            self?.endTime = AVPlayerItem(asset: asset).duration
         }
     }
+    
+    func saveVideo(completion: @escaping (() -> Void)) {
+        guard let asset = videoAsset,
+              let endTime = endTime else {
+            return
+        }
+        
+        videoEditor.exportTrimVideo(asset: asset, startTime: startTime, endTime: endTime) {
+            completion()
+        }
+    }
+    
+//    func saveVideo(completion: @escaping (() -> Void)) {
+//        guard let asset = videoAsset else {
+//            return
+//        }
+//        videoEditor.exportVideo(
+//            asset: asset,
+//            filter: currentFilter,
+//            effects: [
+//                (.Saturation, saturation),
+//                (.Hue, hue),
+//                (.Exposure, exposure),
+//                (.Brightness, brightness),
+//                (.Contrast, contrast),
+//                (.Highlights, highlights),
+//                (.Shadows, shadows),
+//                (.Temperature, temperature),
+//                (.Sharpness, sharpness)
+//            ]) { _ in
+//                completion()
+//            }
+//    }
 }

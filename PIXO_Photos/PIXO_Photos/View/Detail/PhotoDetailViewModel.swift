@@ -32,6 +32,9 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     @Published var currentAsset: PHAsset {
         didSet {
+            if currentAsset == oldValue {
+                return
+            }
             if currentAsset.mediaType == .video {
                 isPlayVideo = true
             }
@@ -195,6 +198,7 @@ extension PhotoDetailViewModel: PHPhotoLibraryChangeObserver {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             let beforeAssets = assets
+            if assets == asset { return }
             assets = asset
             
             if beforeAssets.count > asset.count {
@@ -204,3 +208,4 @@ extension PhotoDetailViewModel: PHPhotoLibraryChangeObserver {
         }
     }
 }
+

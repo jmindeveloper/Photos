@@ -51,6 +51,10 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
               let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell,
               let asset = cell.videoAsset else { return }
         
+        if cell.isStartVideo {
+            return
+        }
+        
         vc.videoTimeLineView.setTimeLineView(asset: asset) {
             vc.videoTimeLineView.isHidden = false
             vc.thumbnailCollectionView.isHidden = true

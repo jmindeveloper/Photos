@@ -41,6 +41,12 @@
 		0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */; };
 		0E9B8FFB2C3B0783004E2A7A /* UINavigationController+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */; };
 		0E9ED6C52C3BCF2E000BE981 /* PhotoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9ED6C42C3BCF2E000BE981 /* PhotoDetailViewModel.swift */; };
+		0EC2F3682C3D6DF300CB1D41 /* VideoTrimViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F3672C3D6DF300CB1D41 /* VideoTrimViewController.swift */; };
+		0EC2F36A2C3D6FBD00CB1D41 /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F3692C3D6FBD00CB1D41 /* VideoView.swift */; };
+		0EC2F36C2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F36B2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift */; };
+		0EC2F36F2C3D711C00CB1D41 /* VideoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F36E2C3D711C00CB1D41 /* VideoEditViewModel.swift */; };
+		0EC2F3712C3D72DC00CB1D41 /* VideoEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F3702C3D72DC00CB1D41 /* VideoEditView.swift */; };
+		0EC2F3732C3D73E200CB1D41 /* VideoTrimViewControllerRepresentableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC2F3722C3D73E200CB1D41 /* VideoTrimViewControllerRepresentableView.swift */; };
 		0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */; };
 		0ECBB1042C3AC5A000482E71 /* UIImage+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1032C3AC5A000482E71 /* UIImage+.swift */; };
 		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
@@ -51,6 +57,7 @@
 		0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
 		0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */; };
+		0EEF48222C3DA18D00B4C1E4 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEF48212C3DA18D00B4C1E4 /* Filter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +95,12 @@
 		0E9B8FF82C3AF874004E2A7A /* AlbumViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewModel.swift; sourceTree = "<group>"; };
 		0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+.swift"; sourceTree = "<group>"; };
 		0E9ED6C42C3BCF2E000BE981 /* PhotoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoDetailViewModel.swift; sourceTree = "<group>"; };
+		0EC2F3672C3D6DF300CB1D41 /* VideoTrimViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimViewController.swift; sourceTree = "<group>"; };
+		0EC2F3692C3D6FBD00CB1D41 /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
+		0EC2F36B2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimTimeLineView.swift; sourceTree = "<group>"; };
+		0EC2F36E2C3D711C00CB1D41 /* VideoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditViewModel.swift; sourceTree = "<group>"; };
+		0EC2F3702C3D72DC00CB1D41 /* VideoEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditView.swift; sourceTree = "<group>"; };
+		0EC2F3722C3D73E200CB1D41 /* VideoTrimViewControllerRepresentableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTrimViewControllerRepresentableView.swift; sourceTree = "<group>"; };
 		0ECBB1012C3AC06A00482E71 /* AssetDragSelectManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetDragSelectManager.swift; sourceTree = "<group>"; };
 		0ECBB1032C3AC5A000482E71 /* UIImage+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+.swift"; sourceTree = "<group>"; };
 		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
@@ -98,6 +111,7 @@
 		0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditViewModel.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
 		0EE445782C3C2BF300A0B9AB /* VideoTimeLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTimeLineView.swift; sourceTree = "<group>"; };
+		0EEF48212C3DA18D00B4C1E4 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +160,7 @@
 		0E64E2E22C3A39C0004C29CE /* View */ = {
 			isa = PBXGroup;
 			children = (
+				0EC2F3652C3D6D8F00CB1D41 /* VideoEditView */,
 				0ED84E1A2C3CF27700946B61 /* PhotoEditView */,
 				0E64E2F52C3A4DAE004C29CE /* Common */,
 				0E14E1442C3BA0E400B04BB0 /* Detail */,
@@ -264,10 +279,40 @@
 			path = PIXO_Photos;
 			sourceTree = "<group>";
 		};
+		0EC2F3652C3D6D8F00CB1D41 /* VideoEditView */ = {
+			isa = PBXGroup;
+			children = (
+				0EC2F3662C3D6D9E00CB1D41 /* VideoTrimViewController */,
+				0EC2F3702C3D72DC00CB1D41 /* VideoEditView.swift */,
+			);
+			path = VideoEditView;
+			sourceTree = "<group>";
+		};
+		0EC2F3662C3D6D9E00CB1D41 /* VideoTrimViewController */ = {
+			isa = PBXGroup;
+			children = (
+				0EC2F36D2C3D6FC600CB1D41 /* View */,
+				0EC2F3672C3D6DF300CB1D41 /* VideoTrimViewController.swift */,
+				0EC2F36E2C3D711C00CB1D41 /* VideoEditViewModel.swift */,
+				0EC2F3722C3D73E200CB1D41 /* VideoTrimViewControllerRepresentableView.swift */,
+			);
+			path = VideoTrimViewController;
+			sourceTree = "<group>";
+		};
+		0EC2F36D2C3D6FC600CB1D41 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				0EC2F3692C3D6FBD00CB1D41 /* VideoView.swift */,
+				0EC2F36B2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		0ED84E0F2C3C5D7600946B61 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				0ED84E102C3C5D8000946B61 /* Album.swift */,
+				0EEF48212C3DA18D00B4C1E4 /* Filter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -369,17 +414,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EEF48222C3DA18D00B4C1E4 /* Filter.swift in Sources */,
 				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
 				0E369F2C2C3D43450061FA0A /* Color+.swift in Sources */,
+				0EC2F36C2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift in Sources */,
 				0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */,
 				0E0D63FF2C3BA34100583079 /* VideoCollectionViewCell.swift in Sources */,
 				0E84319F2C3A18CC0047157C /* AppDelegate.swift in Sources */,
 				0E64E2FE2C3A63E4004C29CE /* PhotoStorageViewModel.swift in Sources */,
 				0E9B8FF92C3AF874004E2A7A /* AlbumViewModel.swift in Sources */,
+				0EC2F3732C3D73E200CB1D41 /* VideoTrimViewControllerRepresentableView.swift in Sources */,
 				0E64E2E42C3A39C6004C29CE /* MainTabbarController.swift in Sources */,
 				0E64E2F22C3A4890004C29CE /* UIApplication+.swift in Sources */,
+				0EC2F36F2C3D711C00CB1D41 /* VideoEditViewModel.swift in Sources */,
 				0E4FB47B2C3BF4E800DD7D79 /* PhotoDetailView.swift in Sources */,
 				0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */,
+				0EC2F3712C3D72DC00CB1D41 /* VideoEditView.swift in Sources */,
 				0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */,
 				0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */,
 				0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */,
@@ -399,11 +449,13 @@
 				0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */,
 				0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */,
 				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
+				0EC2F3682C3D6DF300CB1D41 /* VideoTrimViewController.swift in Sources */,
 				0E64E2E92C3A3A09004C29CE /* AlbumView.swift in Sources */,
 				0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */,
 				0EE445792C3C2BF300A0B9AB /* VideoTimeLineView.swift in Sources */,
 				0ED84E172C3CF0A900946B61 /* ScrollSlider.swift in Sources */,
 				0ED84E1C2C3CF38F00946B61 /* PhotoEditView.swift in Sources */,
+				0EC2F36A2C3D6FBD00CB1D41 /* VideoView.swift in Sources */,
 				0E64E2FC2C3A5430004C29CE /* Constant.swift in Sources */,
 				0E3C84232C3D0B3600FE5FBF /* FilterImage.swift in Sources */,
 				0E8431A12C3A18CC0047157C /* SceneDelegate.swift in Sources */,
@@ -555,6 +607,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = asdf;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -588,6 +641,7 @@
 				DEVELOPMENT_TEAM = 8PRV428ULN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PIXO_Photos/Info.plist;
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = asdf;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사용자의 사진에 접근합니다";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

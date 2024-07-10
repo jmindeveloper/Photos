@@ -160,7 +160,9 @@ final class PhotoLibrary {
             
             PHCachingImageManager.default().requestAVAsset(forVideo: asset, options: options) { asset, _, _ in
                 if let asset = asset {
-                    completion(asset)
+                    DispatchQueue.main.async {
+                        completion(asset)
+                    }
                 }
             }
         }

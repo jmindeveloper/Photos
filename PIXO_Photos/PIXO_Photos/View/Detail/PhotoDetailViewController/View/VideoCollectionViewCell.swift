@@ -40,12 +40,13 @@ final class VideoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var isStartVideo = false
+    var isStartVideo = false
     
     override func prepareForReuse() {
         super.prepareForReuse()
         stopVideo()
         isStartVideo = false
+        videoAsset = nil
     }
     
     func startVideo() {
@@ -58,7 +59,8 @@ final class VideoCollectionViewCell: UICollectionViewCell {
             player = AVPlayer(playerItem: item)
             playerLayer = AVPlayerLayer(player: player)
             playerLayer.frame = videoView.bounds
-            playerLayer.videoGravity = .resizeAspectFill
+            playerLayer.videoGravity = .resizeAspect
+            playerLayer.backgroundColor = UIColor.systemBackground.cgColor
             videoView.layer.addSublayer(playerLayer)
             player?.play()
             NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime, object: player?.currentItem)

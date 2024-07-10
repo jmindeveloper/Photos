@@ -69,7 +69,7 @@ final class VideoTimeLineView: UIView {
         
         timeLinePositionView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
-            $0.width.equalTo(1)
+            $0.width.equalTo(2)
             $0.leading.equalToSuperview()
         }
         
@@ -99,7 +99,10 @@ final class VideoTimeLineView: UIView {
             }
             completion()
         }
-        timeLineSlider.maximumValue = Float(CMTimeGetSeconds(AVPlayerItem(asset: asset).duration))
+        let time = Float(CMTimeGetSeconds(AVPlayerItem(asset: asset).duration))
+        if time > 0 {
+            timeLineSlider.maximumValue = time
+        }
     }
     
     func setTimeLinePosition(currentTime: Double, totalTime: CMTime) {

@@ -1,5 +1,5 @@
 //
-//  PhotoEditView.swift
+//  VideoEditView.swift
 //  PIXO_Photos
 //
 //  Created by J_Min on 7/9/24.
@@ -7,47 +7,51 @@
 
 import SwiftUI
 
-struct PhotoEditView: View {
-    @EnvironmentObject var viewModel: PhotoEditViewModel
+struct VideoEditView: View {
+    @EnvironmentObject private var viewModel: VideoEditViewModel
     @Environment(\.presentationMode) var presentationMode
     @State var uiImage: UIImage?
-    var context = CIContext()
     
     var body: some View {
         VStack {
             
             saveCancelView()
             
-            toolBar()
-                .padding(.top, 5)
+            if viewModel.editMode != .Trim {
+                toolBar()
+                    .padding(.top, 5)
+            }
             
             Spacer()
             
-            if let image = uiImage {
-                ZStack(alignment: .bottom) {
-                    FilterImage(
-                        inputImage: image,
-                        context: viewModel.context,
-                        saturation: viewModel.saturation,
-                        hue: viewModel.hue,
-                        exposure: viewModel.exposure,
-                        brightness: viewModel.brightness,
-                        contrast: viewModel.contrast,
-                        highlights: viewModel.highlights,
-                        shadows: viewModel.shadows,
-                        temperature: viewModel.temperature,
-                        sharpness: viewModel.sharpness,
-                        filterName: viewModel.currentFilter.rawValue
-                    )
-                    
-//                    if viewModel.editMode != .Crop {
+            if viewModel.editMode == .Trim {
+                VideoTrimViewControllerRepresentableView()
+                    .environmentObject(viewModel)
+            } else {
+                if let image = uiImage {
+                    ZStack(alignment: .bottom) {
+                        FilterImage(
+                            inputImage: image,
+                            context: viewModel.context,
+                            saturation: viewModel.saturation,
+                            hue: viewModel.hue,
+                            exposure: viewModel.exposure,
+                            brightness: viewModel.brightness,
+                            contrast: viewModel.contrast,
+                            highlights: viewModel.highlights,
+                            shadows: viewModel.shadows,
+                            temperature: viewModel.temperature,
+                            sharpness: viewModel.sharpness,
+                            filterName: viewModel.currentFilter.rawValue
+                        )
+                        
                         Text(viewModel.editMode == .Adjust ? viewModel.currentAdjustEffect.title : viewModel.currentFilter.rawValue)
                             .padding(4)
                             .background {
                                 RoundedRectangle(cornerRadius: 4).fill(.gray)
                             }
                             .padding(.bottom, 10)
-//                    }
+                    }
                 }
             }
             
@@ -68,17 +72,15 @@ struct PhotoEditView: View {
                 .padding(.horizontal, 20)
             case .Filter:
                 selectFilterView()
-//            case .Crop:
-//                EmptyView()
+            case .Trim:
+                EmptyView()
             }
             
             selectEditModeView()
                 .padding(.top, 3)
         }
         .onAppear {
-            PhotoLibrary.requestImageURL(with: viewModel.editAsset) { url in
-                let data = try? Data(contentsOf: url)
-                let image = UIImage(data: data ?? Data())
+            PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
                 uiImage = image
             }
         }
@@ -88,16 +90,12 @@ struct PhotoEditView: View {
     private func saveCancelView() -> some View {
         HStack {
             Button {
-                if viewModel.backwardHistoryEmpty {
-                    presentationMode.wrappedValue.dismiss()
-                } else {
-                    AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
-                        .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                        .addAction(actionTitle: "취소", style: .cancel)
-                        .present()
-                }
+                AlertManager(message: "모든 변경사항을 폐기하겠습니까?", style: .actionSheet)
+                    .addAction(actionTitle: "변경사항 폐기", style: .destructive) { _ in
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                    .addAction(actionTitle: "취소", style: .cancel)
+                    .present()
             } label: {
                 Text("취소")
                     .foregroundColor(.black)
@@ -112,7 +110,7 @@ struct PhotoEditView: View {
             Spacer()
             
             Button {
-                saveImage()
+                saveVideo()
             } label: {
                 Text("완료")
                     .foregroundColor(.black)
@@ -122,9 +120,8 @@ struct PhotoEditView: View {
                         RoundedRectangle(cornerRadius: 10000)
                             .fill(Color.yellow)
                     )
-                    .opacity(viewModel.backwardHistoryEmpty ? 0.8 : 1)
+                    .opacity(1)
             }
-            .disabled(viewModel.backwardHistoryEmpty)
         }
         .padding(.horizontal, 35)
     }
@@ -203,7 +200,7 @@ struct PhotoEditView: View {
         HStack(spacing: 30) {
             Spacer()
             
-            ForEach(PhotoEditViewModel.EditMode.allCases, id: \.self) { mode in
+            ForEach(VideoEditViewModel.EditMode.allCases, id: \.self) { mode in
                 Button {
                     viewModel.editMode = mode
                 } label: {
@@ -272,32 +269,8 @@ struct PhotoEditView: View {
         }
     }
     
-    func saveImage() {
-        guard let image = uiImage else {
-            return
-        }
-        
-        let filterImage = FilterImage(
-            inputImage: image,
-            contentMode: .fill,
-            context: viewModel.context,
-            saturation: viewModel.saturation,
-            hue: viewModel.hue,
-            exposure: viewModel.exposure,
-            brightness: viewModel.brightness,
-            contrast: viewModel.contrast,
-            highlights: viewModel.highlights,
-            shadows: viewModel.shadows,
-            temperature: viewModel.temperature,
-            sharpness: viewModel.sharpness,
-            filterName: viewModel.currentFilter.rawValue
-        )
-        
-        guard let uiImage = filterImage.uiImage() else {
-            fatalError("이미지 생성 실패")
-        }
-        
-        viewModel.saveImage(image: uiImage) {
+    func saveVideo() {
+        viewModel.saveVideo {
             presentationMode.wrappedValue.dismiss()
         }
     }

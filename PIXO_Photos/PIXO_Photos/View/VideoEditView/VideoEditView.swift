@@ -11,6 +11,7 @@ struct VideoEditView<VM: VideoEditViewModelProtocol>: View {
     @EnvironmentObject private var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var uiImage: UIImage?
+    @State var isSaving: Bool = false
     
     var body: some View {
         VStack {
@@ -79,6 +80,14 @@ struct VideoEditView<VM: VideoEditViewModelProtocol>: View {
             selectEditModeView()
                 .padding(.top, 3)
         }
+        .overlay {
+            if isSaving {
+                ProgressView("저장중")
+                    .progressViewStyle(.circular)
+                    .controlSize(.extraLarge)
+                    .tint(.red)
+            }
+        }
         .onAppear {
             PhotoLibrary.requestImage(with: viewModel.editAsset) { image, _ in
                 uiImage = image
@@ -118,10 +127,11 @@ struct VideoEditView<VM: VideoEditViewModelProtocol>: View {
                     .padding(.horizontal, 14)
                     .background(
                         RoundedRectangle(cornerRadius: 10000)
-                            .fill(Color.yellow)
+                            .fill(Color.yellow.opacity(isSaving ? 0.8 : 1))
                     )
                     .opacity(1)
             }
+            .disabled(isSaving)
         }
         .padding(.horizontal, 35)
     }
@@ -270,6 +280,7 @@ struct VideoEditView<VM: VideoEditViewModelProtocol>: View {
     }
     
     func saveVideo() {
+        isSaving = true
         viewModel.saveVideo {
             presentationMode.wrappedValue.dismiss()
         }

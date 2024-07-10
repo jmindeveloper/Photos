@@ -271,32 +271,36 @@ struct PhotoEditView<VM: PhotoEditViewModelProtocol>: View {
     }
     
     func saveImage() {
-        guard let image = uiImage else {
-            return
-        }
-        
-        let filterImage = FilterImage(
-            inputImage: image,
-            contentMode: .fill,
-            context: viewModel.context,
-            saturation: viewModel.saturation,
-            hue: viewModel.hue,
-            exposure: viewModel.exposure,
-            brightness: viewModel.brightness,
-            contrast: viewModel.contrast,
-            highlights: viewModel.highlights,
-            shadows: viewModel.shadows,
-            temperature: viewModel.temperature,
-            sharpness: viewModel.sharpness,
-            filterName: viewModel.currentFilter.rawValue
-        )
-        
-        guard let uiImage = filterImage.uiImage() else {
-            fatalError("이미지 생성 실패")
-        }
-        
-        viewModel.saveImage(image: uiImage) {
-            presentationMode.wrappedValue.dismiss()
+        PhotoLibrary.requestImageURL(with: viewModel.editAsset) { url in
+            guard let data = try? Data(contentsOf: url),
+                  let image = UIImage(data: data) else {
+                presentationMode.wrappedValue.dismiss()
+                return
+            }
+            
+            let filterImage = FilterImage(
+                inputImage: image,
+                contentMode: .fill,
+                context: viewModel.context,
+                saturation: viewModel.saturation,
+                hue: viewModel.hue,
+                exposure: viewModel.exposure,
+                brightness: viewModel.brightness,
+                contrast: viewModel.contrast,
+                highlights: viewModel.highlights,
+                shadows: viewModel.shadows,
+                temperature: viewModel.temperature,
+                sharpness: viewModel.sharpness,
+                filterName: viewModel.currentFilter.rawValue
+            )
+            
+            guard let uiImage = filterImage.uiImage() else {
+                fatalError("이미지 생성 실패")
+            }
+            
+            viewModel.saveImage(image: uiImage) {
+                presentationMode.wrappedValue.dismiss()
+            }
         }
     }
 }

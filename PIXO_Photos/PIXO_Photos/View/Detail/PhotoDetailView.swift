@@ -12,6 +12,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
     @Environment(\.presentationMode) var presentationMode
     @State var isPresentAlbumGridView: Bool = false
     @State var isPresentEditView: Bool = false
+    @State var isExifView: Bool = false
     
     var body: some View {
         TabView {
@@ -174,9 +175,15 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
             }
             
             Button {
-                
+                viewModel.getEXIFData {
+                    isExifView = true
+                }
             } label: {
                 Image(systemName: "info.circle")
+            }
+            .sheet(isPresented: $isExifView) {
+                PhotoEXIFView(exifData: $viewModel.currentAssetEXIF)
+                    .presentationDetents([.height(200)])
             }
             
             Spacer()

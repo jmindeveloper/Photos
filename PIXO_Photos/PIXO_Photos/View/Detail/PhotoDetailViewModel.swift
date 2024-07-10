@@ -22,6 +22,7 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     var thumbnailCollectionViewShowCellIndex: Int { get set }
     var assets: [PHAsset] { get set }
     var dateString: String { get }
+    var currentAssetEXIF: [String: Any] { get set }
     
     func duplicateCurrentAssets()
     func copyCurrentImageToClipboard()
@@ -29,6 +30,7 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     func setFavoriteCurrentAsset()
     func deleteCurrentAsset()
     func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) 
+    func getEXIFData(completion: @escaping (() -> Void))
 }
 
 final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumGridViewModelProtocol {
@@ -37,6 +39,7 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
             isAssetsChange = true
         }
     }
+    @Published var currentAssetEXIF: [String : Any] = [:]
     @Published var currentAsset: PHAsset {
         didSet {
             if currentAsset == oldValue {
@@ -199,6 +202,13 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
                 userAlbum[albumIndex].assets.append(currentAsset)
                 userAlbum[albumIndex].assetCount += 1
             }
+        }
+    }
+    
+    func getEXIFData(completion: @escaping () -> Void) {
+        library.getEXIFData(asset: currentAsset) { [weak self] exif in
+            self?.currentAssetEXIF = exif ?? [:]
+            completion()
         }
     }
 }

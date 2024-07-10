@@ -156,8 +156,7 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     
     func getCurrentAssetImage(completion: @escaping ([UIImage]) -> Void) {
         library.requestImageURL(with: currentAsset) { url in
-            guard let data = try? Data(contentsOf: url),
-                  let image = UIImage(data: data) else {
+            guard let image = url.getUIImage() else {
                 return
             }
             
@@ -185,8 +184,7 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     
     func copyCurrentImageToClipboard() {
         library.requestImageURL(with: currentAsset) { url in
-            guard let data = try? Data(contentsOf: url),
-                  let image = UIImage(data: data) else {
+            guard let image = url.getUIImage() else {
                 return
             }
             

@@ -256,8 +256,6 @@ final class PhotoLibrary {
                 DispatchQueue.main.async {
                     completion?()
                 }
-            } else if !success || error != nil {
-                fatalError()
             }
         }
     }

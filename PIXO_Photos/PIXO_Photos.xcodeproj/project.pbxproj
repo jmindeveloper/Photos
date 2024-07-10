@@ -38,6 +38,7 @@
 		0E8431AB2C3A18CD0047157C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E8431A92C3A18CD0047157C /* LaunchScreen.storyboard */; };
 		0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */; };
 		0E84BBB92C3A965E00BA93D1 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E84BBB82C3A965E00BA93D1 /* UIView+.swift */; };
+		0E87D3852C3F03AD005461C7 /* URL+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E87D3842C3F03AD005461C7 /* URL+.swift */; };
 		0E907BA52C3A72D2009F8F22 /* Font+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E907BA42C3A72D2009F8F22 /* Font+.swift */; };
 		0E95E3E02C3AA40D00F65754 /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E95E3DF2C3AA40D00F65754 /* View+.swift */; };
 		0E96689B2C3EA44F007D2239 /* VideoFilterStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E96689A2C3EA44F007D2239 /* VideoFilterStorage.swift */; };
@@ -97,6 +98,7 @@
 		0E8431AC2C3A18CD0047157C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E84BBB62C3A963D00BA93D1 /* UITabbar+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITabbar+.swift"; sourceTree = "<group>"; };
 		0E84BBB82C3A965E00BA93D1 /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
+		0E87D3842C3F03AD005461C7 /* URL+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+.swift"; sourceTree = "<group>"; };
 		0E907BA42C3A72D2009F8F22 /* Font+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+.swift"; sourceTree = "<group>"; };
 		0E95E3DF2C3AA40D00F65754 /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		0E96689A2C3EA44F007D2239 /* VideoFilterStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFilterStorage.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 				0E9B8FFA2C3B0783004E2A7A /* UINavigationController+.swift */,
 				0E341D7B2C3C54BF00E2CFE6 /* ContentMode+.swift */,
 				0E369F2B2C3D43450061FA0A /* Color+.swift */,
+				0E87D3842C3F03AD005461C7 /* URL+.swift */,
 				0E4EE2AE2C3E63CB00775D5F /* Int+.swift */,
 				0E4EE2B02C3E658000775D5F /* Date+.swift */,
 				0E96689E2C3EC4D3007D2239 /* UIImage+.swift */,
@@ -432,6 +435,7 @@
 				0E4EE2B12C3E658000775D5F /* Date+.swift in Sources */,
 				0EEF48222C3DA18D00B4C1E4 /* Filter.swift in Sources */,
 				0ECBB1022C3AC06A00482E71 /* AssetDragSelectManager.swift in Sources */,
+				0E87D3852C3F03AD005461C7 /* URL+.swift in Sources */,
 				0E369F2C2C3D43450061FA0A /* Color+.swift in Sources */,
 				0EC2F36C2C3D6FC400CB1D41 /* VideoTrimTimeLineView.swift in Sources */,
 				0E14E14D2C3BA24F00B04BB0 /* ImageCollectionViewCell.swift in Sources */,

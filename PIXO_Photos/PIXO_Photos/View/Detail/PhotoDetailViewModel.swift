@@ -15,11 +15,11 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     var currentAsset: PHAsset { get set }
     var isVideo: Bool { get }
     var isPlayVideo: Bool { get set }
-    var detailScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
-    var thumbnailScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
+    var mainScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
+    var previewScrollToItemPublisher: PassthroughSubject<Int, Never> { get }
     var currentItemIndex: Int { get set }
-    var detailCollectionViewShowCellIndex: Int { get set }
-    var thumbnailCollectionViewShowCellIndex: Int { get set }
+    var mainCollectionViewShowCellIndex: Int { get set }
+    var previewCollectionViewShowCellIndex: Int { get set }
     var assets: [PHAsset] { get set }
     var dateString: String { get }
     var currentAssetEXIF: [String: Any] { get set }
@@ -52,16 +52,16 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     }
     @Published var isPlayVideo: Bool = false
     @Published var hiddenToolBar: Bool = false
-    @Published var detailCollectionViewShowCellIndex: Int = 0 {
+    @Published var mainCollectionViewShowCellIndex: Int = 0 {
         didSet {
-            detailScrollToItemBlock = true
-            thumbnailScrollToItemBlock = false
+            mainScrollToItemBlock = true
+            previewScrollToItemBlock = false
         }
     }
-    @Published var thumbnailCollectionViewShowCellIndex: Int = 0  {
+    @Published var previewCollectionViewShowCellIndex: Int = 0  {
         didSet {
-            detailScrollToItemBlock = false
-            thumbnailScrollToItemBlock = true
+            mainScrollToItemBlock = false
+            previewScrollToItemBlock = true
         }
     }
     @Published var userAlbum: [Album] = []
@@ -87,12 +87,12 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     var dateString: String {
         currentAsset.creationDate?.toMd() ?? ""
     }
-    var detailScrollToItemBlock: Bool = false
-    var thumbnailScrollToItemBlock: Bool = false
+    var mainScrollToItemBlock: Bool = false
+    var previewScrollToItemBlock: Bool = false
     private var subscriptions = Set<AnyCancellable>()
     
-    let detailScrollToItemPublisher = PassthroughSubject<Int, Never>()
-    let thumbnailScrollToItemPublisher = PassthroughSubject<Int, Never>()
+    let mainScrollToItemPublisher = PassthroughSubject<Int, Never>()
+    let previewScrollToItemPublisher = PassthroughSubject<Int, Never>()
     
     init(assets: [PHAsset], library: PhotoLibrary, fetchResult: PHFetchResult<PHAsset>, currentItemIndex: Int) {
         self.assets = assets
@@ -103,8 +103,8 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
         super.init()
         binding()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.detailScrollToItemPublisher.send(currentItemIndex)
-            self?.thumbnailScrollToItemPublisher.send(currentItemIndex)
+            self?.mainScrollToItemPublisher.send(currentItemIndex)
+            self?.previewScrollToItemPublisher.send(currentItemIndex)
         }
         
         self.userAlbum = library.collections[.album]?.map { collection in
@@ -127,20 +127,20 @@ final class PhotoDetailViewModel: NSObject, PhotoDetailViewModelProtocol, AlbumG
     
     // MARK: - Method
     private func binding() {
-        $detailCollectionViewShowCellIndex
+        $mainCollectionViewShowCellIndex
             .sink { [weak self] index in
                 self?.currentItemIndex = index
-                if self?.thumbnailScrollToItemBlock == false {
-                    self?.thumbnailScrollToItemPublisher.send(index)
+                if self?.previewScrollToItemBlock == false {
+                    self?.previewScrollToItemPublisher.send(index)
                 }
             }.store(in: &subscriptions)
         
-        $thumbnailCollectionViewShowCellIndex
+        $previewCollectionViewShowCellIndex
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] index in
                 self?.currentItemIndex = index
-                if self?.detailScrollToItemBlock == false {
-                    self?.detailScrollToItemPublisher.send(index)
+                if self?.mainScrollToItemBlock == false {
+                    self?.mainScrollToItemPublisher.send(index)
                 }
             }.store(in: &subscriptions)
         
@@ -228,8 +228,8 @@ extension PhotoDetailViewModel: PHPhotoLibraryChangeObserver {
             assets = asset
             
             if beforeAssets.count > asset.count {
-                detailScrollToItemPublisher.send(currentItemIndex)
-                thumbnailScrollToItemPublisher.send(currentItemIndex)
+                mainScrollToItemPublisher.send(currentItemIndex)
+                previewScrollToItemPublisher.send(currentItemIndex)
             }
         }
     }

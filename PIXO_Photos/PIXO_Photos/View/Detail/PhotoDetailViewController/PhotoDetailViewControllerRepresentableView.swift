@@ -18,9 +18,9 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     }
     
     func makeUIViewController(context: Context) -> PhotoDetailCollectionViewController {
-        viewController.detailCollectionView.dataSource = context.coordinator
-        viewController.detailCollectionView.delegate = context.coordinator
-        viewController.thumbnailCollectionView.dataSource = context.coordinator
+        viewController.mainCollectionView.dataSource = context.coordinator
+        viewController.mainCollectionView.delegate = context.coordinator
+        viewController.previewCollectionView.dataSource = context.coordinator
         
         viewController.setViewModel(viewModel: viewModel)
         context.coordinator.viewController = viewController
@@ -31,8 +31,8 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     func updateUIViewController(_ uiViewController: PhotoDetailCollectionViewController, context: Context) {
         if viewModel.isAssetsChange {
             context.coordinator.assets = viewModel.assets
-            uiViewController.detailCollectionView.reloadData()
-            uiViewController.thumbnailCollectionView.reloadData()
+            uiViewController.mainCollectionView.reloadData()
+            uiViewController.previewCollectionView.reloadData()
             viewModel.isAssetsChange = false
         }
         
@@ -48,7 +48,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     
     private func startVideo(in vc: PhotoDetailCollectionViewController) {
         guard viewModel.currentAsset.mediaType == .video,
-              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell,
+              let cell = vc.mainCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell,
               let videoAsset = cell.videoAsset else { return }
         
         if cell.isStartVideo {
@@ -58,7 +58,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
         
         vc.videoTimeLineView.setTimeLineView(asset: videoAsset, filter: filter) {
             vc.videoTimeLineView.isHidden = false
-            vc.thumbnailCollectionView.isHidden = true
+            vc.previewCollectionView.isHidden = true
             vc.currentImageBoxView.isHidden = true
         }
         
@@ -67,7 +67,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     
     private func playVideo(in vc: PhotoDetailCollectionViewController) {
         guard viewModel.currentAsset.mediaType == .video,
-              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
+              let cell = vc.mainCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
         
         vc.observeVideoCellVideo()
         cell.playVideo()
@@ -75,7 +75,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
     
     private func pauseVideo(in vc: PhotoDetailCollectionViewController) {
         guard viewModel.currentAsset.mediaType == .video,
-              let cell = vc.detailCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
+              let cell = vc.mainCollectionView.cellForItem(at: IndexPath(item: viewModel.currentItemIndex, section: 0)) as? VideoCollectionViewCell else { return }
         
         cell.pauseVideo()
     }
@@ -96,7 +96,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
         
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
             let asset = assets[indexPath.item]
-            if collectionView === parent.viewController.detailCollectionView {
+            if collectionView === parent.viewController.mainCollectionView {
                 return configureDetailCell(for: collectionView, at: indexPath, with: asset)
             } else {
                 return configureThumbnailCell(for: collectionView, at: indexPath, with: asset)
@@ -148,7 +148,7 @@ struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtoc
             }
             viewController?.videoTimeLineView.isHidden = true
             viewController?.currentImageBoxView.isHidden = false
-            viewController?.thumbnailCollectionView.isHidden = false
+            viewController?.previewCollectionView.isHidden = false
         }
     }
 }

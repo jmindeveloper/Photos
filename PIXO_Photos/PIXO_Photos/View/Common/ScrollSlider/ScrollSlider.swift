@@ -10,7 +10,7 @@ import SwiftUI
 struct ScrollSlider: View {
     @State var initIndex: Int = 0
     @State private var scrollViewSize: CGSize = .zero
-    @State var tickCount: Int = 101
+    @State var tickCount: Int = 100
     @State var scrollDisabled: Bool = false
     @Binding var updateSlider: Bool
     
@@ -30,14 +30,14 @@ struct ScrollSlider: View {
     
     var body: some View {
         ZStack(alignment: .center) {
-            ScrollViewReader { scrollViewProxy in
+            ScrollViewReader { proxy in
                 
                 ScrollHorizontalOffsetView(.horizontal) { value in
                     let value = calculateValue(min: min, max: max, percent: Float(value))
                     valueChangeAction(value)
                 } content: {
                     HStack(spacing: 4) {
-                        ForEach(0..<tickCount, id: \.self) { index in
+                        ForEach(0...tickCount, id: \.self) { index in
                             if index == tickCount / 2 {
                                 Rectangle()
                                     .fill(Color.yellow)
@@ -53,47 +53,27 @@ struct ScrollSlider: View {
                             }
                         }
                     }
-                    .padding(.horizontal, (scrollViewSize.width / 2) - 2)
+                    .padding(.horizontal, (scrollViewSize.width / 2))
                 }
                 .readSize(onChange: { size in
                     scrollViewSize = size
                 })
                 .scrollDisabled(scrollDisabled)
                 .onAppear {
-                    scrollDisabled = true
-                    calculateinitIndex(min: min, max: max, current: currentValue)
-                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
-                    scrollDisabled = false
-                    updateSlider = false
+                    slide(proxy: proxy)
                 }
                 .onChange(of: initIndex) { initValue in
-                    scrollDisabled = true
-                    calculateinitIndex(min: min, max: max, current: currentValue)
-                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
-                    scrollDisabled = false
-                    updateSlider = false
+                    slide(proxy: proxy)
                 }
                 .onChange(of: min) { _ in
-                    scrollDisabled = true
-                    calculateinitIndex(min: min, max: max, current: currentValue)
-                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
-                    scrollDisabled = false
-                    updateSlider = false
+                    slide(proxy: proxy)
                 }
                 .onChange(of: max) { _ in
-                    scrollDisabled = true
-                    calculateinitIndex(min: min, max: max, current: currentValue)
-                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
-                    scrollDisabled = false
-                    updateSlider = false
+                    slide(proxy: proxy)
                 }
                 .onChange(of: updateSlider) { _ in
                     if !updateSlider { return }
-                    scrollDisabled = true
-                    calculateinitIndex(min: min, max: max, current: currentValue)
-                    scrollViewProxy.scrollTo(initIndex, anchor: .center)
-                    scrollDisabled = false
-                    updateSlider = false
+                    slide(proxy: proxy)
                 }
             }
             
@@ -117,5 +97,13 @@ struct ScrollSlider: View {
     func calculateValue(min: Float, max: Float, percent: Float) -> Float {
         let value = min + percent * (max - min)
         return value
+    }
+    
+    func slide(proxy: ScrollViewProxy) {
+        scrollDisabled = true
+        calculateinitIndex(min: min, max: max, current: currentValue)
+        proxy.scrollTo(initIndex, anchor: .center)
+        scrollDisabled = false
+        updateSlider = false
     }
 }

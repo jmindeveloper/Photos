@@ -12,7 +12,6 @@ class AssetDragSelectManager: NSObject {
     @Published var selectedAssets: Set<PHAsset> = []
     
     private var dragStartIndex: Int? = nil
-    private var isDragStart: Bool = false
     private var isInsert: Bool = false
     private var beforeSelectedAssets: Set<PHAsset> = []
     var assetWithFrame: [(asset: PHAsset, frame: CGRect)] = []
@@ -23,32 +22,32 @@ class AssetDragSelectManager: NSObject {
     }
     
     func draggingAssetSelect(startLocation: CGPoint, currentLocation: CGPoint) {
+        // 드래그 시작점의 asset index, 현재 드래그중인 위치의 asset index 계산
         guard let startIndex = itemIndexFromPoint(startLocation),
               let endIndex = itemIndexFromPoint(currentLocation) else {
             return
         }
+        // dratStartIndex 저장
         if dragStartIndex == nil {
             dragStartIndex = startIndex
-        }
-        
-        if beforeSelectedAssets.isEmpty {
+            // startIndex의 asset이 selectedAsset에 포함이 안돼있으면 insert mode
+            if !selectedAssets.contains(assetWithFrame[startIndex].asset) {
+                isInsert = true
+            }
+            // 드래그 시작 이전에 저장돼있던 selectedAssets 기억
             beforeSelectedAssets = selectedAssets
         }
         
         let (min, max) = endIndex >= dragStartIndex! ? (dragStartIndex!, endIndex) : (endIndex, dragStartIndex!)
         
-        if !isDragStart {
-            if !selectedAssets.contains(assetWithFrame[startIndex].asset) {
-                isInsert = true
-            }
-            isDragStart = true
-        }
-        
+        // selectedAssets beforeSelectedAssets으로 초기화
+        // 만약 기존 0..<9 까지 드래그됐다가 0..<5 까지 드래그했다면 5..<9 까지는 selectedAssets에 없어야 한다
+        // 매 드래그마다 min..<max의 asset들 insert, remove가 이루어지기 때문에 beforeSelectedAssets으로 초기화해줘서 기존 상태로 만들어준다
         selectedAssets = beforeSelectedAssets
         
         for i in min..<max + 1 {
             let asset = assetWithFrame[i].asset
-            
+            // insert mode일경우 selectedAsset에 추가 아닐경우 remove
             if isInsert {
                 selectedAssets.insert(asset)
             } else {
@@ -59,7 +58,6 @@ class AssetDragSelectManager: NSObject {
     
     func finishDraggingAssetSelect() {
         dragStartIndex = nil
-        isDragStart = false
         isInsert = false
         beforeSelectedAssets.removeAll()
     }

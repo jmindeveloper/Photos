@@ -183,7 +183,7 @@ class FilterManager: FilterManagerProtocol {
         }
         
         isLoadHistory = true
-        let history = forwardHistory.removeFirst()
+        let history = forwardHistory.removeLast()
         backwardHistory.append(history)
         
         saturation = history["saturation"] ?? 0

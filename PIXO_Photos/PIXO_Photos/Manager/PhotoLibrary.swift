@@ -256,8 +256,6 @@ final class PhotoLibrary {
                 DispatchQueue.main.async {
                     completion?()
                 }
-            } else if !success || error != nil {
-                fatalError()
             }
         }
     }
@@ -404,6 +402,30 @@ final class PhotoLibrary {
                 fatalError("에셋 추가 실패")
             }
         })
+    }
+    
+    func getEXIFData(asset: PHAsset, completion: @escaping ([String: Any]?) -> Void) {
+        let options = PHContentEditingInputRequestOptions()
+        options.isNetworkAccessAllowed = true
+        
+        asset.requestContentEditingInput(with: options) { (contentEditingInput, info) in
+            guard let url = contentEditingInput?.fullSizeImageURL else {
+                completion(nil)
+                return
+            }
+            
+            if let imageSource = CGImageSourceCreateWithURL(url as CFURL, nil) {
+                let propertiesOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+                if let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, propertiesOptions) as? [String: Any] {
+                    let exifData = imageProperties[kCGImagePropertyExifDictionary as String] as? [String: Any]
+                    completion(exifData)
+                } else {
+                    completion(nil)
+                }
+            } else {
+                completion(nil)
+            }
+        }
     }
     
     private func checkAccessAuthority() {

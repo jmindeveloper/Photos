@@ -272,8 +272,7 @@ struct PhotoEditView<VM: PhotoEditViewModelProtocol>: View {
     
     func saveImage() {
         PhotoLibrary.requestImageURL(with: viewModel.editAsset) { url in
-            guard let data = try? Data(contentsOf: url),
-                  let image = UIImage(data: data) else {
+            guard let image = url.getUIImage() else {
                 presentationMode.wrappedValue.dismiss()
                 return
             }

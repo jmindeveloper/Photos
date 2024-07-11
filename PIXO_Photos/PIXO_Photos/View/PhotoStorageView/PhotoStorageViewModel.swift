@@ -159,8 +159,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
     func getSelectedAssetsImage(completion: @escaping ([UIImage]) -> Void) {
         library.requestImageURLs(with: Array(selectedAssets)) { urls in
             let images = urls.compactMap { url -> UIImage? in
-                guard let data = try? Data(contentsOf: url),
-                      let image = UIImage(data: data) else {
+                guard let image = url.getUIImage() else {
                     return nil
                 }
                 
@@ -192,8 +191,7 @@ final class PhotoStorageViewModel: AssetDragSelectManager, PhotoStorageViewModel
     func copySelectedImageToClipboard() {
         library.requestImageURLs(with: Array(selectedAssets)) { urls in
             let images = urls.compactMap { url -> UIImage? in
-                guard let data = try? Data(contentsOf: url),
-                      let image = UIImage(data: data) else {
+                guard let image = url.getUIImage() else {
                     return nil
                 }
                 

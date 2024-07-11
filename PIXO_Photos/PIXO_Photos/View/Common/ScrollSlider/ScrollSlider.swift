@@ -32,7 +32,7 @@ struct ScrollSlider: View {
         ZStack(alignment: .center) {
             ScrollViewReader { scrollViewProxy in
                 
-                ScrollHorizontalCenterOffsetView(.horizontal) { value in
+                ScrollHorizontalOffsetView(.horizontal) { value in
                     let value = calculateValue(min: min, max: max, percent: Float(value))
                     valueChangeAction(value)
                 } content: {

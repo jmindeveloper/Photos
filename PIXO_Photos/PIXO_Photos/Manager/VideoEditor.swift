@@ -10,8 +10,6 @@ import Photos
 import AVFoundation
 
 final class VideoEditor {
-    var context = CIContext()
-    
     func getTimeLineImages(asset: AVAsset, count: Int, completion: @escaping (([UIImage]) -> Void)) {
         var count = count
         DispatchQueue.global().async {

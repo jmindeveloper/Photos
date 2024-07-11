@@ -1,5 +1,5 @@
 //
-//  ScrollHorizontalCenterOffsetView.swift
+//  ScrollHorizontalOffsetView.swift
 //  PIXO_Photos
 //
 //  Created by J_Min on 7/9/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ScrollHorizontalCenterOffsetView<Content: View>: View {
+struct ScrollHorizontalOffsetView<Content: View>: View {
     let onOffsetChange: (CGFloat) -> Void
     let content: () -> Content
     let axes: Axis.Set

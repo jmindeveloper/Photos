@@ -56,7 +56,7 @@
 		0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECBB1052C3AC8C600482E71 /* ActivityView.swift */; };
 		0ED84E112C3C5D8000946B61 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E102C3C5D8000946B61 /* Album.swift */; };
 		0ED84E172C3CF0A900946B61 /* ScrollSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */; };
-		0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */; };
+		0ED84E192C3CF0B800946B61 /* ScrollHorizontalOffsetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E182C3CF0B800946B61 /* ScrollHorizontalOffsetView.swift */; };
 		0ED84E1C2C3CF38F00946B61 /* PhotoEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1B2C3CF38F00946B61 /* PhotoEditView.swift */; };
 		0ED84E1E2C3CFDCB00946B61 /* PhotoEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */; };
 		0EE445772C3C2BAB00A0B9AB /* VideoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */; };
@@ -114,7 +114,7 @@
 		0ECBB1052C3AC8C600482E71 /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
 		0ED84E102C3C5D8000946B61 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
 		0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollSlider.swift; sourceTree = "<group>"; };
-		0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHorizontalCenterOffsetView.swift; sourceTree = "<group>"; };
+		0ED84E182C3CF0B800946B61 /* ScrollHorizontalOffsetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollHorizontalOffsetView.swift; sourceTree = "<group>"; };
 		0ED84E1B2C3CF38F00946B61 /* PhotoEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditView.swift; sourceTree = "<group>"; };
 		0ED84E1D2C3CFDCB00946B61 /* PhotoEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoEditViewModel.swift; sourceTree = "<group>"; };
 		0EE445762C3C2BAB00A0B9AB /* VideoEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoEditor.swift; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 			isa = PBXGroup;
 			children = (
 				0ED84E162C3CF0A900946B61 /* ScrollSlider.swift */,
-				0ED84E182C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift */,
+				0ED84E182C3CF0B800946B61 /* ScrollHorizontalOffsetView.swift */,
 			);
 			path = ScrollSlider;
 			sourceTree = "<group>";
@@ -463,7 +463,7 @@
 				0E64E2F42C3A4A08004C29CE /* PhotoLibrary.swift in Sources */,
 				0E9ED6C52C3BCF2E000BE981 /* PhotoDetailViewModel.swift in Sources */,
 				0E64E2FA2C3A4DD1004C29CE /* PhotoCell.swift in Sources */,
-				0ED84E192C3CF0B800946B61 /* ScrollHorizontalCenterOffsetView.swift in Sources */,
+				0ED84E192C3CF0B800946B61 /* ScrollHorizontalOffsetView.swift in Sources */,
 				0E84BBB72C3A963D00BA93D1 /* UITabbar+.swift in Sources */,
 				0ECBB1062C3AC8C600482E71 /* ActivityView.swift in Sources */,
 				0EC2F3682C3D6DF300CB1D41 /* VideoTrimViewController.swift in Sources */,

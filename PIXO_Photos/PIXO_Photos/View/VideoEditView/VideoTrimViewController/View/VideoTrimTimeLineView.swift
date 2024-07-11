@@ -95,10 +95,14 @@ final class VideoTrimTimeLineView: UIView {
     
     // MARK: - setSubViews
     private func setSubViews() {
-        [baseView, playPauseButton, trimPositionView, timeLineView,
-         startPositionView, endPositionView].forEach {
+        [baseView, playPauseButton, ].forEach {
             addSubview($0)
         }
+        
+        [trimPositionView, trimPositionView, timeLineView,
+         startPositionView, endPositionView].forEach {
+                baseView.addSubview($0)
+            }
         
         setConstraints()
     }
@@ -124,18 +128,25 @@ final class VideoTrimTimeLineView: UIView {
         
         NSLayoutConstraint.activate([
             startPositionOffset!,
-            endPositionOffset!,
             startPositionView.widthAnchor.constraint(equalToConstant: 25),
-            endPositionView.widthAnchor.constraint(equalToConstant: 25),
             startPositionView.topAnchor.constraint(equalTo: baseView.topAnchor),
             startPositionView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            endPositionOffset!,
+            endPositionView.widthAnchor.constraint(equalToConstant: 25),
             endPositionView.topAnchor.constraint(equalTo: baseView.topAnchor),
             endPositionView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
             trimPositionView.leadingAnchor.constraint(equalTo: startPositionView.leadingAnchor),
             trimPositionView.trailingAnchor.constraint(equalTo: endPositionView.trailingAnchor),
             trimPositionView.topAnchor.constraint(equalTo: startPositionView.topAnchor),
             trimPositionView.bottomAnchor.constraint(equalTo: endPositionView.bottomAnchor)
         ])
+
     }
     
     // MARK: - binding
@@ -179,7 +190,7 @@ final class VideoTrimTimeLineView: UIView {
         
         startPositionOffset?.constant += moveX
         
-        var startOffset = (startPositionView.frame.maxX - 81) / timeLineView.bounds.width
+        var startOffset = (startPositionView.frame.maxX - startPositionView.frame.width) / timeLineView.bounds.width
         if startOffset < 0 {
             startOffset = 0
         } else if startOffset > 1 {
@@ -208,7 +219,7 @@ final class VideoTrimTimeLineView: UIView {
         
         endPositionOffset?.constant += moveX
         
-        var endOffset = (endPositionView.frame.minX - 81) / timeLineView.bounds.width
+        var endOffset = (endPositionView.frame.minX - startPositionView.frame.width) / timeLineView.bounds.width
         if endOffset < 0 {
             endOffset = 0
         } else if endOffset > 1 {

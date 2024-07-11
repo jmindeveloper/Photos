@@ -18,7 +18,7 @@ final class VideoEditor {
             var images = [UIImage]()
             
             let duration = asset.duration.seconds
-            if duration < 9 {
+            if duration < CGFloat(count) {
                 count = Int(duration)
             }
             var offset = duration / Double(count)
@@ -43,7 +43,7 @@ final class VideoEditor {
         }
     }
     
-    func exportTrimVideo(asset: AVAsset, filter: FilterValue?, startTime: CMTime, endTime: CMTime, completion: @escaping (() -> Void)) {
+    func exportVideo(asset: AVAsset, filter: FilterValue?, startTime: CMTime, endTime: CMTime, completion: @escaping (() -> Void)) {
         let timeRange = CMTimeRangeFromTimeToTime(start: startTime, end: endTime)
         let exporter = AVAssetExportSession(asset: asset, presetName: AVAssetExportPresetHighestQuality)
         let fileManager = FileManager.default

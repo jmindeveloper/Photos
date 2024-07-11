@@ -217,7 +217,7 @@ final class PhotoDetailCollectionViewController: UIViewController {
         section.visibleItemsInvalidationHandler = { [weak self] visibleItems, offset, _ in
             guard let self = self else { return }
             // MARK: - visibleItem Error
-            // visibleItem에 0..<item.count 만큼의 range가 포함돼서 나옴
+            // visibleItem에 0..<cellColumnCount 만큼의 range가 포함돼서 나옴
             // scrollOffset이랑 비교해서 작은값들은 remove
             var visibleItems = visibleItems
             visibleItems.removeAll { $0.frame.minX < offset.x }

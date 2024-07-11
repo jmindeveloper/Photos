@@ -118,7 +118,7 @@ final class VideoEditViewModel: FilterManager, VideoEditViewModelProtocol {
             return
         }
         
-        videoEditor.exportTrimVideo(
+        videoEditor.exportVideo(
             asset: asset,
             filter: backwardHistoryEmpty ? nil : backwardHistory.last ?? [:],
             startTime: startTime,

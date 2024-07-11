@@ -227,21 +227,21 @@ struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
     
     // MARK: - Gesture
     private func dragSelectionGesture() -> some Gesture {
-            DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
-                .onChanged { gesture in
-                    guard viewModel.selectMode else { return }
-                    if !isEnableDragToSelect {
-                        isEnableDragToSelect = true
-                        return
-                    }
-                    viewModel.draggingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("CARDCELLFRAME"))
+            .onChanged { gesture in
+                guard viewModel.selectMode else { return }
+                if !isEnableDragToSelect {
+                    isEnableDragToSelect = true
+                    return
                 }
-                .onEnded { _ in
-                    guard viewModel.selectMode else { return }
-                    isEnableDragToSelect = false
-                    viewModel.finishDraggingAssetSelect()
-                }
-        }
+                viewModel.draggingAssetSelect(startLocation: gesture.startLocation, currentLocation: gesture.location)
+            }
+            .onEnded { _ in
+                guard viewModel.selectMode else { return }
+                isEnableDragToSelect = false
+                viewModel.finishDraggingAssetSelect()
+            }
+    }
     
     // MARK: - Method
     private func handleAssetAppear(asset: PHAsset) {

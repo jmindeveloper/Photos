@@ -23,6 +23,7 @@ protocol PhotoDetailViewModelProtocol: ObservableObject {
     var assets: [PHAsset] { get set }
     var dateString: String { get }
     var currentAssetEXIF: [String: Any] { get set }
+    var isAssetsChange: Bool { get set }
     
     func duplicateCurrentAssets()
     func copyCurrentImageToClipboard()

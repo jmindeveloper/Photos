@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct VideoTrimViewControllerRepresentableView<VM: VideoEditViewModelProtocol>: UIViewControllerRepresentable {
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     let viewController = VideoTrimViewController()
     
     func makeUIViewController(context: Context) -> VideoTrimViewController {

@@ -9,7 +9,7 @@ import SwiftUI
 import Photos
 
 struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     @State var columnItemCount: Int = 3
     @State var scrollAsset: PHAsset?
     @State var cellContentMode: ContentMode = ContentMode.fill
@@ -26,13 +26,13 @@ struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
                     
                     PhotoGridView<PhotoStorageViewModel>(
                         columnItemCount: $columnItemCount,
-                        cellContentMode: $cellContentMode
+                        cellContentMode: $cellContentMode,
+                        viewModel: viewModel as! PhotoStorageViewModel
                     ) { asset in
                         handleAssetAppear(asset: asset)
                     } cellOnDisappearAction: { asset in
                         handleAssetDisAppear(asset: asset)
                     }
-                    .environmentObject(viewModel)
                     
                     if !viewModel.selectMode {
                         Text("\(viewModel.imageCount)장의 사진, \(viewModel.videoCount)개의 비디오")
@@ -186,13 +186,12 @@ struct PhotoStorageView<VM: PhotoStorageViewModelProtocol>: View {
         }
         .sheet(isPresented: $isPresentAlbumGridView) {
             NavigationView {
-                UserAlbumGridView<PhotoStorageViewModel>(isNavigate: false) { album in
+                UserAlbumGridView<PhotoStorageViewModel>(viewModel: viewModel as! PhotoStorageViewModel, isNavigate: false) { album in
                     viewModel.addAssetsToAlbum(albumName: album.title)
                     isPresentAlbumGridView = false
                 }
                 .navigationTitle("앨범에 추가")
                 .navigationBarTitleDisplayMode(.inline)
-                .environmentObject(viewModel)
             }
         }
     }

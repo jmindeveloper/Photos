@@ -13,7 +13,7 @@ protocol AlbumGridViewModelProtocol: ObservableObject {
 }
 
 struct UserAlbumGridView<VM: AlbumGridViewModelProtocol>: View {
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     @State var columnCount: Int = 2
     @State var spacingWidth: CGFloat = 20
     
@@ -34,12 +34,11 @@ struct UserAlbumGridView<VM: AlbumGridViewModelProtocol>: View {
                     if isNavigate {
                         NavigationLink {
                             LazyView(
-                                PhotoStorageView<PhotoStorageViewModel>()
-                                    .environmentObject(PhotoStorageViewModel(
-                                        library: viewModel.library,
-                                        album: album
-                                    ))
-                                    .navigationBarHidden(true)
+                                PhotoStorageView<PhotoStorageViewModel>(viewModel: PhotoStorageViewModel(
+                                    library: viewModel.library,
+                                    album: album
+                                ))
+                                .navigationBarHidden(true)
                             )
                         } label: {
                             AlbumCoverView(album: album)

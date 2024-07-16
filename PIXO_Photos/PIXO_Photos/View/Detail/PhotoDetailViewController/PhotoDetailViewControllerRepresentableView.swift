@@ -10,7 +10,7 @@ import Photos
 import UIKit
 
 struct PhotoDetailViewControllerRepresentableView<VM: PhotoDetailViewModelProtocol>: UIViewControllerRepresentable {
-    @EnvironmentObject var viewModel: PhotoDetailViewModel
+    @ObservedObject var viewModel: VM
     let viewController = PhotoDetailCollectionViewController()
     
     func makeCoordinator() -> Coordinator {

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
-    @EnvironmentObject var viewModel: VM
+    @StateObject var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var isPresentAlbumGridView: Bool = false
     @State var isPresentEditView: Bool = false
@@ -17,8 +17,7 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
     var body: some View {
         TabView {
             ZStack(alignment: .top) {
-                PhotoDetailViewControllerRepresentableView<PhotoDetailViewModel>()
-                    .environmentObject(viewModel)
+                PhotoDetailViewControllerRepresentableView<PhotoDetailViewModel>(viewModel: viewModel as! PhotoDetailViewModel)
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.1)) {
                             viewModel.hiddenToolBar.toggle()
@@ -91,11 +90,11 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
         .fullScreenCover(isPresented: $isPresentEditView) {
             if viewModel.currentAsset.mediaType == .image {
                 LazyView(
-                    PhotoEditView<PhotoEditViewModel>().environmentObject(PhotoEditViewModel(editAsset: viewModel.currentAsset))
+                    PhotoEditView<PhotoEditViewModel>(viewModel: PhotoEditViewModel(editAsset: viewModel.currentAsset))
                 )
             } else {
                 LazyView(
-                    VideoEditView<VideoEditViewModel>().environmentObject(VideoEditViewModel(editAsset: viewModel.currentAsset))
+                    VideoEditView<VideoEditViewModel>(viewModel: VideoEditViewModel(editAsset: viewModel.currentAsset))
                 )
             }
         }
@@ -132,13 +131,12 @@ struct PhotoDetailView<VM: PhotoDetailViewModelProtocol>: View {
         .contentShape(Rectangle())
         .sheet(isPresented: $isPresentAlbumGridView) {
             NavigationView {
-                UserAlbumGridView<PhotoDetailViewModel>(isNavigate: false) { album in
+                UserAlbumGridView<PhotoDetailViewModel>(viewModel: viewModel as! PhotoDetailViewModel, isNavigate: false) { album in
                     viewModel.addAssetsToAlbum(albumName: album.title)
                     isPresentAlbumGridView = false
                 }
                 .navigationTitle("앨범에 추가")
                 .navigationBarTitleDisplayMode(.inline)
-                .environmentObject(viewModel)
             }
         }
     }

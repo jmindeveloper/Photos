@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PhotoEditView<VM: PhotoEditViewModelProtocol>: View {
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     @Environment(\.presentationMode) var presentationMode
     @State var uiImage: UIImage?
     var context = CIContext()

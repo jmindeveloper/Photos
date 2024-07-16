@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AlbumView<VM: AlbumViewModelProtocol>: View {
     
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     
     @State var rowCount: Int = 2
     @State var spacingWidth: CGFloat = 10
@@ -63,8 +63,7 @@ struct AlbumView<VM: AlbumViewModelProtocol>: View {
             Spacer()
             
             NavigationLink {
-                UserAlbumGridView<AlbumViewModel>()
-                    .environmentObject(viewModel)
+                UserAlbumGridView<AlbumViewModel>(viewModel: viewModel as! AlbumViewModel)
                     .navigationTitle("나의 앨범")
                     .navigationBarTitleDisplayMode(.inline)
             } label: {
@@ -81,8 +80,7 @@ struct AlbumView<VM: AlbumViewModelProtocol>: View {
             ForEach(viewModel.userAlbum, id: \.self) { album in
                 NavigationLink {
                     LazyView(
-                        PhotoStorageView<PhotoStorageViewModel>()
-                            .environmentObject(PhotoStorageViewModel(library: viewModel.library, album: album))
+                        PhotoStorageView<PhotoStorageViewModel>(viewModel: PhotoStorageViewModel(library: viewModel.library, album: album))
                             .navigationBarHidden(true)
                     )
                 } label: {
@@ -108,8 +106,7 @@ struct AlbumView<VM: AlbumViewModelProtocol>: View {
             ForEach(viewModel.smartAlbum, id: \.self) { album in
                 NavigationLink {
                     LazyView(
-                        PhotoStorageView<PhotoStorageViewModel>()
-                            .environmentObject(PhotoStorageViewModel(library: viewModel.library, album: album))
+                        PhotoStorageView<PhotoStorageViewModel>(viewModel: PhotoStorageViewModel(library: viewModel.library, album: album))
                             .navigationBarHidden(true)
                     )
                 } label: {

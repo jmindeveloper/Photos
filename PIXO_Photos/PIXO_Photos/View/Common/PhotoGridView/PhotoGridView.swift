@@ -23,7 +23,7 @@ protocol PhotoGridViewModelProtocol: ObservableObject {
 }
 
 struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
-    @EnvironmentObject var viewModel: VM
+    @ObservedObject var viewModel: VM
     
     @Binding var columnItemCount: Int
     @Binding var cellContentMode: ContentMode
@@ -36,6 +36,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
     init(
         columnItemCount: Binding<Int>,
         cellContentMode: Binding<ContentMode>,
+        viewModel: VM,
         cellOnAppearAction: @escaping (_ asset: PHAsset) -> Void = { _ in },
         cellOnDisappearAction: @escaping (_ asset: PHAsset) -> Void = { _ in }
     ) {
@@ -43,6 +44,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
         self.cellOnAppearAction = cellOnAppearAction
         self.cellOnDisappearAction = cellOnDisappearAction
         self._cellContentMode = cellContentMode
+        self.viewModel = viewModel
     }
     
     var body: some View {
@@ -75,7 +77,7 @@ struct PhotoGridView<VM: PhotoGridViewModelProtocol>: View {
                             viewModel.toggleSelectPhoto(index: index)
                         } else {
                             let viewModel = PhotoDetailViewModel(assets: viewModel.assets, library: viewModel.library, fetchResult: viewModel.fetchResult, currentItemIndex: index)
-                            present(view: PhotoDetailView<PhotoDetailViewModel>().environmentObject(viewModel), modalStyle: .fullScreen)
+                            present(view: PhotoDetailView<PhotoDetailViewModel>(viewModel: viewModel), modalStyle: .fullScreen)
                         }
                     }
             }
